@@ -1,0 +1,29 @@
+{
+    "Rank_1": [
+        "age"
+    ],
+    "Rank_2": [
+        "sysBP",
+        "trestbps"
+    ],
+    "Rank_3": [
+        "totChol",
+        "chol"
+    ],
+    "Rank_4": [
+        "currentSmoker",
+        "cigsPerDay"
+    ],
+    "Rank_5": [
+        "glucose",
+        "diabetes",
+        "fbs"
+    ],
+    "Rank_6": [
+        "male",
+        "sex"
+    ],
+    "Rank_7": [
+        "heartRate"
+    ]
+}
