@@ -2,34 +2,31 @@
 
 ## Paper
 
-Evaluating the Reliability and Clinical Consistency of Explainability Methods Heart Disease Prediction
+**Evaluating the Reliability and Clinical Consistency of Explainability Methods in Deep Learning–Based Heart Disease Prediction**
 
 ## Datasets
 
-- Framingham
-- BRFSS 2015
+- Framingham Heart Study 
+- CDC BRFSS 2015 
 
 ## Models
 
-- Logistic Regression
-- Random Forest
-- MLP
+- Logistic Regression (LR)
+- Random Forest (RF)
+- Multi-Layer Perceptron (MLP)
 
-## Explainability
+## Explainability Methods
 
-- SHAP
-- Integrated Gradients
-- DiCE
+- SHAP (LinearExplainer, TreeExplainer, KernelExplainer)
+- Integrated Gradients (IG)
 
-## Metrics
+## Evaluation Metrics
 
-- Kendall Tau
-- Spearman
-- Stability
-- Cross-seed consistency
+- **Clinical Alignment:** Kendall's τ (against ACC/AHA 2019 guidelines)
+- **Instance-Level Stability:** Mean Rank Perturbation (under 1%, 2%, and 5% input noise)
+- **Cross-Seed Consistency:** Spearman rank correlation (ρ)
+- **Cross-Model Consistency:** Jaccard similarity
 
 ## Reproduce
 
-Run
-
-Untitled.ipynb
+Run xai-reliability-pipeline
