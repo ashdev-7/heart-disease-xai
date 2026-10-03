@@ -247,8 +247,70 @@ D-20  Decision threshold for "near the threshold" analysis
   Status: Framingham supported; BRFSS is a convention, declared.
 
 --------------------------------------------------------------------------------
-E. OPEN ITEMS
+E. LATER PHASES (registered 2026-10-04, before those phases were run)
 --------------------------------------------------------------------------------
-  - D-06 and D-14 are conditional on empirical checks not yet run.
-  - Decisions for KernelSHAP settings, faithfulness, the noise model and the
-    variance decomposition will be added before those phases start.
+
+D-21  KernelSHAP: shap default budget (2 x features + 2,048 coalitions), same
+      100 background rows, logit link, fixed seed; re-run 5 times for the
+      noise floor
+  Evidence: Covert & Lee 2021 (AISTATS) [V]: KernelSHAP is a stochastic
+    estimator; convergence should be checked and uncertainty reported;
+    paired sampling reduces variance. The shap default budget is the
+    documented setting [V, shap documentation].
+  Check: on the LR model the exact answer is known (linear SHAP). The gap
+    between KernelSHAP and exact linear SHAP is reported as the estimator
+    error at this budget. [E, Phase 4]
+  Status: supported; error measured against a known truth.
+
+D-22  Faithfulness: prediction gap when the top-k features are replaced versus
+      when k random features are replaced, k = 3; replacement values drawn
+      from the background rows (marginal), not zeros or means
+  Evidence: Agarwal et al. 2022 (OpenXAI) [V]: PGI / PGU prediction-gap
+    metrics. Hase, Xie & Bansal 2021 (NeurIPS) [A]: removing features creates
+    out-of-distribution inputs, and the replacement function matters.
+    Hooker et al. 2019 (ROAR) [K]: same concern, solved there by retraining.
+  Why marginal replacement: it is the same operation that defines the
+    interventional Shapley values being tested (D-13), so method and test
+    are consistent. Limitation: still out-of-distribution for correlated
+    features. Retraining (ROAR) is out of scope.
+  Status: supported with a declared limitation.
+
+D-23  Noise model: independent, zero-mean Gaussian error on each continuous
+      measurement, multiplicative for quantities with a published CV,
+      additive for heart rate; 20 draws per patient; two levels (protocol 6)
+  Evidence: classical measurement-error model (Carroll et al., Measurement
+    Error in Nonlinear Models) [K]. Magnitudes from Warren 2010 [A], Ricos
+    database [V], Quer 2020 [V].
+  Limitation: errors in systolic and diastolic pressure are correlated in
+    reality; independence overstates the spread of their difference. Stated.
+  Status: standard model; simplification declared.
+
+D-24  Variance decomposition framed as a generalizability study: patient is
+      the object of measurement; model, explainer, training sample and noise
+      draw are facets; report variance components and intraclass
+      correlations (reliability of one explanation for one patient)
+  Evidence: Shavelson & Webb, generalizability theory [K]; Shrout & Fleiss
+    1979 (Psychol Bull) [A] for ICC forms; Koo & Li 2016 (J Chiropr Med) [A]
+    for reporting and the conventional bands (<0.5 poor, 0.5-0.75 moderate,
+    0.75-0.9 good, >0.9 excellent). Bouthillier et al. 2021 [A] for treating
+    data sampling and initialisation as separate variance sources.
+  Novelty note: a search found no prior use of generalizability theory or
+    ICCs for feature-attribution reliability; closest is RoSHAP (arXiv
+    2605.15154, distribution of attributions across resamples) [S]. Not a
+    systematic search, so no "first" claim.
+  Caution: Koo & Li bands are conventions from rater studies, not validated
+    thresholds for explanations. Reported as context, not as verdicts.
+  Status: established statistical method, new application; declared.
+
+D-25  Rank-biased overlap persistence p = 0.9
+  Evidence: Webber, Moffat & Zobel 2010 [A]: p sets how top-heavy the measure
+    is; p = 0.9 puts about 86% of the weight on the first 10 ranks, a common
+    default. With 15-21 features this weights the top 3-5 most.
+  Status: conventional; chance level computed for our feature counts.
+
+--------------------------------------------------------------------------------
+F. OPEN ITEMS
+--------------------------------------------------------------------------------
+  - D-06 and D-14 are conditional on empirical checks.
+  - Related work to read before writing: "Statistical significance of feature
+    importance rankings" (arXiv 2401.15800); RoSHAP (arXiv 2605.15154).
