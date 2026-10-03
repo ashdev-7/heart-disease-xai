@@ -1,0 +1,600 @@
+================================================================================
+METHODOLOGY AND DATA FLOW  (protocol v1.0 - FROZEN 2026-10-04, git tag protocol-v1.0)
+Where does explanation unreliability come from in tabular cardiovascular
+risk models?
+================================================================================
+Written: 2026-10-04
+Status : Phases 1-2 (validation) are complete. Frozen before any training
+         variant or explanation-reliability score was computed. Each choice is
+         justified in Decision_Register.txt. Later changes are logged in
+         Section 9 with date and reason.
+
+--------------------------------------------------------------------------------
+1. QUESTION AND CLAIMS WE WANT TO BE ABLE TO MAKE
+--------------------------------------------------------------------------------
+
+Question
+  When a cardiovascular risk model explains one patient's prediction, how
+  much of the explanation is fixed by the patient, and how much moves with
+  (a) the model class, (b) the explanation method, (c) training randomness,
+  (d) ordinary measurement noise?
+
+Three sub-questions
+  Q1  Sources : what share of attribution variability does each of (a)-(d)
+                account for?
+  Q2  Linking : per patient, do the reliability axes predict each other, and
+                are unreliable explanations concentrated near the decision
+                threshold?
+  Q3  Plausibility : how far are attributions from published cardiovascular
+                risk knowledge, and is that distance caused by the model or
+                by the explainer?
+
+Out of scope (decided 2026-10-03 / 04)
+  Counterfactuals (DiCE), LIME, EBM, hyperparameter Rashomon sets, clinician
+  rankings, a third dataset, new model architectures.
+
+--------------------------------------------------------------------------------
+2. DATA FLOW DIAGRAM
+--------------------------------------------------------------------------------
+
+  EXTERNAL SOURCES
+  ----------------
+  [Kaggle Framingham csv]   [Kaggle BRFSS 2015 csv]   [Published risk knowledge]
+   4,240 x 16                253,680 x 22              D'Agostino 2008 betas
+        |                          |                   INTERHEART 2004
+        |                          |                   CDC BRFSS 2015 codebook
+        v                          v                          |
+  +--------------------------------------------+              |
+  | PHASE 1  DATA VALIDATION                   |<-------------+ (codebook,
+  |  D1 provenance / codebook                  |                 cohort stats)
+  |  D2 integrity (range, units, dup, missing) |
+  |  D3 known-result replication (plain LR)    |
+  |  D5 fitness-for-purpose decision           |
+  +--------------------------------------------+
+        |  validated tables + data_validation_report
+        |  STOP RULE 1 if a check fails
+        v
+  +--------------------------------------------+     +------------------------+
+  | PHASE 2  REFERENCE CONSTRUCTION            |<----| published coefficients |
+  |  2A Framingham (primary)                   |     | and odds ratios        |
+  |   D4 apply D'Agostino equation to the data |     +------------------------+
+  |   R1 build Ref-A, Ref-B, Ref-C             |
+  |   R2 agreement among references = ceiling  |
+  |  2B BRFSS (secondary, association-based)   |
+  |   Ref-D INTERHEART odds ratios             |
+  |   Ref-E D'Agostino ordering, shared items  |
+  |  feature -> group map for each dataset     |
+  +--------------------------------------------+
+        |  reference_importance.csv, group_map.csv, ceiling
+        |  STOP RULE 2 if the equation does not discriminate
+        v
+  ================= PROTOCOL FREEZE (git tag) =================
+        |
+        v
+  +--------------------------------------------+
+  | PHASE 3  SPLIT AND MODELS (both datasets)  |
+  |  fixed stratified test set (20%)           |
+  |  explained set: 500 test patients          |
+  |  train variants:                           |
+  |    base (1) + seeds (10) + bootstraps (30) |
+  |  models: LR, RF, XGBoost, MLP              |
+  |  imbalance: none (primary), SMOTE (sens.)  |
+  +--------------------------------------------+
+        |  fitted models + predictions + performance table
+        v
+  +--------------------------------------------+
+  | PHASE 4  EXPLANATIONS                      |
+  |  native  : exact linear SHAP (LR)          |
+  |            TreeSHAP interventional (RF,XGB)|
+  |            Expected Gradients, IG (MLP)    |
+  |  common  : KernelSHAP on all four models   |
+  |  inputs  : explained set, clean and noised |
+  +--------------------------------------------+
+        |  attribution store: one row per
+        |  (dataset, model, train variant, explainer, noise draw,
+        |   patient, feature)  ->  attributions.parquet
+        v
+  +-----------+-----------+-------------+----------------+
+  | AXIS F    | AXIS R    | AXIS M      | AXIS P         |
+  | faithful- | robust-   | multipli-   | plausibility   |
+  | ness      | ness to   | city across | vs Ref-A/B/C   |
+  |           | noise     | retraining  | (Framingham)   |
+  +-----------+-----------+-------------+----------------+
+        |  per-patient scores + global scores, each with CI, null, floor
+        v
+  +--------------------------------------------+
+  | PHASE 6  ANALYSIS                          |
+  |  A1 variance decomposition   (answers Q1)  |
+  |  A2 per-patient linking      (answers Q2)  |
+  |  A3 model vs explainer split (answers Q3)  |
+  +--------------------------------------------+
+        |
+        v
+  tables, figures, paper
+
+Data stores (all under results/)
+  data_validation_report.txt     Phase 1
+  reference_importance.csv       Phase 2
+  group_map.csv                  Phase 2
+  performance.csv                Phase 3
+  attributions.parquet           Phase 4
+  axis_scores.parquet            Phase 5
+  analysis_tables/               Phase 6
+
+--------------------------------------------------------------------------------
+3. PHASE 1 - DATA VALIDATION
+--------------------------------------------------------------------------------
+
+D1 Provenance and codebook
+  Framingham: record the Kaggle source and file hash. Compare summary
+    statistics (age range, % male, % smokers, mean sysBP, CHD rate) with
+    published descriptions of the cohort. No formal codebook exists on
+    Kaggle; this is stated as a limitation.
+  BRFSS: map each of the 21 features and the target to the CDC 2015
+    codebook variable it came from. Check coding of each against the
+    codebook.
+
+D2 Integrity
+  Ranges and units per column; impossible values; missingness per column;
+  exact-duplicate rows.
+  Duplicates in BRFSS are counted but NOT dropped by default: with 21 coarse
+  survey answers, two different people can give identical rows. A
+  de-duplicated run is a sensitivity analysis.
+
+D3 Known-result replication
+  Plain logistic regression, no resampling, train-only preprocessing.
+  Expect: age, systolic BP, smoking, diabetes with positive coefficients;
+  leakage-free test AUC about 0.70 (Framingham) and 0.81-0.85 (BRFSS), in
+  line with published leakage-free results.
+
+D5 Fitness for purpose
+  Framingham: prospective 10-year outcome with measured risk factors. Fit
+    for all four axes.
+  BRFSS: one-time survey; outcome is self-reported existing disease;
+    several features (general health, difficulty walking, physical health
+    days) are consequences of disease. A prospective prevention equation is
+    the wrong yardstick. An association-based reference (case-control odds
+    ratios) is the matching design, so BRFSS gets its own, weaker reference
+    (Section 4.7). Fit for axes F, R, M; axis P is secondary on BRFSS.
+
+Output: data_validation_report.txt with pass/fail per check.
+
+STOP RULE 1
+  If D3 gives a wrong-signed coefficient for age, systolic BP, smoking, or
+  diabetes with a confidence interval excluding zero, or an AUC outside
+  0.60-0.80 (Framingham) / 0.75-0.90 (BRFSS), stop and investigate the data
+  before anything else.
+
+--------------------------------------------------------------------------------
+4. PHASE 2 - REFERENCE CONSTRUCTION AND VALIDATION (FRAMINGHAM ONLY)
+--------------------------------------------------------------------------------
+
+4.1 The published equation (retrieved 2026-10-04 from the Framingham Heart
+    Study risk-function page; D'Agostino et al. 2008, Circulation 117:743)
+
+  Outcome: general CVD (coronary death, MI, coronary insufficiency, angina,
+  ischaemic and haemorrhagic stroke, TIA, peripheral artery disease, heart
+  failure). Population: ages 30-74, free of CVD at baseline.
+  Age, cholesterol, HDL, systolic BP, BMI enter as natural logs.
+
+  BMI-based (office) model            Men        Women
+    ln age                            3.11296    2.72107
+    ln BMI                            0.79277    0.51125
+    ln SBP, untreated                 1.85508    2.81291
+    ln SBP, treated                   1.92672    2.88267
+    smoking                           0.70953    0.61868
+    diabetes                          0.53160    0.77763
+    baseline survival S0(10)          0.88431    0.94833
+
+  Lipid-based model                   Men        Women
+    ln age                            3.06117    2.32888
+    ln total cholesterol              1.12370    1.20904
+    ln HDL cholesterol               -0.93263   -0.70833
+    ln SBP, untreated                 1.93303    2.76157
+    ln SBP, treated                   1.99881    2.82263
+    smoking                           0.65451    0.52873
+    diabetes                          0.57367    0.69154
+    baseline survival S0(10)          0.88936    0.95012
+
+  Mapping to the Kaggle file: age, male, BMI, sysBP, BPMeds (treated),
+  currentSmoker, diabetes. All present. HDL is absent, so the lipid model
+  cannot be computed, only its coefficients used.
+
+4.2 D4 - Does the equation work on this data?
+  Apply the BMI-based model to patients aged 30-74 with prevalentStroke = 0
+  (the only prior-CVD flag in the file).
+  Report: AUC with bootstrap CI against TenYearCHD; observed vs predicted
+  by decile.
+  Expected: AUC about 0.65-0.75. Predicted risk should exceed the observed
+  CHD rate, because the equation predicts all CVD and the target is CHD
+  only. So discrimination is the acceptance test, not calibration.
+
+  STOP RULE 2
+    If AUC < 0.60, the data and the reference do not fit each other. Stop
+    and reconsider the reference before building anything on it.
+
+4.3 Feature groups (applied to model attributions before any comparison)
+
+  Age            age
+  Sex            male
+  Blood pressure sysBP, diaBP, prevalentHyp, BPMeds
+  Smoking        currentSmoker, cigsPerDay
+  Glycaemia      diabetes, glucose
+  Adiposity      BMI
+  Lipids         totChol
+  Unreferenced   education, heartRate, prevalentStroke
+
+  Group attribution = sum of member attributions (signed), then absolute
+  value. Unreferenced features are excluded from rank comparisons and
+  reported separately as "share of attribution mass on unreferenced
+  features".
+
+4.4 R1 - Three references
+
+  Ref-A (primary)  Exact Shapley values of the BMI-based equation computed
+                   on the Framingham explained set, sex included as a
+                   feature (7 inputs, all coalitions enumerated). Gives a
+                   per-patient and a global importance per group.
+                   Covers: Age, Sex, Blood pressure, Smoking, Glycaemia,
+                   Adiposity. Not Lipids.
+  Ref-B            Lipid-model coefficients times the standard deviation of
+                   each (log) variable in our data, sex-averaged.
+                   Covers: Age, Blood pressure, Smoking, Glycaemia, Lipids.
+                   HDL absent in data. Global only.
+  Ref-C            INTERHEART 2004 ordering of modifiable factors by odds
+                   ratio (values in Section 4.7). Covers Smoking, Lipids,
+                   Blood pressure, Glycaemia, Adiposity; age and sex are not
+                   in it (cases and controls were matched on them). Ordinal
+                   only.
+
+4.5 R2 - Ceiling
+  Agreement among Ref-A, Ref-B, Ref-C on the groups they share (Kendall
+  tau-b). No model can be expected to agree with "clinical knowledge" more
+  than clinical sources agree with each other.
+
+4.6 Known weaknesses, stated up front
+  - Reference outcome is general CVD; target is CHD.
+  - Only 6-7 groups, so rank correlations have wide intervals. Therefore the
+    primary plausibility metric uses magnitudes (Section 6, Axis P).
+  - Ref-A is itself an explanation of a model. It is like-for-like, which is
+    the point, but it inherits the choice of background distribution.
+
+4.7 Phase 2B - BRFSS reference (secondary)
+
+  Why a different kind of reference
+    BRFSS records who already has heart disease. The matching evidence is
+    case-control association with myocardial infarction, not a 10-year risk
+    equation. INTERHEART (Yusuf et al. 2004, Lancet 364:937-952; 15,152
+    cases, 14,820 controls, 52 countries) is that design.
+
+  INTERHEART values. VERIFIED 2026-10-04 against the paper itself (Table 3,
+  fully adjusted column "OR 2", 99% confidence intervals). Analysed sample:
+  12,461 cases and 14,637 controls (15,152 and 14,820 enrolled).
+
+    Factor                Comparison               OR (99% CI)        PAR    BRFSS item
+    ApoB/ApoA1 ratio      top vs lowest quintile   3.25 (2.81-3.76)   49.2%  HighChol*
+    Psychosocial index    any vs none              2.67 (2.21-3.22)   32.5%  MentHlth*
+    Diabetes              history vs none          2.37 (2.07-2.71)    9.9%  Diabetes
+    Smoking               current+former vs never  2.04 (1.86-2.25)   35.7%  Smoker
+      (current vs never: 2.87 (2.58-3.19))
+    Hypertension          history vs none          1.91 (1.74-2.10)   17.9%  HighBP
+    Abdominal obesity     top vs lowest tertile    1.62 (1.45-1.80)   20.1%  (none)
+    Fruit and veg daily   yes vs no                0.70 (0.62-0.79)   13.7%  Fruits, Veggies
+    Exercise              >= 4 h/week vs less      0.86 (0.76-0.97)   12.2%  PhysActivity*
+    Alcohol               >= 3 times/week vs less  0.91 (0.82-1.02)    6.7%  (none)
+    (* = imperfect proxy; reported with and without these items)
+
+  Facts confirmed from the paper that shape the mapping
+    - Hypertension and diabetes are SELF-REPORTED history. Measured blood
+      pressure was recorded but deliberately not used. This matches BRFSS
+      HighBP and Diabetes directly.
+    - BRFSS "Smoker" (ever smoked 100 cigarettes) matches current+former vs
+      never, so 2.04 is the right figure, not 2.87.
+    - BMI is NOT a valid stand-in for abdominal obesity: the paper states
+      BMI was a weaker predictor than waist/hip ratio and became
+      non-significant once waist/hip ratio was in the model. No BMI odds
+      ratio is reported. BMI is therefore unreferenced in Ref-D.
+    - Alcohol in INTERHEART is regular drinking (protective, p = 0.03).
+      BRFSS HvyAlcoholConsump is heavy drinking, a different exposure.
+      Not mapped.
+    - Exercise is >= 4 hours a week of moderate or strenuous activity;
+      BRFSS PhysActivity is any activity in the past 30 days. Loose proxy.
+    - Cases and controls were matched on age and sex, so the study gives no
+      importance for Age or Sex.
+    - Effects of hypertension and diabetes were larger in women than men.
+    - The abstract of the paper swaps the two abdominal-obesity odds ratios;
+      Table 3 is the correct one (top vs lowest tertile = 1.62).
+
+  Ref-D therefore covers 7 BRFSS items directly or by proxy: HighChol*,
+  MentHlth*, Diabetes, Smoker, HighBP, Fruits/Veggies, PhysActivity*.
+
+  Ref-D  Rank BRFSS items by |ln OR| from INTERHEART. Covers 7 items
+         (4 exact, 3 proxies). Age, Sex, BMI and alcohol are not covered.
+  Ref-E  Ordering of Age, Sex, HighBP, HighChol, Smoker, Diabetes, BMI
+         implied by the D'Agostino equations. Ordinal only, because BRFSS
+         records these as yes/no or bands, not measured values.
+
+  BRFSS feature classes
+    Referenced      HighBP, HighChol, Smoker, Diabetes, Fruits, Veggies,
+                    PhysActivity, MentHlth (Ref-D); Age, Sex, BMI (Ref-E only)
+    Unreferenced    HvyAlcoholConsump
+    Downstream      GenHlth, PhysHlth, DiffWalk
+    Prior disease   Stroke
+    Access / social Income, Education, AnyHealthcare, NoDocbcCost, CholCheck
+
+  What is reported for BRFSS
+    Primary  : share of attribution mass in each class. How much of the
+               explanation rests on consequences of disease is the
+               informative number here.
+    Secondary: rank agreement with Ref-D and Ref-E on referenced items.
+
+  Remaining weakness: people diagnosed with heart disease change behaviour
+  (quit smoking, change diet), so survey associations can be weaker or
+  reversed relative to INTERHEART. Low agreement on BRFSS is therefore not
+  evidence against a model or explainer, and is not used for any verdict.
+
+--------------------------------------------------------------------------------
+5. PHASES 3 AND 4 - MODELS AND EXPLANATIONS
+--------------------------------------------------------------------------------
+
+5.1 Splits
+  One stratified 80/20 split per dataset, fixed. The test set is never used
+  for fitting, tuning, imputation, or scaling.
+  Explained set: 500 test patients per dataset, stratified by outcome,
+  fixed.
+
+5.2 Training variants (per model, per dataset)
+  base       1   seed 42, full training set
+  seed      10   seeds 0-9, full training set (RF, XGBoost, MLP)
+  bootstrap 100 (Framingham) / 50 (BRFSS)
+                 resample training rows with replacement, model seed fixed;
+                 preprocessing refitted in every variant
+                 (Decision Register D-05, D-06)
+  Hyperparameters are tuned once on the base training set by 5-fold CV and
+  then held fixed for all variants.
+
+5.3 Models
+  LR (L2), RF, XGBoost, MLP (same 64-32 architecture as the draft).
+  Imbalance: no resampling, decision threshold tuned on a validation split
+  (primary). SMOTE-in-pipeline as a sensitivity arm on base models only.
+  Reported per model: AUC with CI, Brier score, calibration slope.
+
+5.4 Explainers
+  Native (cheap; used on every training variant)
+    LR   exact linear SHAP (interventional)
+    RF   TreeSHAP, interventional, fixed background
+    XGB  TreeSHAP, interventional, fixed background
+    MLP  Expected Gradients; Integrated Gradients with mean baseline
+  Common (expensive; base models only)
+    KernelSHAP on all four models, same 100-row background from real
+    training data, fixed sample budget, fixed seed.
+
+  What each comparison isolates
+    same explainer (KernelSHAP), different model  -> model effect
+    same model, KernelSHAP vs native              -> explainer effect
+      on LR this is a ground-truth check of KernelSHAP settings
+      on RF/XGB both target the same quantity, so the gap is estimator error
+      on MLP the methods target different quantities
+    same model and explainer, different variant   -> training effect
+    same everything, noised input                 -> measurement effect
+    same everything, explainer re-run             -> noise floor
+
+--------------------------------------------------------------------------------
+6. PHASE 5 - THE FOUR AXES
+--------------------------------------------------------------------------------
+
+Every score is reported with: a bootstrap confidence interval, a null
+(random attribution / random ranking), and where relevant the noise floor
+(explainer re-run with nothing changed).
+
+Axis F - Faithfulness
+  Prediction gap when the top-3 attributed features are replaced by
+  background values, versus when the bottom-3 are replaced. A faithful
+  explanation gives a large gap for top and a small gap for bottom.
+  Null: random choice of 3 features.
+  Ground-truth check: on LR, exact linear SHAP is the truth.
+
+Axis R - Robustness to measurement noise
+  Framingham: noise per continuous feature from published within-person
+    variation. 20 draws per patient. Two levels (low, high) are run because
+    sources differ.
+
+    Feature     Low     High    Source                              Status
+    sysBP       4.3%    8.6%    Warren et al. 2010, Br J Gen Pract   abstract
+    diaBP       4.3%    8.6%    (office within-person CV 8.6% for    abstract
+                                both; PMC2930221)
+    totChol     3.0%    5.95%   Ricos database, Westgard 2014        opened
+    glucose     2.8%    5.6%    Ricos database, Westgard 2014;       opened
+                                5.7% in Chai et al. 2017
+    BMI         held fixed      only source found is a one-person study
+                                (Schneditz et al. 2023); not used
+    heartRate   1.5     3.0 bpm Quer et al. 2020, PLOS One           opened
+                                (wrist wearable, 92,457 people;
+                                not a clinic pulse reading)
+    cigsPerDay  held fixed      no source found
+    age, binary and ordinal items held fixed
+
+    High = the published within-person figure. Low = half of it, as a
+    sensitivity level (a choice, not a published value).
+    Status: "opened" = I read the page; "abstract" = figure confirmed from
+    the abstract/record, full text not read.
+    All levels are relative to the patient's own value, except heart rate.
+    Correction 2026-10-04: an earlier note gave glucose as 4.5%; the Ricos
+    value is 5.6%.
+    The Warren BP figure is variation between office visits. It is larger
+    than variation between readings in one visit, so "a re-measurement the
+    same day" is NOT what the high level represents; it represents a
+    re-measurement at another visit.
+
+  BRFSS: noise calibrated to published test-retest reliability. For each
+    item, the flip rate is chosen so that a simulated re-interview
+    reproduces the published kappa.
+      GenHlth        kappa 0.75   (Andresen et al. 2003, J Epidemiol
+                                   Community Health; 868 Missouri adults
+                                   re-interviewed after about 2 weeks;
+                                   PMC1732444; via Pierannunzi 2013)
+      PhysHlth       kappa 0.71
+      MentHlth       kappa 0.67
+      PhysActivity   kappa 0.67-0.86
+    Items with no published item-level reliability (HighBP, HighChol,
+    Diabetes, Smoker, BMI, others) are held fixed. Consequence: BRFSS
+    robustness is measured against noise in 4 of 21 features only, and
+    cannot be compared in size with Framingham robustness.
+  Draws that change the predicted class are analysed separately.
+  Metrics: top-3 Jaccard, top-5 Jaccard, Kendall tau-b on feature ranks
+  between clean and noised attributions.
+
+Axis M - Multiplicity across retraining
+  For seeds and bootstraps separately:
+    per patient : mean pairwise top-3 Jaccard and rank correlation of that
+                  patient's attributions across training variants
+    global      : rank correlation of mean |attribution| rankings
+    alongside   : spread of the patient's predicted risk across variants
+                  (prediction instability)
+
+Axis P - Plausibility (Framingham only)
+  Primary  : cosine similarity between the normalised group-importance
+             vector of the model explanation and of each reference.
+  Secondary: Kendall tau-b on group ranks; share of attribution mass on
+             unreferenced features.
+  Context  : null from random permutations; ceiling from Section 4.5.
+
+--------------------------------------------------------------------------------
+7. PHASE 6 - ANALYSIS
+--------------------------------------------------------------------------------
+
+A1 Variance decomposition (Q1)
+  Attributions normalised per explanation to sum to 1 in absolute value.
+  For each dataset, a variance-components model per feature group with
+  factors: model class, explainer, training variant, noise draw, patient.
+  Report the share of variance per factor.
+
+A2 Linking (Q2)
+  Per patient: Spearman correlation between the F, R, M scores, and between
+  each score and distance of predicted risk from the decision threshold.
+
+A3 Model versus explainer (Q3)
+  Plausibility with explainer held fixed across models, and with model held
+  fixed across explainers. Compare the two ranges.
+
+Planned outputs
+  Table 1  data validation results
+  Table 2  reference importance and between-reference agreement
+  Table 3  model performance with CI and calibration
+  Table 4  axis scores per model x explainer, with CI, null, floor
+  Figure 1 variance shares per dataset
+  Figure 2 per-patient reliability versus distance to threshold
+  Figure 3 plausibility: model effect versus explainer effect
+
+--------------------------------------------------------------------------------
+8. COMPUTE BUDGET (ESTIMATE, UNTESTED)
+--------------------------------------------------------------------------------
+
+  Model fits      : 4 models x 41 variants x 2 datasets = 328
+  Native explains : 328 models x 500 patients, plus 20 noise draws x 500
+                    patients on base models
+  KernelSHAP      : 8 base models x 500 patients, plus a 100-patient subset
+                    for noise and re-run floor
+  Risk            : KernelSHAP on RF with BRFSS is the slow cell. If it
+                    exceeds a few hours, cut the explained set for that cell
+                    to 200 and record the change in Section 9.
+
+--------------------------------------------------------------------------------
+9. AMENDMENT LOG
+--------------------------------------------------------------------------------
+
+  2026-10-04  v0.1 -> v0.2 (before approval)
+    - Added Phase 2B: BRFSS gets an association-based reference (INTERHEART
+      odds ratios, D'Agostino ordering). Reason: a case-control study
+      matches the survey's design; excluding BRFSS from plausibility
+      entirely was too strict. Kept as secondary.
+    - Axis R noise table filled in with low/high levels per feature.
+    - BRFSS noise changed from an assumed 5%/10% flip rate to flip rates
+      calibrated to published test-retest kappa; items without published
+      reliability held fixed.
+    - INTERHEART values entered (secondary source; primary check pending).
+
+  2026-10-04  v0.2, noise table revised
+    - Blood pressure now from Warren et al. 2010 (8.6% office CV), replacing
+      loosely sourced 5-8 mmHg figures.
+    - Glucose corrected to 5.6% (was 4.5%). Cholesterol 5.95%.
+    - Low level redefined as half the published figure.
+
+  2026-10-04  v0.2, INTERHEART verified from the paper
+    - Table 3 values confirmed; psychosocial CI is 2.21-3.22.
+    - BMI and alcohol removed from Ref-D (not valid proxies per the paper).
+    - Self-reported hypertension and diabetes confirmed.
+
+  2026-10-04  v0.2 -> v0.3, after running Phases 1 and 2
+    Results (full output in results/*.txt)
+    - Stop rule 1 PASSED for both datasets. Plain logistic regression test
+      AUC: Framingham 0.702 (95% CI 0.654-0.746), BRFSS 0.847 (0.842-0.852).
+      Age, systolic BP, cigarettes/day, male sex positive on Framingham; Age,
+      HighBP, HighChol, Smoker, Diabetes, Sex positive on BRFSS.
+    - Row counts, event counts and missingness match the draft paper exactly.
+    - BRFSS has 23,899 exact duplicate rows (9.42%). Disease prevalence among
+      duplicated rows is 0.9% against 10.8% elsewhere: they are healthy
+      respondents giving the same answers, not copy errors. Keeping them is
+      correct; dropping them would inflate prevalence.
+    - Stop rule 2 PASSED. The D'Agostino BMI equation, applied untrained to
+      4,146 eligible Framingham rows, gives AUC 0.718 (0.695-0.739) against
+      TenYearCHD; 0.712 in men and in women. Predicted and observed risk rise
+      together across tenths (Kendall tau 0.96).
+    - Calibration expectation was WRONG: observed CHD rate (14.8%) is higher
+      than predicted all-CVD risk (12.4%), ratio 1.20. I expected the reverse.
+      Consistent with this file being an older, higher-risk cohort (49%
+      current smokers), but that is not established.
+    - Refit of the same model form: signs all agree with the published
+      equation; ln age 3.21 vs 2.92, ln SBP 2.40 vs 2.33, diabetes 0.71 vs
+      0.66, smoking 0.39 vs 0.66. BMI is not significant in this data.
+    Changes
+    - Ref-C now uses INTERHEART attributable risk (PAR) for population-level
+      comparison, with ln(odds ratio) kept alongside. Reason: an odds ratio
+      measures effect in an exposed person; mean |Shapley| measures
+      importance across the population, which also depends on how common
+      the exposure is. Diabetes shows the difference: third by odds ratio,
+      last by PAR and last in Ref-A and Ref-B (3% prevalence here).
+      Same change for Ref-D on BRFSS.
+    - Ref-A and Ref-B agree closely in size (cosine 0.99 on shared groups)
+      but both come from D'Agostino 2008, so this is NOT independent
+      confirmation. Ref-C is the only independent reference, and it shares
+      just 3-4 groups. The "ceiling" in 4.5 is therefore weak and will be
+      reported as a table, not as a single number.
+    - BMI held fixed in the noise test (no adequate source).
+    - Explained output for Ref-A is the logit of 10-year risk, so it is on
+      the same scale as model margins.
+    Decisions made without asking (see notes_for_self Entry 10)
+    - Pipeline runs on this machine. Data in data/ (git-ignored).
+    - Code lives in src/ as scripts, outputs in results/.
+    Source checks completed
+    - Warren 2010: office CV 8.6% systolic and diastolic, visits at 0 and
+      6 weeks, 163 subjects (abstract via NCBI).
+    - Andresen 2003: 868 Missouri adults, retest after mean 13.5 days;
+      self-rated health and healthy days kappa >= 0.75, other items
+      0.58-0.71 (abstract via NCBI).
+    - D'Agostino 2008: 8,491 participants, 1,174 events over 12 years,
+      C 0.763 men / 0.793 women (abstract); coefficients and constants from
+      the Framingham Heart Study page.
+
+  2026-10-04  v0.3 -> v1.0 FROZEN
+    - Decision_Register.txt added: 20 decisions, each with alternatives,
+      evidence and status.
+    - Bootstraps raised from 30 to 100 (Framingham) and 50 (BRFSS), with a
+      half-sample convergence check (D-06).
+    - Hyperparameters tuned on log loss, fixed across variants (D-07).
+    - MLP uses a fixed epoch count from one early-stopping run (D-10).
+    - Random forest depth capped for TreeSHAP feasibility (D-11).
+    - Integrated Gradients uses 256 steps (D-15).
+    - Not yet registered, to be added BEFORE those phases run: KernelSHAP
+      settings, faithfulness metric details, noise model implementation,
+      variance decomposition model.
+
+  Still open at freeze
+    - Full text of Warren 2010 and Andresen 2003 not read (abstracts only).
+    - (superseded) Read Warren 2010 Table for the exact office CVs (PMC2930221, free).
+    - Find a better BMI source than a single-person study, or hold BMI
+      fixed.
+    - Compute estimate still untested: shap, captum, imbalanced-learn and
+      pyarrow are not installed on this machine and no data files are local.
+
+================================================================================

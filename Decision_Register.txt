@@ -1,0 +1,254 @@
+================================================================================
+DECISION REGISTER
+Every methodological choice, the alternatives, the evidence, and its status
+================================================================================
+Started 2026-10-04. Rule (set by the user 2026-10-04): no choice goes into the
+pipeline unless it is checked against prior work and can be defended.
+
+Evidence tags
+  [V] opened/confirmed online in this project   [A] abstract confirmed only
+  [K] standard reference, from background knowledge, not re-opened
+  [E] our own empirical check (file in results/ named)
+Where the literature does not settle a choice, that is said, and the choice is
+backed by an empirical check or flagged as a limitation.
+
+--------------------------------------------------------------------------------
+A. DATA AND DESIGN
+--------------------------------------------------------------------------------
+
+D-01  One fixed stratified 80/20 split; test set never used for fitting
+  Alternatives: cross-validation; bootstrap optimism correction with no split.
+  Evidence: Steyerberg & Harrell 2016 (J Clin Epidemiol) [A] call random
+    split-sample validation inefficient and unstable compared with bootstrap
+    for ESTIMATING PERFORMANCE. That criticism applies here and is accepted.
+  Why we still split: the study compares explanations for the SAME patients
+    across hundreds of models. That needs a fixed set of patients that no
+    model was trained on. Performance is not the estimand.
+  Mitigation: performance is reported with bootstrap confidence intervals and
+    across all training variants, never from one model alone.
+  Status: defensible for the stated purpose; split-sample weakness declared.
+
+D-02  Explained set = 500 test patients, stratified by outcome, fixed
+  Evidence: no standard exists. OpenXAI and Qureshi et al. 2026 [V] evaluate
+    on test subsets of similar size; the draft used 30 for stability.
+  Empirical backing: bootstrap confidence intervals over patients are
+    reported for every score, so the adequacy of 500 is visible in the width
+    of the intervals. [E, Phase 5]
+  Status: defensible; precision shown rather than assumed.
+
+D-03  No resampling for class imbalance (primary); SMOTE as sensitivity arm
+  Alternatives: SMOTE (the draft), class weights, under-sampling.
+  Evidence: van den Goorbergh et al. 2022 (JAMIA) [V]: random over/under-
+    sampling and SMOTE give miscalibrated models that overestimate risk, with
+    no gain in discrimination. Rai et al. 2025 (Front Artif Intell) [V]:
+    imbalance handling changes LIME and SHAP rankings.
+  Empirical backing: plain LR with no resampling reached test AUC 0.702 on
+    Framingham, at least equal to the draft's SMOTE LR (0.698).
+    [E, results/data_validation_report.txt]
+  Status: supported by literature and by our data.
+
+D-04  Missing values: single imputation, train-only (median; mode for binary)
+  Alternatives: multiple imputation; missing indicators; native NaN handling
+    in XGBoost.
+  Evidence: Sperrin et al. 2020 (J Clin Epidemiol 125:183-187) [A] argue that
+    for PREDICTION, missing data handling must be something that can be
+    applied at prediction time, which multiple imputation using the outcome
+    cannot. Sisk et al. 2023 (Stat Methods Med Res) [A] study regression
+    imputation and missing indicators as deployable options.
+  Why this choice: all four models must see identical inputs for a patient,
+    so explanations differ only because of the model. Native NaN handling in
+    XGBoost alone would break that.
+  Limitation: glucose is 9.2% missing in Framingham; its attribution is
+    biased toward zero for imputed patients. Sensitivity: scores recomputed
+    on patients with complete data. [E, Phase 5]
+  Status: defensible; simpler than regression imputation, declared.
+
+D-05  Preprocessing refitted inside every training variant
+  Evidence: Riley & Collins 2023 (Biometrical J) [V]: instability must be
+    assessed by repeating ALL model-building steps in each bootstrap sample.
+  Status: follows the cited method.
+
+D-06  Training variants: bootstrap B = 100 (Framingham), 50 (BRFSS);
+      10 seeds each for RF, XGBoost, MLP
+  Evidence: Riley & Collins 2023 [V] illustrate with large B (e.g. 1,000) for
+    instability PLOTS of individual predictions. Bouthillier et al. 2021
+    (MLSys) [A]: data sampling, initialisation and hyperparameters are
+    separate sources of variance and should each be varied. No source gives
+    a required B for mean pairwise agreement of explanations.
+  Constraint [E, src/bench_timing.py, this laptop]: one variant of all four
+    models with native explanations takes about 40 s (Framingham) and 110 s
+    (BRFSS); random-forest TreeSHAP dominates. B = 100 / 50 is about 3 hours.
+  Empirical backing required: every multiplicity score is recomputed on the
+    first half of the bootstraps; if half-B and full-B differ by more than
+    the confidence interval, B is increased. [E, Phase 5]
+  Deviation from Riley & Collins: smaller B than their examples. Declared.
+  Status: defensible conditional on the convergence check.
+
+D-07  Hyperparameters tuned once (5-fold CV on base training set, log loss),
+      then fixed for all variants
+  Evidence: Riley & Collins 2023 [V] would re-tune in every bootstrap.
+    Van Calster et al. 2019 (BMC Med) [A] stress calibration, which supports
+    tuning on a proper scoring rule (log loss) rather than AUC.
+  Why fixed: hyperparameter-induced multiplicity was removed from scope on
+    2026-10-03 to fit the time available. Fixing them isolates data
+    resampling and seed effects.
+  Consequence: reported instability is a LOWER BOUND on real-world
+    instability. Declared as a limitation.
+  Status: deviation, declared.
+
+D-08  Sample size relative to model flexibility is reported, not assumed
+  Evidence: van der Ploeg, Austin & Steyerberg 2014 (BMC Med Res Methodol)
+    [V]: random forests, neural networks and SVMs may need over 10 times as
+    many events per variable as logistic regression for stable AUC and small
+    optimism. Riley et al. 2020 (BMJ) [A]: sample size criteria for
+    prediction model development.
+  Our numbers: Framingham training set has about 515 events for 15
+    predictors (about 34 events per predictor): adequate for LR, well short
+    of what flexible models need. BRFSS: about 19,100 events for 21
+    predictors (about 900 per predictor).
+  Consequence: on Framingham, instability of RF/XGBoost/MLP explanations is
+    EXPECTED from sample size alone. The paper must say so and must not
+    present it as a defect of the explanation method.
+  Status: literature-grounded expectation, to be tested by the data.
+
+--------------------------------------------------------------------------------
+B. MODELS
+--------------------------------------------------------------------------------
+
+D-09  Model set: logistic regression, random forest, XGBoost, MLP
+  Evidence: Christodoulou et al. 2019 (J Clin Epidemiol) [K]: LR is the
+    reference standard in clinical prediction. Grinsztajn et al. 2022
+    (NeurIPS) [K]: tree ensembles are the strongest family on tabular data.
+    Section 13.3 of Literature_Survey.txt [V/S]: gradient boosting is the
+    most used family in heart-disease XAI papers. MLP kept for continuity
+    with the draft and because gradient-based explainers require it.
+  Status: supported.
+
+D-10  MLP: 64-32 ReLU, dropout 0.2, Adam; epochs chosen once by early
+      stopping on a 15% validation split of the base training set, then the
+      same epoch count for every variant with no validation split
+  Evidence: architecture carried over from the draft; no claim of optimality
+    (Grinsztajn 2022 [K] and Shwartz-Ziv & Armon 2022 [K] show MLPs are
+    rarely best on tabular data).
+  Why fixed epochs: in a bootstrap sample duplicated rows would fall on both
+    sides of a train/validation split and make early stopping optimistic.
+    Fixing the epoch count avoids that and keeps training size equal across
+    variants.
+  Status: defensible; own reasoning on the bootstrap leak, no citation found.
+
+D-11  Random forest depth is capped (max_depth <= 12) and leaves >= 10
+  Reason: interventional TreeSHAP cost grows with leaves x trees x background
+    rows; unrestricted forests on 203k rows are not explainable in the time
+    available. [E, bench_timing.py: 69 s for 500 patients at depth 12]
+  Evidence: Probst, Wright & Boulesteix 2019 (WIREs DMKD) [K]: random forest
+    performance is comparatively insensitive to tuning.
+  Check: capped forest's test AUC is compared with the plain-LR AUC; a
+    clear loss would reopen this. [E, Phase 3]
+  Status: compute-driven constraint, declared, checked.
+
+--------------------------------------------------------------------------------
+C. EXPLANATIONS
+--------------------------------------------------------------------------------
+
+D-12  Explain the log-odds margin; random forest TreeSHAP explains probability
+  Evidence: Lundberg et al. 2020 (Nat Mach Intell) [K]: TreeSHAP is exact on
+    the scale where the model is additive over trees. For boosted trees that
+    is the margin; for a random forest it is the averaged probability.
+  Consequence: RF TreeSHAP values are on a different scale from the others.
+    All cross-model comparisons therefore use (a) ranks, (b) attributions
+    normalised to sum to 1 in absolute value, and (c) the KernelSHAP arm,
+    which explains the log-odds of all four models on one scale.
+  Status: follows the method's own exactness condition; mismatch handled.
+
+D-13  Interventional (marginal) Shapley values with real training rows as
+      background, not conditional values and not the SMOTE distribution
+  Evidence: Janzing et al. 2020 (AISTATS) [K] and Chen et al. 2020 [V]:
+    interventional values are "true to the model", which is the question
+    here (what did THIS model use). Aas et al. 2021 [V] show conditional
+    values are preferable when the aim is to be true to the data, and that
+    marginal values evaluate the model on unrealistic combinations when
+    features are correlated.
+  Limitation: with correlated features (four blood-pressure columns) the
+    interventional choice splits credit among them. Handled by grouping
+    (protocol 4.3), following Aas et al.'s grouped-Shapley proposal.
+  Status: supported; limitation handled.
+
+D-14  Background set: 100 real training rows, fixed; sensitivity to size
+  Evidence: Yuan et al. 2022 (arXiv 2204.11351) [A]: on MIMIC-III, SHAP
+    values and rankings fluctuate with the random background sample, the
+    fluctuation falls as background size grows, and top and bottom ranks are
+    more stable than middle ranks.
+  Empirical backing required: base-model explanations are recomputed with
+    several different background draws and with 50 / 100 / 200 rows; the
+    spread is reported as part of the explainer noise floor. [E, Phase 5]
+  Status: literature says the choice matters, so it is measured.
+
+D-15  Integrated Gradients: mean-of-background baseline, 256 steps;
+      Expected Gradients: every background row as baseline, 16 steps each
+  Evidence: Sundararajan et al. 2017 (ICML) [K]: IG with completeness check;
+    Sturmfels et al. 2020 [K] and Haug et al. 2021 [V]: baseline choice
+    changes attributions on tabular data and the zero vector is a poor
+    default. Erion et al. 2021 (Nat Mach Intell) [K]: Expected Gradients
+    removes the single-baseline choice by averaging over the data.
+  Check [E, Framingham base MLP]: IG completeness error (max over 500
+    patients) is 0.011 at 64 steps, 0.0035 at 256, 0.0006 at 1,024. 256 steps
+    chosen: error about 0.4% of the mean attribution total. Expected
+    Gradients (100 baselines x 16 steps): max error 0.005, about 0.7%.
+  Status: supported; verified numerically.
+
+D-16  Own implementations for linear SHAP, IG and Expected Gradients
+  Reason: each is a few lines and can be verified exactly (additivity /
+    completeness), which avoids version-specific library behaviour.
+  Check [E, results/framingham/explainer_checks.txt]: additivity error is
+    5e-07 for linear SHAP and 2e-06 for XGBoost TreeSHAP.
+  Known imperfection: random-forest interventional TreeSHAP (shap 0.52) has
+    mean additivity error 0.0006 and maximum 0.0095 on the probability scale,
+    against a mean attribution total of 0.18 (0.3% on average, 5% worst
+    case). Same result with 32- and 64-bit inputs. Cause not established.
+    It is reported, and RF results are also available through KernelSHAP.
+  Status: defensible because verified, not because of authority.
+
+--------------------------------------------------------------------------------
+D. METRICS
+--------------------------------------------------------------------------------
+
+D-17  Agreement metrics: top-k overlap (k = 3, 5), rank correlation, and
+      rank-biased overlap; ALWAYS reported against a chance baseline
+  Evidence: Krishna et al. 2022 [V] define feature agreement and rank
+    agreement for explanations. Nogueira, Sechidis & Brown 2018 (JMLR
+    18(174)) [A]: a stability measure should be corrected for chance, among
+    five required properties; raw overlap measures are not. Webber, Moffat &
+    Zobel 2010 (ACM TOIS) [A]: rank-biased overlap weights top ranks more
+    and handles the tail gracefully. Hwang et al. 2026 [V]: magnitude-based
+    metrics can hide rank instability; use randomised null baselines.
+  Choice: report raw top-k Jaccard (comparable with Krishna and the draft)
+    together with its expected value under random rankings, and a
+    chance-corrected version (observed - expected) / (1 - expected).
+  Status: supported.
+
+D-18  Performance: AUC with bootstrap CI, Brier score, calibration slope and
+      calibration-in-the-large
+  Evidence: Van Calster et al. 2019 (BMC Med) [A]; TRIPOD+AI, Collins et al.
+    2024 (BMJ) [V].
+  Status: supported.
+
+D-19  Global importance = mean absolute attribution over patients
+  Evidence: Lundberg et al. 2020 [K]. Phase 2 showed this is a POPULATION
+    measure, to be compared with attributable risk, not with per-person
+    odds ratios. [E, results/reference_validation_report.txt]
+  Status: supported; interpretation fixed by our own check.
+
+D-20  Decision threshold for "near the threshold" analysis
+  Framingham: 20% ten-year risk. Evidence: the high-risk category used with
+    Framingham risk scores (D'Agostino 2008 [A]; ATP III [K]).
+  BRFSS: no clinical threshold exists for a prevalence model; the outcome
+    prevalence is used and labelled as a convention.
+  Sensitivity: prevalence threshold also run on Framingham.
+  Status: Framingham supported; BRFSS is a convention, declared.
+
+--------------------------------------------------------------------------------
+E. OPEN ITEMS
+--------------------------------------------------------------------------------
+  - D-06 and D-14 are conditional on empirical checks not yet run.
+  - Decisions for KernelSHAP settings, faithfulness, the noise model and the
+    variance decomposition will be added before those phases start.

@@ -11,3 +11,7 @@ kaggle.json
 
 # OS
 .DS_Store
+# Large generated artefacts
+*.joblib
+*.npz
+results/*/variants/

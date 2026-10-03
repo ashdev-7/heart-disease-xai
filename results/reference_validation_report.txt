@@ -1,0 +1,84 @@
+==============================================================================
+PHASE 2 - REFERENCE CONSTRUCTION AND VALIDATION
+==============================================================================
+
+--- D4  Does the published equation work on this data? ------------------
+Eligible (age 30-74, no prior stroke): 4215 of 4240
+Complete on the 7 equation inputs     : 4146 (dropped 69 with missing BMI or BPMeds)
+CHD events in this set                : 615 (14.8%)
+
+AUC of D'Agostino BMI equation vs TenYearCHD: 0.718 (95% CI 0.695-0.739)
+  men   n=1791  AUC 0.712 (95% CI 0.683-0.739)   [published C for general CVD: 0.763 (lipid model)]
+  women n=2355  AUC 0.712 (95% CI 0.681-0.742)   [published C for general CVD: 0.793 (lipid model)]
+
+Mean predicted 10-year CVD risk 0.124 vs observed 10-year CHD rate 0.148 (ratio observed/predicted 1.20)
+Calibration by tenth of predicted risk (predicted = all CVD, observed = CHD only):
+       n  predicted  observed
+dec                          
+0    415      0.021     0.034
+1    415      0.035     0.046
+2    414      0.049     0.070
+3    415      0.064     0.113
+4    414      0.080     0.082
+5    415      0.101     0.116
+6    414      0.128     0.188
+7    415      0.165     0.214
+8    414      0.221     0.251
+9    415      0.373     0.369
+Rank agreement between predicted and observed across tenths: Kendall tau 0.96
+
+STOP RULE 2 (AUC >= 0.60): PASS
+
+Refit of the same model form on this data (logistic, sexes pooled with sex term):
+          refit   lo95   hi95  published_avg_of_sexes
+ln_age    3.209  2.602  3.817                   2.917
+ln_bmi    0.183 -0.445  0.811                   0.652
+ln_sbp    2.397  1.771  3.023                   2.334
+treated   0.409 -0.025  0.843                     NaN
+smoker    0.393  0.200  0.586                   0.664
+diabetes  0.710  0.271  1.149                   0.655
+male      0.605  0.417  0.792                     NaN
+(published values are Cox log hazard ratios for all CVD; the refit is a logistic model for CHD,
+ so sizes are not expected to match exactly. Signs and rough ordering are the check.)
+
+--- R1  References ------------------------------------------------------
+Ref-A: exact Shapley values of the BMI equation (logit of 10-year risk), 4146 patients,
+       200 background rows, 128 coalitions. Max additivity error 9.44e-16
+
+Framingham references (blank = group not covered by that reference):
+                RefA_mean_abs_shap  RefA_share  RefB_beta_x_SD  RefB_share  RefC_ln_OR  RefCp_PAR_pct  RefA_rank  RefB_rank  RefC_rank  RefCp_rank
+Age                          0.456       0.278           0.466       0.323         NaN            NaN        1.0        1.0        NaN         NaN
+Sex                          0.381       0.232             NaN         NaN         NaN            NaN        2.0        NaN        NaN         NaN
+Blood pressure               0.332       0.202           0.368       0.255       0.647           17.9        4.0        2.0        4.0         3.0
+Smoking                      0.353       0.215           0.296       0.205       1.054           35.7        3.0        3.0        2.0         2.0
+Glycaemia                    0.037       0.022           0.099       0.068       0.863            9.9        6.0        5.0        3.0         4.0
+Adiposity                    0.081       0.049             NaN         NaN         NaN            NaN        5.0        NaN        NaN         NaN
+Lipids                         NaN         NaN           0.216       0.150       1.179           49.2        NaN        4.0        1.0         1.0
+
+Ref-A: equation inputs are measured values, importance = mean |Shapley| over patients.
+Ref-B: lipid-model coefficient x SD of the variable in this data (HDL absent, sexes averaged).
+Ref-C: INTERHEART ln(odds ratio) for a yes/no exposure. Ordinal use only; smoking uses
+       current vs never (2.87) because Framingham records current smoking.
+
+--- R2  Agreement among references (ceiling) ---------------------------
+  RefA vs RefB: 4 shared groups ['Age', 'Blood pressure', 'Smoking', 'Glycaemia'], Kendall tau 0.67
+  RefA vs RefC: 3 shared groups ['Blood pressure', 'Smoking', 'Glycaemia'], Kendall tau 0.33
+  RefB vs RefC: 4 shared groups ['Blood pressure', 'Smoking', 'Glycaemia', 'Lipids'], Kendall tau -0.33
+  RefA vs RefCp: 3 shared groups ['Blood pressure', 'Smoking', 'Glycaemia'], Kendall tau 1.00
+  RefB vs RefCp: 4 shared groups ['Blood pressure', 'Smoking', 'Glycaemia', 'Lipids'], Kendall tau 0.00
+  RefA vs RefB cosine similarity of importance shares on shared groups: 0.990
+  With 3-4 shared groups a rank correlation can only take a few values; read the table, not tau.
+
+--- Phase 2B  BRFSS reference (secondary) -------------------------------
+Ref-D (INTERHEART |ln OR| mapped to BRFSS items):
+              abs_ln_OR  rank_OR  PAR_pct  rank_PAR  match
+HighChol          1.179      1.0     49.2       1.0  proxy
+MentHlth          0.982      2.0     32.5       3.0  proxy
+Diabetes          0.863      3.0      9.9       8.0  exact
+Smoker            0.713      4.0     35.7       2.0  exact
+HighBP            0.647      5.0     17.9       4.0  exact
+Fruits            0.357      6.5     13.7       5.5  exact
+Veggies           0.357      6.5     13.7       5.5  exact
+PhysActivity      0.151      8.0     12.2       7.0  proxy
+Ref-E (D'Agostino ordering on shared items, ordinal only): Age > HighBP > Smoker > Diabetes;
+       Sex and BMI present in the equation, HighChol from the lipid model.
