@@ -1,0 +1,30 @@
+==============================================================================
+BRFSS - WHERE THE ATTRIBUTION GOES, BY FEATURE CLASS
+==============================================================================
+Classes: Referenced: HighBP, HighChol, BMI, Smoker, Diabetes, PhysActivity, Fruits, Veggies, MentHlth, Sex, Age; Downstream: GenHlth, PhysHlth, DiffWalk; Prior disease: Stroke; Access / social: CholCheck, AnyHealthcare, NoDocbcCost, Education, Income; Unreferenced: HvyAlcoholConsump
+
+model   explainer  Referenced  Downstream  Prior disease  Access / social  Unreferenced  downstream_boot_lo  downstream_boot_hi  tau_PAR  tau_lnOR
+   lr linear_shap       0.711       0.197          0.030            0.054         0.009               0.189               0.202    0.255     0.255
+   rf   tree_shap       0.653       0.246          0.064            0.036         0.001               0.237               0.254    0.327     0.327
+  xgb   tree_shap       0.683       0.200          0.038            0.074         0.005               0.186               0.206    0.327     0.327
+  mlp          ig       0.697       0.192          0.043            0.062         0.006               0.181               0.201    0.327     0.327
+  mlp          eg       0.707       0.191          0.033            0.062         0.007               0.181               0.201    0.327     0.327
+   lr kernel_shap       0.724       0.201          0.030            0.040         0.006                 NaN                 NaN    0.400     0.400
+   rf kernel_shap       0.703       0.223          0.039            0.035         0.000                 NaN                 NaN    0.327     0.327
+  xgb kernel_shap       0.701       0.200          0.039            0.057         0.004                 NaN                 NaN    0.400     0.400
+  mlp kernel_shap       0.725       0.192          0.035            0.044         0.004                 NaN                 NaN    0.327     0.327
+
+downstream_boot_lo/hi: 2.5th-97.5th percentile of the downstream share across 50 bootstrap models.
+tau_PAR / tau_lnOR: Kendall tau between mean |attribution| and INTERHEART attributable risk /
+odds ratio on the 8 mapped items (secondary; see protocol 4.7).
+
+Top five features:
+  lr  linear_shap  Age > GenHlth > Sex > HighChol > HighBP
+  rf  tree_shap    Age > GenHlth > HighBP > Sex > HighChol
+  xgb tree_shap    Age > GenHlth > Sex > HighBP > HighChol
+  mlp ig           Age > Sex > GenHlth > HighChol > HighBP
+  mlp eg           Age > GenHlth > Sex > HighChol > HighBP
+  lr  kernel_shap  Age > GenHlth > Sex > HighChol > HighBP
+  rf  kernel_shap  Age > GenHlth > HighBP > HighChol > Sex
+  xgb kernel_shap  Age > GenHlth > HighBP > Sex > HighChol
+  mlp kernel_shap  Age > GenHlth > Sex > HighChol > HighBP

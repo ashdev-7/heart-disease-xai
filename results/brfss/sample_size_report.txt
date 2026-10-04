@@ -1,0 +1,39 @@
+==============================================================================
+SAMPLE-SIZE EXPERIMENT (BRFSS, exploratory, D-28)
+==============================================================================
+30 bootstraps per size, 200 explained patients, same background rows and explainer settings.
+Chance level of top-3 Jaccard: 0.090
+
+Events per predictor at each training size:
+n
+3392       15.2
+7580       34.0
+30000     134.5
+202944    910.2
+
+Per-patient top-3 agreement across bootstrap retrains, by training size:
+n                  3392    7580    30000   202944
+model explainer                                  
+lr    linear_shap   0.750   0.746   0.868   0.957
+mlp   eg            0.667   0.670   0.817   0.888
+      ig            0.635   0.634   0.791   0.884
+rf    tree_shap     0.615   0.702   0.738   0.859
+xgb   tree_shap     0.585   0.634   0.736   0.852
+
+Mean test AUC across the bootstrap models:
+n      3392    7580    30000   202944
+model                                
+lr      0.837   0.844   0.845   0.847
+mlp     0.830   0.838   0.846   0.848
+rf      0.828   0.833   0.841   0.847
+xgb     0.834   0.840   0.845   0.850
+
+Prediction instability (mean SD of predicted risk across bootstraps):
+n      3392    7580    30000   202944
+model                                
+lr     0.0198  0.0133  0.0075  0.0027
+mlp    0.0238  0.0210  0.0117  0.0063
+rf     0.0208  0.0210  0.0150  0.0073
+xgb    0.0224  0.0220  0.0152  0.0093
+
+Full detail with confidence intervals: results/brfss/sample_size.csv

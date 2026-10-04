@@ -1,0 +1,36 @@
+==============================================================================
+SMOTE SENSITIVITY ARM   dataset: framingham
+==============================================================================
+Training rows 3392 -> 5754 after SMOTE (positives 515 -> 2877).
+Same hyperparameters as the no-resampling models; background and explained patients unchanged.
+
+Performance and calibration on the untouched test set:
+model  auc_none  auc_smote  mean_pred_none  mean_pred_smote  prevalence  slope_none  slope_smote  citl_none  citl_smote
+   lr     0.702      0.697           0.149            0.428       0.152       0.787        0.689      0.029      -1.710
+   rf     0.665      0.649           0.150            0.329       0.152       0.690        0.588      0.022      -1.147
+  xgb     0.684      0.686           0.149            0.396       0.152       0.833        0.815      0.030      -1.458
+  mlp     0.696      0.676           0.151            0.396       0.152       0.748        0.533      0.007      -1.607
+
+mean_pred should equal prevalence; slope should be 1; citl (calibration-in-the-large) should be 0.
+
+Per-patient agreement between the SMOTE-model explanation and the no-resampling explanation:
+model   explainer  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+   lr linear_shap 0.845    0.825    0.866           0.823 0.766     0.885                0.002
+   rf   tree_shap 0.489    0.467    0.511           0.413 0.504     0.704                0.278
+  xgb   tree_shap 0.595    0.573    0.619           0.536 0.597     0.803                0.104
+  mlp          ig 0.528    0.505    0.550           0.458 0.558     0.740                0.214
+  mlp          eg 0.596    0.572    0.620           0.537 0.572     0.710                0.160
+
+(chance level of top-3 Jaccard: 0.129)
+
+Global top-5 features:
+  lr  linear_shap  none : age > cigsPerDay > sysBP > male > totChol
+                   SMOTE: age > cigsPerDay > male > sysBP > totChol
+  rf  tree_shap    none : age > sysBP > cigsPerDay > male > glucose
+                   SMOTE: age > sysBP > cigsPerDay > education > male
+  xgb tree_shap    none : age > sysBP > cigsPerDay > male > glucose
+                   SMOTE: age > cigsPerDay > male > sysBP > education
+  mlp ig           none : age > cigsPerDay > sysBP > male > totChol
+                   SMOTE: age > cigsPerDay > sysBP > male > heartRate
+  mlp eg           none : age > cigsPerDay > sysBP > male > totChol
+                   SMOTE: age > cigsPerDay > sysBP > male > heartRate
