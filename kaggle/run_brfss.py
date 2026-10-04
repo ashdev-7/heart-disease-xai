@@ -14,10 +14,18 @@ import time
 PINS = ["scikit-learn==1.8.0", "xgboost==3.1.3", "shap==0.52.0", "numpy==2.2.6",
         "pandas==2.3.2", "scipy==1.16.3", "statsmodels==0.14.6"]
 WORK = "/kaggle/working"
-hits = glob.glob("/kaggle/input/**/src/common.py", recursive=True)
-assert hits, "bundle dataset not attached"
-BUNDLE = os.path.dirname(os.path.dirname(hits[0]))
-print("bundle:", BUNDLE, flush=True)
+
+
+def find(pattern):
+    hits = glob.glob(f"/kaggle/input/**/{pattern}", recursive=True)
+    assert hits, f"{pattern} not found in attached datasets"
+    return hits[0]
+
+
+SRC = os.path.dirname(find("common.py"))
+DATA_DIR = os.path.dirname(find("heart_disease_health_indicators_BRFSS2015.csv"))
+HP = find("hyperparameters.json")
+print("src:", SRC, "| data:", DATA_DIR, "| hp:", HP, flush=True)
 
 
 def sh(cmd, check=True):
@@ -30,9 +38,10 @@ def sh(cmd, check=True):
 
 
 sh(f"{sys.executable} -m pip install --quiet " + " ".join(PINS), check=False)
-shutil.copytree(f"{BUNDLE}/src", f"{WORK}/src", dirs_exist_ok=True)
-shutil.copytree(f"{BUNDLE}/seed_results", f"{WORK}/results", dirs_exist_ok=True)
-os.environ.update(XAI_DATA=f"{BUNDLE}/data", XAI_OUT=f"{WORK}/results", XAI_REUSE_HP="1")
+shutil.copytree(SRC, f"{WORK}/src", dirs_exist_ok=True)
+os.makedirs(f"{WORK}/results/brfss", exist_ok=True)
+shutil.copy(HP, f"{WORK}/results/brfss/hyperparameters.json")
+os.environ.update(XAI_DATA=DATA_DIR, XAI_OUT=f"{WORK}/results", XAI_REUSE_HP="1")
 sh(f"{sys.executable} -c \"import sklearn,xgboost,shap,numpy,torch,sys;"
    "print('python',sys.version.split()[0],'sklearn',sklearn.__version__,'xgboost',xgboost.__version__,"
    "'shap',shap.__version__,'numpy',numpy.__version__,'torch',torch.__version__)\"")
