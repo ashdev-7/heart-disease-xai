@@ -168,8 +168,9 @@ def explain_tree(model, X, Xbg):
     """Interventional TreeSHAP. XGBoost: log-odds margin. Random forest: probability
     (the scale on which a forest is additive; see Decision Register D-12)."""
     import shap
-    ex = shap.TreeExplainer(model.est, data=Xbg, feature_perturbation="interventional",
-                            model_output="raw")
+    # A plain array is silently subsampled to 100 rows by shap; the masker keeps all rows (D-27).
+    ex = shap.TreeExplainer(model.est, data=shap.maskers.Independent(Xbg, max_samples=len(Xbg)),
+                            feature_perturbation="interventional", model_output="raw")
     sv = ex.shap_values(X, check_additivity=False)
     if isinstance(sv, list):
         sv = sv[1]

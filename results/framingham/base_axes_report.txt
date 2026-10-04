@@ -109,3 +109,10 @@ lr linear_shap, 200 rows 0.876    0.842    0.909           0.858 0.929     0.919
         mlp eg, 200 rows 0.899    0.863    0.931           0.884 0.915     0.924                 0.00
 Each row: agreement between the explanation with the fixed 100-row background and
 explanations with a different random background of the stated size.
+
+--- D-27 correction: tree explainers with a 200-row background, all 200 rows used ---
+The earlier 'xgb tree_shap, 200 rows' line used only 100 of the 200 rows (shap default cap)
+and must be read as another 100-row draw. Corrected values:
+                              item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman
+xgb tree_shap, 200 rows (all used) 0.947    0.925    0.966           0.939 0.905     0.956
+ rf tree_shap, 200 rows (all used) 0.827    0.790    0.867           0.802 0.822     0.940

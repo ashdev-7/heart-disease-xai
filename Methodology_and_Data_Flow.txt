@@ -589,6 +589,13 @@ Planned outputs
       settings, faithfulness metric details, noise model implementation,
       variance decomposition model.
 
+  2026-10-04  amendments after freeze (see Decision Register D-26 to D-31)
+    - BRFSS run moved to Kaggle (memory); versions verified.
+    - Tree explainer background cap fixed (D-27).
+    - Background draw added as a source of variation (D-30).
+    - Variance decomposition is one-facet-at-a-time, not fully crossed.
+    - Sample-size experiment on BRFSS added, exploratory (D-28).
+
   Still open at freeze
     - Full text of Warren 2010 and Andresen 2003 not read (abstracts only).
     - (superseded) Read Warren 2010 Table for the exact office CVs (PMC2930221, free).

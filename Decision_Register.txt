@@ -318,18 +318,75 @@ D-26  Two computing environments: Framingham on the laptop, BRFSS on Kaggle
     AUC to four decimals for LR (0.8468) and RF (0.8481); XGBoost differs
     by 0.0002 (0.8511 vs 0.8509) and MLP by 0.0001. Hyperparameters and
     seeds were identical.
-  NOT verified: the library versions actually installed on Kaggle. The
-    runner pins them and prints them, but the downloaded log file was
-    empty. They are visible near the top of the log on the Kaggle page and
-    must be copied into the paper's methods before submission.
-  Status: declared; version line still to be recorded.
+  Verified 2026-10-04 from the Kaggle run log (retrieved through the API):
+    python 3.13.15, scikit-learn 1.8.0, xgboost 3.1.3, shap 0.52.0,
+    numpy 2.2.6, torch 2.11.0+cpu. Laptop: python 3.13.7, same
+    scikit-learn, xgboost, shap and numpy; torch 2.9.1+cpu.
+    So every pinned library matched. torch was not pinned and differs,
+    which accounts for the 0.0001 AUC difference of the MLP. The XGBoost
+    difference of 0.0002 occurs with identical versions and is attributed
+    to hardware / thread count (4 cores vs 12); not investigated further.
+  Status: verified.
 
 D-27  Correction to the background-sensitivity test (D-14)
-  The shap tree explainer subsamples any background above 100 rows to 100
-  (warning seen in the Kaggle log). So the "200 rows" lines for TreeSHAP
-  are in fact another 100-row draw. The 200-row comparison is valid only
-  for linear SHAP, IG and Expected Gradients. Applies to both datasets.
-  Status: caveat recorded; table must be labelled accordingly.
+  Verified 2026-10-04 [E]: given a plain 200-row array, shap's tree
+  explainer keeps 100 rows (explainer.data has shape (100, F)) and warns;
+  given shap.maskers.Independent(data, max_samples=200) it keeps all 200 and
+  its expected value equals the mean model output over the 200 rows.
+  Fix: src/common.py now always passes the masker with max_samples = number
+  of background rows. Results with the standard 100-row background are
+  unaffected. The 200-row tree lines were recomputed
+  (src/fix_background_200.py) and appended to both base_axes reports:
+      Framingham  XGB 0.947, RF 0.827     BRFSS  XGB 0.778, RF 0.870
+  (top-3 agreement with the fixed 100-row explanation; 100 patients).
+  Status: verified and corrected.
+
+D-28  Sample-size experiment on BRFSS (added after seeing the results)
+  Question: is the Framingham-BRFSS gap in bootstrap stability a
+    sample-size effect?
+  Design: fixed stratified subsamples of the BRFSS training set of size
+    3,392 (Framingham's n; about 15 events per predictor), 7,580 (about 34
+    events per predictor, Framingham's ratio) and 30,000 (about 135);
+    full size already run (about 900). At each size: hyperparameters
+    re-tuned by the same 5-fold procedure, 30 bootstraps of the subsample,
+    native explainers, 200 explained patients, same background rows.
+  Evidence: van der Ploeg et al. 2014 [V] studied stability as a function
+    of events per variable by subsampling; Riley & Collins 2023 [V] tie
+    instability to development sample size. Matching on events per
+    predictor as well as on n follows Riley et al. 2020 [A].
+  B = 30 is justified empirically: half-sample checks changed the scores
+    by 0.02 or less on Framingham and 0.003 on BRFSS. [E]
+  Limits: one subsample per size; this is a post-hoc experiment, labelled
+    exploratory in the paper.
+  Status: exploratory, declared.
+
+D-29  SMOTE arm: base models only, SMOTE (k = 5) on the preprocessed training
+      set, same hyperparameters as the no-resampling models
+  Evidence: Chawla et al. 2002 [K]; van den Goorbergh et al. 2022 [V]
+    (miscalibration); Rai et al. 2025 [V] (explanations change).
+  Not re-tuned, so the comparison isolates the resampling step. Declared.
+  Reported: calibration, per-patient top-3 agreement with the no-resampling
+    explanation, and plausibility (Framingham).
+  Status: supported.
+
+D-30  Variance decomposition as run (amends protocol 7, A1)
+  One facet at a time, not a fully crossed design: for each source (model
+    class, explainer, bootstrap, seed, measurement noise, background draw)
+    the other sources are held at their base setting. Per feature, a
+    one-way random-effects ANOVA over patients gives between-patient and
+    within-patient (facet) variance of the normalised attribution share;
+    components are summed over features. Reported: ICC(1,1) =
+    between / (between + within), i.e. the reliability of a single
+    explanation with respect to that source (Shrout & Fleiss 1979 [A]).
+  Background draw is added as a facet (found to matter; Yuan et al. 2022
+    [A]). Interactions between sources are NOT estimated. Declared.
+  Status: established method, simplified design, declared.
+
+D-31  Linking analysis: Spearman correlation across patients between
+      reliability scores and prediction properties, with bootstrap CIs
+  No specific precedent found; standard rank correlation. Many
+  correlations are computed, so they are descriptive, not tests.
+  Status: descriptive, declared.
 
 --------------------------------------------------------------------------------
 F. OPEN ITEMS
