@@ -308,6 +308,29 @@ D-25  Rank-biased overlap persistence p = 0.9
     default. With 15-21 features this weights the top 3-5 most.
   Status: conventional; chance level computed for our feature counts.
 
+D-26  Two computing environments: Framingham on the laptop, BRFSS on Kaggle
+  Reason: the laptop has 7.6 GB RAM and BRFSS jobs were stopped twice for
+    low memory. All BRFSS numbers (base models, 60 variants, all base-model
+    tests) come from one Kaggle CPU run with the tuned hyperparameters
+    carried over. The laptop's BRFSS base models and its single variant
+    were discarded (kept in results/brfss_local_discarded, not used).
+  Reproducibility check [E]: laptop and Kaggle base models agree on test
+    AUC to four decimals for LR (0.8468) and RF (0.8481); XGBoost differs
+    by 0.0002 (0.8511 vs 0.8509) and MLP by 0.0001. Hyperparameters and
+    seeds were identical.
+  NOT verified: the library versions actually installed on Kaggle. The
+    runner pins them and prints them, but the downloaded log file was
+    empty. They are visible near the top of the log on the Kaggle page and
+    must be copied into the paper's methods before submission.
+  Status: declared; version line still to be recorded.
+
+D-27  Correction to the background-sensitivity test (D-14)
+  The shap tree explainer subsamples any background above 100 rows to 100
+  (warning seen in the Kaggle log). So the "200 rows" lines for TreeSHAP
+  are in fact another 100-row draw. The 200-row comparison is valid only
+  for linear SHAP, IG and Expected Gradients. Applies to both datasets.
+  Status: caveat recorded; table must be labelled accordingly.
+
 --------------------------------------------------------------------------------
 F. OPEN ITEMS
 --------------------------------------------------------------------------------

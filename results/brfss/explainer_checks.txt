@@ -1,0 +1,16 @@
+=== brfss: tuning (5-fold CV log loss on base training set, n=202944) ===
+  reusing tuned hyperparameters from hyperparameters.json: {'lr': {'C': 0.1}, 'rf': {'n_estimators': 300, 'min_samples_leaf': 50, 'max_depth': 12}, 'xgb': {'n_estimators': 300, 'max_depth': 4, 'learning_rate': 0.05}, 'mlp': {'epochs': 18, 'batch': 1024}}
+
+=== brfss: base models ===
+model    auc  auc_lo  auc_hi  brier  cal_slope  cal_in_large  mean_pred  prevalence
+   lr 0.8468  0.8414  0.8517 0.0708     0.9857        0.0049     0.0939      0.0942
+   rf 0.8481  0.8427  0.8528 0.0705     1.1850        0.0047     0.0939      0.0942
+  xgb 0.8509  0.8457  0.8555 0.0700     0.9908        0.0077     0.0937      0.0942
+  mlp 0.8486  0.8432  0.8534 0.0705     1.1029       -0.0292     0.0963      0.0942
+
+=== brfss: explainer exactness checks on the base models (max abs error) ===
+  lr  linear_shap additivity      4.85e-07
+  xgb tree_shap additivity (margin)5.25e-06
+  rf  tree_shap additivity (prob)  1.39e-04
+  mlp IG completeness              max 1.31e-03, relative to mean |f(x)-f(b)| 9.66e-04
+  mlp EG completeness              max 3.42e-03, relative to mean |f(x)-E f(b)| 2.52e-03
