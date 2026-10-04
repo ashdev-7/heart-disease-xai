@@ -15,3 +15,7 @@ kaggle.json
 *.joblib
 *.npz
 results/*/variants/
+
+# Kaggle upload bundle (contains data)
+kaggle/bundle/
+kaggle/kernel/

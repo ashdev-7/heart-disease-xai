@@ -16,9 +16,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
+import os
+
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data"
-OUT = ROOT / "results"
+# Paths can be redirected (e.g. on Kaggle: read-only input, writable /kaggle/working).
+DATA = Path(os.environ.get("XAI_DATA", ROOT / "data"))
+OUT = Path(os.environ.get("XAI_OUT", ROOT / "results"))
 SEED = 42
 N_EXPLAIN = 500
 N_BACKGROUND = 100

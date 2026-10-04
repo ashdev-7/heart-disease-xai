@@ -8,6 +8,7 @@ Outputs under results/<dataset>/ :
   variants/<variant>.npz   margins, test AUCs and native attributions per model
 """
 import json
+import os
 import sys
 import time
 import warnings
@@ -102,7 +103,11 @@ if STAGE == "base":
     f = open(RES / "explainer_checks.txt", "w", encoding="utf-8")
     log(f"=== {DS}: tuning (5-fold CV log loss on base training set, n={len(ytr)}) ===", f)
     hps = {}
-    for name, grid in GRIDS.items():
+    reuse = RES / "hyperparameters.json"
+    if os.environ.get("XAI_REUSE_HP") == "1" and reuse.exists():
+        hps = json.loads(reuse.read_text())
+        log(f"  reusing tuned hyperparameters from {reuse.name}: {hps}", f)
+    for name, grid in ({} if hps else GRIDS).items():
         scores = []
         for hp in grid:
             t = time.time()
@@ -113,13 +118,17 @@ if STAGE == "base":
         log(f"  -> {name} chosen {hps[name]}", f)
 
     # MLP: epoch count from early stopping on a 15% validation split of base training
-    tr, va = train_test_split(np.arange(len(ytr)), test_size=0.15, stratify=ytr, random_state=SEED)
-    prep = Prep().fit(d["Xtr"].iloc[tr])
-    probe = MLP(epochs=100, batch=BATCH, seed=SEED).fit(
-        prep.transform(d["Xtr"].iloc[tr]), ytr[tr], prep.transform(d["Xtr"].iloc[va]), ytr[va])
-    hps["mlp"] = dict(epochs=int(probe.best_epoch), batch=BATCH)
-    log(f"  -> mlp epochs {probe.best_epoch} (early stopping, patience 10)", f)
-    (RES / "hyperparameters.json").write_text(json.dumps(hps, indent=2))
+    if "mlp" in hps:
+        tr = None
+    else:
+        tr, va = train_test_split(np.arange(len(ytr)), test_size=0.15, stratify=ytr, random_state=SEED)
+    if tr is not None:
+        prep = Prep().fit(d["Xtr"].iloc[tr])
+        probe = MLP(epochs=100, batch=BATCH, seed=SEED).fit(
+            prep.transform(d["Xtr"].iloc[tr]), ytr[tr], prep.transform(d["Xtr"].iloc[va]), ytr[va])
+        hps["mlp"] = dict(epochs=int(probe.best_epoch), batch=BATCH)
+        log(f"  -> mlp epochs {probe.best_epoch} (early stopping, patience 10)", f)
+        (RES / "hyperparameters.json").write_text(json.dumps(hps, indent=2))
 
     log(f"\n=== {DS}: base models ===", f)
     prep, models = fit_variant(hps, np.arange(len(ytr)), SEED)
