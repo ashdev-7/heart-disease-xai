@@ -684,3 +684,24 @@ S9 D'Agostino BMI equation on the SAME held-out test set as the trained models: 
    mlp  AUC on the same 835 patients 0.696; model minus equation -0.005 (95% CI -0.027 to +0.016)
    xgb  AUC on the same 835 patients 0.683; model minus equation -0.018 (95% CI -0.043 to +0.009)
    rf   AUC on the same 835 patients 0.665; model minus equation -0.036 (95% CI -0.069 to -0.001)
+
+==============================================================================
+AUDIT 4 - SETTINGS FIXED BY CHOICE (Framingham base models, 500 patients)
+==============================================================================
+
+H1 Random forest with 1,000 trees instead of 300 (same leaf size and depth)
+  1,000 trees: test AUC 0.664 (used setting 0.665); top-3 agreement with the used setting 0.897 (95% CI 0.879-0.914); seed-to-seed agreement for this model 0.815
+
+H2 XGBoost with learning rate 0.1 and no row/column subsampling (depth and trees re-chosen by 5-fold CV)
+  chosen: depth 2, 50 trees
+  learning rate 0.1, no subsampling: test AUC 0.686 (used setting 0.684); top-3 agreement with the used setting 0.856 (95% CI 0.836-0.877); seed-to-seed agreement for this model 0.869
+
+H3 MLP with hidden layers 128-64 instead of 64-32 (same optimiser settings and epochs)
+  128-64, Expected Gradients: test AUC 0.695 (used setting 0.696); top-3 agreement with the used setting 0.908 (95% CI 0.891-0.925); seed-to-seed agreement for this model 0.903
+  128-64, Integrated Gradients: test AUC 0.695 (used setting 0.696); top-3 agreement with the used setting 0.863 (95% CI 0.843-0.882); seed-to-seed agreement for this model 0.848
+
+H4 Number of seeds: per-patient seed agreement from the first 5 seeds vs all 10
+  rf tree_shap: 5 seeds 0.807, 10 seeds 0.815
+  xgb tree_shap: 5 seeds 0.868, 10 seeds 0.869
+  mlp ig: 5 seeds 0.848, 10 seeds 0.848
+  mlp eg: 5 seeds 0.906, 10 seeds 0.903
