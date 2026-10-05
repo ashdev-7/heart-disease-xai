@@ -1,0 +1,14 @@
+==============================================================================
+LINKING ANALYSIS (A2)   dataset: brfss   500 patients
+==============================================================================
+Spearman correlation across patients. boot = per-patient top-3 agreement across bootstrap
+retrains; noise = top-3 agreement clean vs re-measured; risk_sd = SD of predicted risk across
+bootstraps; dist = |predicted risk - 0.094|; faith = top-3 / random-3 prediction-gap ratio.
+With 500 patients a correlation has a standard error of about 0.045.
+
+model   explainer  boot_vs_noise  boot_vs_risk_sd  boot_vs_dist  boot_vs_risk  noise_vs_dist  noise_vs_risk  boot_vs_faith  boot_low_risk_third  boot_high_risk_third
+   lr linear_shap         -0.089           -0.252         0.075        -0.235          0.009          0.223          0.042                0.977                 0.959
+   rf   tree_shap          0.345           -0.032        -0.097        -0.017          0.010          0.012         -0.010                0.829                 0.811
+  xgb   tree_shap          0.373            0.250        -0.006         0.321         -0.002          0.172          0.159                0.756                 0.861
+  mlp          ig          0.008           -0.425         0.067        -0.361          0.026          0.219          0.008                0.939                 0.841
+  mlp          eg         -0.010           -0.418         0.094        -0.348          0.018          0.214          0.027                0.943                 0.846

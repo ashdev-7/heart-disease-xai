@@ -757,3 +757,30 @@ S17. PER-PATIENT LINKING                      (src/phase6_shares_linking.py)
   - Full texts of Warren 2010 and Andresen 2003.
   - Regenerating the Kaggle token.
 ================================================================================
+
+==============================================================================
+ADDENDUM 2026-10-06 - SECOND-DEGREE CHECKS (audit 4 extended, audit 5, seed-7 replication)
+==============================================================================
+D-37  Settings fixed by choice were re-checked on BOTH datasets (src/audit4_settings.py).
+      Forest size, network width and XGBoost learning rate move explanations about as much
+      as a seed. Two things move them more, at unchanged accuracy:
+        - MLP optimiser settings (lr 0.001, weight decay 0.0001, dropout 0.1):
+          top-3 agreement with the main model 0.74-0.81 Framingham, 0.63-0.79 BRFSS
+          (seed-to-seed 0.85-0.90 and 0.90-0.91);
+        - a wider search grid: XGBoost on Framingham (depth 1, 200 trees; 0.79 vs seed 0.87)
+          and random forest on BRFSS (leaf 25, depth 16; 0.91 vs seed 0.95).
+      Consequence: hyperparameter choice is a source of explanation variability that the
+      variance decomposition did not include. Reported in paper 4.11, 5.2, 6, Appendix A.
+D-38  Analysis settings re-checked from stored explanations (src/audit5_stored.py): number
+      of patients, number of bootstraps, k = 1..5, RBO persistence 0.8/0.9/0.95, pairing
+      scheme. The bootstrap-below-seed result holds under all of them on both datasets.
+      BRFSS day-count banding is not a free choice: kappa = 1 - change rate for any banding.
+D-39  Full replication with master seed 7 on both datasets (kaggle/run_replication.py;
+      results/replication_seed7/). Every qualitative result reproduced. Not reproduced
+      numerically: Framingham test AUC and calibration slope (split-dependent), Framingham
+      MLP stability figures (tuning chose 14 epochs instead of 62), Framingham background
+      ICC (0.91-0.94 vs 0.95-0.97). Reported in paper 4.14.
+Basis of the settings formerly labelled "our choice": common defaults (RF 300 trees, XGB
+learning rate 0.05 and subsampling 0.8, MLP 64-32 with dropout 0.2, top-3, RBO 0.9),
+compute budget (500 patients, background size, 10 seeds, 50/100 bootstraps, 20 noise draws,
+grid sizes), arbitrary (master seed 42). None derived from theory; defended by D-37 to D-39.

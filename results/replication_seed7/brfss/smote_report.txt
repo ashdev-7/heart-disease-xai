@@ -1,0 +1,36 @@
+==============================================================================
+SMOTE SENSITIVITY ARM   dataset: brfss
+==============================================================================
+Training rows 202944 -> 367660 after SMOTE (positives 19114 -> 183830).
+Same hyperparameters as the no-resampling models; background and explained patients unchanged.
+
+Performance and calibration on the untouched test set:
+model  auc_none  auc_smote  mean_pred_none  mean_pred_smote  prevalence  slope_none  slope_smote  citl_none  citl_smote
+   lr     0.851      0.850           0.095            0.344       0.094       1.019        0.904     -0.005      -2.302
+   rf     0.852      0.844           0.095            0.268       0.094       1.221        1.048     -0.004      -1.626
+  xgb     0.854      0.847           0.095            0.135       0.094       1.013        1.115     -0.007      -0.492
+  mlp     0.853      0.850           0.095            0.339       0.094       1.136        1.021     -0.015      -2.192
+
+mean_pred should equal prevalence; slope should be 1; citl (calibration-in-the-large) should be 0.
+
+Per-patient agreement between the SMOTE-model explanation and the no-resampling explanation:
+model   explainer  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+   lr linear_shap 0.942    0.928    0.956           0.936 0.961     0.981                0.000
+   rf   tree_shap 0.700    0.676    0.724           0.671 0.784     0.872                0.056
+  xgb   tree_shap 0.768    0.745    0.791           0.745 0.766     0.703                0.038
+  mlp          ig 0.697    0.674    0.720           0.667 0.783     0.868                0.050
+  mlp          eg 0.745    0.721    0.769           0.719 0.757     0.844                0.028
+
+(chance level of top-3 Jaccard: 0.090)
+
+Global top-5 features:
+  lr  linear_shap  none : Age > GenHlth > Sex > HighChol > HighBP
+                   SMOTE: Age > GenHlth > Sex > HighChol > HighBP
+  rf  tree_shap    none : Age > GenHlth > HighChol > Sex > HighBP
+                   SMOTE: Age > GenHlth > HighBP > Sex > HighChol
+  xgb tree_shap    none : Age > GenHlth > Sex > HighChol > HighBP
+                   SMOTE: Age > GenHlth > Sex > HighChol > HighBP
+  mlp ig           none : Age > Sex > GenHlth > HighChol > HighBP
+                   SMOTE: Age > GenHlth > Sex > HighChol > HighBP
+  mlp eg           none : Age > Sex > GenHlth > HighChol > HighBP
+                   SMOTE: Age > GenHlth > Sex > HighChol > HighBP

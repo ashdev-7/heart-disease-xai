@@ -1,0 +1,40 @@
+=== brfss: tuning (5-fold CV log loss on base training set, n=202944) ===
+  lr {'C': 0.001}  logloss 0.23929  (3s)
+  lr {'C': 0.01}  logloss 0.23893  (3s)
+  lr {'C': 0.1}  logloss 0.23892  (3s)
+  lr {'C': 1}  logloss 0.23892  (3s)
+  lr {'C': 10}  logloss 0.23892  (3s)
+  lr {'C': 100}  logloss 0.23892  (3s)
+  -> lr chosen {'C': 0.1}
+  rf {'n_estimators': 300, 'min_samples_leaf': 50, 'max_depth': 6}  logloss 0.24614  (56s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 50, 'max_depth': 12}  logloss 0.23900  (83s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 100, 'max_depth': 6}  logloss 0.24633  (55s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 100, 'max_depth': 12}  logloss 0.23968  (82s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 200, 'max_depth': 6}  logloss 0.24653  (54s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 200, 'max_depth': 12}  logloss 0.24085  (76s)
+  -> rf chosen {'n_estimators': 300, 'min_samples_leaf': 50, 'max_depth': 12}
+  xgb {'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.24092  (4s)
+  xgb {'n_estimators': 300, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.23704  (10s)
+  xgb {'n_estimators': 600, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.23672  (15s)
+  xgb {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.23815  (5s)
+  xgb {'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.23633  (10s)
+  xgb {'n_estimators': 600, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.23631  (20s)
+  xgb {'n_estimators': 100, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.23719  (6s)
+  xgb {'n_estimators': 300, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.23640  (12s)
+  xgb {'n_estimators': 600, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.23681  (21s)
+  -> xgb chosen {'n_estimators': 600, 'max_depth': 3, 'learning_rate': 0.05}
+  -> mlp epochs 11 (early stopping, patience 10)
+
+=== brfss: base models ===
+model    auc  auc_lo  auc_hi  brier  cal_slope  cal_in_large  mean_pred  prevalence
+   lr 0.8509  0.8454  0.8559 0.0700     1.0190       -0.0053     0.0946      0.0942
+   rf 0.8520  0.8470  0.8572 0.0700     1.2206       -0.0043     0.0945      0.0942
+  xgb 0.8536  0.8483  0.8586 0.0695     1.0128       -0.0074     0.0947      0.0942
+  mlp 0.8527  0.8475  0.8578 0.0700     1.1358       -0.0147     0.0953      0.0942
+
+=== brfss: explainer exactness checks on the base models (max abs error) ===
+  lr  linear_shap additivity      6.99e-07
+  xgb tree_shap additivity (margin)8.58e-06
+  rf  tree_shap additivity (prob)  1.69e-03
+  mlp IG completeness              max 1.74e-03, relative to mean |f(x)-f(b)| 1.28e-03
+  mlp EG completeness              max 5.13e-03, relative to mean |f(x)-E f(b)| 3.72e-03

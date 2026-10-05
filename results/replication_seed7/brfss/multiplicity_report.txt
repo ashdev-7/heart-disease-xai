@@ -1,0 +1,85 @@
+==============================================================================
+AXIS M - MULTIPLICITY ACROSS RETRAINING   dataset: brfss   features: 21
+==============================================================================
+Chance level (two independent random rankings): jaccard3 0.090, jaccard5 0.146, spearman 0.000, rbo 0.353
+corrected = (observed - chance) / (1 - chance); 1 = identical, 0 = no better than chance
+
+--- BOOTSTRAP of the training set (model seed fixed); variants = 50 ---
+
+  jaccard3   (chance 0.090)
+model   explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   lr linear_shap        0.966  0.961  0.971                  0.963                    0.000           1.000   0.973
+   rf   tree_shap        0.833  0.821  0.843                  0.816                    0.000           0.668   0.836
+  xgb   tree_shap        0.813  0.799  0.826                  0.795                    0.010           0.980   0.810
+  mlp          ig        0.890  0.879  0.902                  0.880                    0.002           1.000   0.883
+  mlp          eg        0.893  0.881  0.903                  0.882                    0.000           1.000   0.887
+
+  jaccard5   (chance 0.146)
+model   explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   lr linear_shap        0.951  0.946  0.956                  0.943                    0.000             1.0   0.943
+   rf   tree_shap        0.930  0.922  0.937                  0.918                    0.000             1.0   0.931
+  xgb   tree_shap        0.836  0.826  0.845                  0.808                    0.002             1.0   0.835
+  mlp          ig        0.878  0.872  0.885                  0.858                    0.000             1.0   0.885
+  mlp          eg        0.869  0.862  0.876                  0.846                    0.000             1.0   0.868
+
+  spearman   (chance 0.000)
+model   explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   lr linear_shap        0.956  0.955  0.957                  0.956                      0.0           0.964   0.955
+   rf   tree_shap        0.951  0.950  0.953                  0.951                      0.0           0.991   0.950
+  xgb   tree_shap        0.920  0.918  0.923                  0.920                      0.0           0.978   0.919
+  mlp          ig        0.936  0.934  0.937                  0.936                      0.0           0.952   0.938
+  mlp          eg        0.922  0.921  0.924                  0.922                      0.0           0.949   0.924
+
+  rbo   (chance 0.353)
+model   explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   lr linear_shap        0.965  0.964  0.966                  0.946                      0.0           0.977   0.965
+   rf   tree_shap        0.930  0.927  0.933                  0.892                      0.0           0.955   0.930
+  xgb   tree_shap        0.903  0.900  0.907                  0.851                      0.0           0.972   0.903
+  mlp          ig        0.937  0.934  0.940                  0.902                      0.0           0.952   0.936
+  mlp          eg        0.933  0.931  0.936                  0.897                      0.0           0.955   0.932
+
+--- SEED only (training set fixed); variants = 10 ---
+
+  jaccard3   (chance 0.090)
+model explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   rf tree_shap        0.938  0.929  0.947                  0.932                      0.0           0.656     NaN
+  xgb tree_shap        0.917  0.907  0.927                  0.909                      0.0           1.000     NaN
+  mlp        ig        0.917  0.906  0.929                  0.909                      0.0           1.000     NaN
+  mlp        eg        0.920  0.909  0.930                  0.912                      0.0           1.000     NaN
+
+  jaccard5   (chance 0.146)
+model explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   rf tree_shap        0.979  0.974  0.983                  0.975                      0.0             1.0     NaN
+  xgb tree_shap        0.935  0.928  0.942                  0.924                      0.0             1.0     NaN
+  mlp        ig        0.883  0.875  0.890                  0.863                      0.0             1.0     NaN
+  mlp        eg        0.897  0.888  0.905                  0.879                      0.0             1.0     NaN
+
+  spearman   (chance 0.000)
+model explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   rf tree_shap        0.980  0.979  0.981                  0.980                      0.0           0.996     NaN
+  xgb tree_shap        0.982  0.981  0.983                  0.982                      0.0           0.997     NaN
+  mlp        ig        0.950  0.949  0.952                  0.950                      0.0           0.968     NaN
+  mlp        eg        0.939  0.938  0.941                  0.939                      0.0           0.961     NaN
+
+  rbo   (chance 0.353)
+model explainer  per_patient  ci_lo  ci_hi  per_patient_corrected  pct_patients_below_half  global_ranking  half_B
+   rf tree_shap        0.973  0.972  0.975                  0.959                      0.0           0.964     NaN
+  xgb tree_shap        0.962  0.960  0.964                  0.941                      0.0           0.995     NaN
+  mlp        ig        0.951  0.949  0.953                  0.924                      0.0           0.956     NaN
+  mlp        eg        0.949  0.947  0.951                  0.921                      0.0           0.949     NaN
+
+Columns: per_patient = mean over the 500 explained patients of the mean pairwise agreement of
+that patient's attribution ranking across training variants (95% CI by bootstrap over patients).
+global_ranking = same agreement for rankings of mean |attribution| over patients.
+half_B = per_patient recomputed on the first half of the bootstraps (convergence check).
+pct_patients_below_half = share of patients whose own agreement is below 0.5.
+
+Prediction instability: mean over patients of the SD of predicted risk across variants
+source model  risk_sd_mean
+  seed    rf        0.0023
+  seed   xgb        0.0030
+  seed   mlp        0.0043
+  boot    lr        0.0027
+  boot    rf        0.0074
+  boot   xgb        0.0087
+  boot   mlp        0.0058

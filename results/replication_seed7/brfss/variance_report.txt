@@ -1,0 +1,48 @@
+==============================================================================
+VARIANCE DECOMPOSITION, ONE SOURCE AT A TIME (D-30)   dataset: brfss
+==============================================================================
+Quantity: normalised attribution share per feature. 100 patients.
+ICC = share of the variance in attribution shares that is due to real differences between
+patients; 1 - ICC = share due to the named source. Higher ICC = the source matters less.
+Conventional bands (Koo & Li 2016, from rater studies): <0.5 poor, 0.5-0.75 moderate,
+0.75-0.9 good, >0.9 excellent. Context only, not validated for explanations.
+
+Summary across model / explainer combinations, most disruptive source first:
+                                  icc_min  icc_median  icc_max
+source                                                        
+model class (KernelSHAP)            0.848       0.848    0.848
+measurement noise                   0.816       0.915    0.930
+background draw                     0.904       0.947    0.953
+training-data bootstrap             0.960       0.978    0.993
+seed                                0.987       0.991    0.996
+explainer (native vs KernelSHAP)    0.728       0.996    1.000
+
+Detail:
+                          source    model          explainer  levels   icc  icc_lo  icc_hi  within_share_of_total  within_sd
+         training-data bootstrap       lr        linear_shap      50 0.993   0.992   0.994                  0.007      0.016
+               measurement noise       lr        linear_shap      20 0.913   0.898   0.926                  0.087      0.056
+                 background draw       lr        linear_shap      10 0.947   0.936   0.955                  0.053      0.044
+         training-data bootstrap       rf          tree_shap      50 0.963   0.955   0.968                  0.037      0.028
+                            seed       rf          tree_shap      10 0.996   0.995   0.996                  0.004      0.009
+               measurement noise       rf          tree_shap      20 0.816   0.770   0.848                  0.184      0.063
+                 background draw       rf          tree_shap      10 0.904   0.877   0.920                  0.096      0.046
+         training-data bootstrap      xgb          tree_shap      50 0.960   0.952   0.964                  0.040      0.039
+                            seed      xgb          tree_shap      10 0.995   0.994   0.996                  0.005      0.013
+               measurement noise      xgb          tree_shap      20 0.930   0.915   0.941                  0.070      0.051
+                 background draw      xgb          tree_shap      10 0.953   0.943   0.960                  0.047      0.041
+         training-data bootstrap      mlp                 ig      50 0.978   0.974   0.981                  0.022      0.027
+                            seed      mlp                 ig      10 0.987   0.984   0.989                  0.013      0.020
+               measurement noise      mlp                 ig      20 0.917   0.902   0.930                  0.083      0.051
+                 background draw      mlp                 ig      10 0.944   0.932   0.953                  0.056      0.042
+         training-data bootstrap      mlp                 eg      50 0.979   0.976   0.982                  0.021      0.027
+                            seed      mlp                 eg      10 0.987   0.985   0.989                  0.013      0.021
+               measurement noise      mlp                 eg      20 0.915   0.901   0.928                  0.085      0.053
+                 background draw      mlp                 eg      10 0.950   0.940   0.959                  0.050      0.040
+explainer (native vs KernelSHAP)       lr linear_shap+kernel       2 1.000   1.000   1.000                  0.000      0.000
+explainer (native vs KernelSHAP)       rf   tree_shap+kernel       2 0.728   0.661   0.777                  0.272      0.085
+explainer (native vs KernelSHAP)      xgb   tree_shap+kernel       2 1.000   1.000   1.000                  0.000      0.001
+explainer (native vs KernelSHAP)      mlp       ig+eg+kernel       3 0.992   0.990   0.994                  0.008      0.016
+        model class (KernelSHAP) all four        kernel_shap       4 0.848   0.818   0.869                  0.152      0.073
+
+within_sd: root of the summed within-patient variance of the share vector, i.e. the typical
+size of the shift in a patient's attribution shares caused by that source.
