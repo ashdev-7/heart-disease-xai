@@ -12,10 +12,10 @@ model   explainer  cos_Ref-A  boot_lo_Ref-A  boot_hi_Ref-A  null_mean_Ref-A  pct
   xgb   tree_shap      0.900          0.826          0.928            0.654                 0.983      0.928          0.889          0.972         -0.333               0.015
   mlp          ig      0.938          0.910          0.977            0.681                 0.983      0.952          0.935          0.987          0.000               0.054
   mlp          eg      0.940          0.895          0.970            0.684                 0.983      0.954          0.927          0.985          0.000               0.048
-   lr kernel_shap      0.954            NaN            NaN            0.701                 0.983      0.970            NaN            NaN         -0.333               0.017
-   rf kernel_shap      0.904            NaN            NaN            0.721                 0.951      0.969            NaN            NaN         -0.333               0.059
-  xgb kernel_shap      0.900            NaN            NaN            0.653                 0.983      0.927            NaN            NaN         -0.333               0.015
-  mlp kernel_shap      0.938            NaN            NaN            0.677                 0.983      0.952            NaN            NaN          0.000               0.043
+   lr kernel_shap      0.955            NaN            NaN            0.703                 0.983      0.971            NaN            NaN         -0.333               0.019
+   rf kernel_shap      0.906            NaN            NaN            0.730                 0.946      0.972            NaN            NaN         -0.333               0.060
+  xgb kernel_shap      0.900            NaN            NaN            0.654                 0.983      0.928            NaN            NaN         -0.333               0.015
+  mlp kernel_shap      0.939            NaN            NaN            0.683                 0.983      0.955            NaN            NaN          0.000               0.045
 
 boot_lo / boot_hi: 2.5th and 97.5th percentile of the cosine across bootstrap-trained models.
 null_mean: mean cosine when the model's group importances are randomly reassigned to groups;
@@ -42,7 +42,7 @@ model   explainer  per_patient_cos_Ref-A  pp_lo  pp_hi
   xgb   tree_shap                  0.879  0.872  0.886
   mlp          ig                  0.904  0.898  0.910
   mlp          eg                  0.922  0.918  0.926
-   lr kernel_shap                  0.926  0.921  0.931
-   rf kernel_shap                  0.842  0.832  0.851
-  xgb kernel_shap                  0.879  0.871  0.886
-  mlp kernel_shap                  0.922  0.918  0.926
+   lr kernel_shap                  0.927  0.922  0.931
+   rf kernel_shap                  0.846  0.837  0.854
+  xgb kernel_shap                  0.879  0.872  0.886
+  mlp kernel_shap                  0.923  0.919  0.927

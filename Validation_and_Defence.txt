@@ -1,0 +1,521 @@
+================================================================================
+VALIDATION AND DEFENCE FILE
+Is the work correct, does it answer the stated problem, and can every design
+choice be defended against its alternatives?
+================================================================================
+Written 2026-10-05. Raw output of every test: results/audit_report.txt.
+Code: src/audit1_correctness.py, audit2_sensitivity.py, audit3_alternatives.py,
+phase6_sample_size.py (indep mode).
+
+STATUS LINE: 2 items were still running on Kaggle when this was written and
+are marked PENDING. Everything else is complete.
+
+CONTENTS
+  1. What "validated" means here, and what it cannot mean
+  2. The problem statement and the nine claims
+  3. Verification: is the code right?            (Audit 1)
+  4. Validation: do conclusions survive?         (Audits 2 and 3)
+  5. Claims-evidence matrix
+  6. Every design choice, its alternatives, and why
+  7. Errors the audit found, and their effect
+  8. Questions a hostile reviewer will ask, with answers
+  9. Weaknesses that remain
+ 10. Honest assessment of where this can be published
+ 11. Pending items
+
+================================================================================
+1. WHAT "VALIDATED" MEANS HERE
+================================================================================
+
+Verification = the code computes what the methods section says it computes.
+Validation   = the conclusions follow from the evidence and do not depend on
+               arbitrary analysis choices.
+
+What this file establishes: both of the above, for the two datasets, four
+models and explainers studied, to the extent the listed tests cover.
+
+What no test can establish: that reviewers will accept the paper, that the
+findings hold on other clinical data, or that explanations judged plausible by
+a risk equation are useful to a clinician. Section 9 lists what is still weak.
+
+================================================================================
+2. PROBLEM STATEMENT AND CLAIMS
+================================================================================
+
+Problem
+  For tabular heart-disease risk models, how much of a patient's feature-
+  attribution explanation is determined by the patient, and how much changes
+  with model class, explainer, training sample, seed, measurement noise and
+  the explainer's background sample?
+
+Claims the paper would make
+  C1  Explanations are faithful to the model they explain.
+  C2  Grouped importance is plausible against a published risk equation
+      (Framingham).
+  C3  On small data, a patient's leading features are not reproducible when
+      the training data is resampled.
+  C4  That irreproducibility is largely a sample-size effect.
+  C5  Model class changes an explanation more than explainer choice does.
+  C6  SMOTE breaks calibration and changes explanations.
+  C7  The explainer's background sample is a non-trivial source of variation.
+  C8  Seed-only retraining understates instability.
+  C9  A measurement-noise test partly identifies the patients whose
+      explanations will not reproduce (small data only; descriptive).
+
+================================================================================
+3. VERIFICATION (AUDIT 1): ALL CHECKS PASSED
+================================================================================
+
+T1 Metrics and estimators
+  - Top-k Jaccard: hand example and identity case correct.
+  - Spearman: equals scipy on 200 random pairs (max difference 2e-16).
+  - Chance level of top-k Jaccard: formula equals simulation for five
+    feature-count / k combinations (largest gap 0.0007).
+  - Random attribution vectors pushed through the production functions score
+    0.1291 against a chance level of 0.1288.
+  - Stored per-patient bootstrap scores (XGBoost, 25 patients, 4,950 pairs
+    each) recomputed by an independent brute-force loop: max difference 8e-06
+    (Jaccard) and 3e-08 (Spearman).
+  - ICC estimator on synthetic data with true ICC 0.75: mean of 200
+    simulations 0.748.
+
+T2 Explainers against exact Shapley values
+  Exact values computed by enumerating all 2^15 = 32,768 coalitions with the
+  same 100 background rows (Framingham base models).
+      LR  linear SHAP              max error 3e-08          top-3 1.000
+      XGB TreeSHAP                 max error 6e-07          top-3 1.000
+      RF  TreeSHAP (probability)   0.28% of total           top-3 1.000
+      KernelSHAP, corrected (7.1)  LR 0.00%, XGB 0.11%, MLP 0.16%, RF 0.48%
+      MLP Expected Gradients       4.2% of total            top-3 1.000
+      MLP Integrated Gradients     15.6% of total           top-3 0.900
+  Reading: the Shapley-type explainers are numerically correct. Expected
+  Gradients is close to Shapley values. Integrated Gradients with one baseline
+  is a different quantity, as theory says, and is reported as such.
+  (10 patients for LR/XGB/MLP, 4 for RF because of cost.)
+
+T3 Leakage and sanity
+  - Train/test disjoint; explained patients inside test, none in train;
+    background rows inside train. Both datasets.
+  - Label permutation (10 shuffles): test AUC falls to 0.49-0.51 for all four
+    models, so the pipeline has no leak.
+  - Model randomisation (Adebayo et al. 2018): explanations of models trained
+    on shuffled labels agree with the real explanations at 0.17 (XGB),
+    0.25 (MLP), 0.28 (LR); chance is 0.13 and real seed-to-seed agreement is
+    0.82-0.90. Explanations depend on what the model learned.
+
+T4 Determinism
+  Refitting the four base models reproduces stored predictions and
+  attributions to 1e-7 or better; a bootstrap variant reproduces from its seed.
+
+================================================================================
+4. VALIDATION (AUDITS 2 AND 3)
+================================================================================
+
+4.1 Complete cases (the check promised in Decision D-04)
+  56 of 500 explained Framingham patients have an imputed value; 34 have
+  imputed glucose. Restricting to the 444 complete cases changes bootstrap
+  agreement, noise agreement and plausibility by 0.002 or less, and the
+  faithfulness ratio by 0.02. Glucose carries 2-8% of attribution; among
+  patients with imputed glucose it carries less for LR and MLP (as expected
+  for a value set to the median) and about the same for the tree models.
+  Conclusion: imputation does not drive any result.
+
+4.2 Metric choice
+  "Bootstrap agreement is lower than seed agreement" holds in 40 of 40
+  model x metric cells (top-1, top-3, top-5, Spearman, cosine; both datasets).
+  A magnitude-based metric (cosine of raw attribution vectors) stays at
+  0.83-0.88 on Framingham while top-3 agreement is 0.52-0.59: magnitude
+  metrics hide rank instability, as Hwang et al. 2026 warn. Both are reported.
+
+4.3 Grouping correlated features
+  Merging the four blood-pressure, two smoking and two glycaemia columns before
+  ranking does not remove the Framingham instability: chance-corrected
+  bootstrap agreement is 0.45-0.66 on raw features and 0.45-0.65 on 8 groups.
+  The single top GROUP is the same in 70-83% of bootstrap pairs.
+
+4.4 Sign stability (a limit on claim C3)
+  For a patient's three leading features, a bootstrap-retrained model gives
+  the attribution the same sign 96-100% of the time on Framingham and 100% on
+  BRFSS. What is unstable is the ORDER of the leading features, not whether a
+  feature raises or lowers risk. The paper must say this; it narrows C3.
+
+4.5 Paired differences with confidence intervals
+  Seed-only minus bootstrap agreement, per patient:
+      Framingham +0.29 to +0.32 (every CI excludes zero by a wide margin)
+      BRFSS      +0.09 to +0.10 for the tree models, +0.02 for the MLP
+  Explainer-swap minus model-swap agreement, per patient:
+      Framingham +0.27 (95% CI +0.26 to +0.29); +0.20 without the random
+      forest; +0.24 for Shapley-type explainers without the random forest
+      BRFSS      +0.24 (+0.22 to +0.25); +0.22; +0.22
+  C5 and C8 do not rest on the random forest or on Integrated Gradients.
+
+4.6 Threshold choice
+  The weak link between bootstrap agreement and distance from the decision
+  threshold stays weak at four Framingham thresholds (0.075, 0.10, 0.152,
+  0.20) and three BRFSS thresholds; the largest correlation anywhere is 0.45.
+
+4.7 Other train/test splits (answers the single-split weakness, D-01)
+  Three further random splits, 30 bootstraps each, 200 patients:
+      per-patient top-3      main    split 1  split 2  split 3
+      LR  linear SHAP        0.682   0.686    0.719    0.720
+      XGB TreeSHAP           0.580   0.616    0.611    0.559
+      MLP Expected Grad.     0.574   0.612    0.623    0.581
+      RF  TreeSHAP           0.528   0.533    0.524    0.520
+      MLP Integr. Grad.      0.515   0.538    0.559    0.509
+  Stability results move by at most 0.05 across splits; the ordering of the
+  models is unchanged. Base-model test AUC DOES move with the split
+  (LR 0.702 on the main split; 0.742, 0.751, 0.736 on the others). The main
+  split is the hardest of the four. Performance must be reported as a range.
+
+4.8 Imputation method
+  Regression (iterative) imputation instead of the median: each patient's
+  explanation agrees with the median-imputation explanation at top-3 0.99
+  (LR), 0.97 (MLP-EG), 0.94 (MLP-IG), 0.89 (XGB), 0.83 (RF). For comparison,
+  changing only the SEED gives 0.82-0.90, so the imputation method moves
+  explanations no more than a seed does. Test AUC unchanged.
+
+4.9 Interventional versus path-dependent TreeSHAP
+  Bootstrap agreement is the same under both (RF 0.528 vs 0.545; XGB 0.580 vs
+  0.583). The two variants themselves agree at 0.79 (RF) and 0.84 (XGB) on the
+  same model, so the choice matters for an individual explanation but not for
+  any stability conclusion.
+
+4.10 Resampling scheme, and whether the bootstrap exaggerates
+  80% subsampling without replacement gives higher agreement than the
+  bootstrap (0.64-0.84 vs 0.52-0.68), as expected, because two 80% subsamples
+  share most of their rows.
+  Decisive test on BRFSS: 30 bootstraps of ONE sample of n rows versus up to
+  30 DISJOINT samples of n rows from the 202,944-row pool.
+      n = 3,392 (30 disjoint)     bootstrap   disjoint samples
+        LR 0.750 / 0.675; RF 0.615 / 0.616; XGB 0.585 / 0.589;
+        MLP-IG 0.635 / 0.601; MLP-EG 0.667 / 0.632
+      n = 7,580 (26 disjoint; positives run out after 26)
+        LR 0.746 / 0.749; RF 0.702 / 0.625; XGB 0.634 / 0.625;
+        MLP-IG 0.634 / 0.667; MLP-EG 0.670 / 0.690
+  Differences are between -0.08 and +0.03 with no consistent direction. The
+  bootstrap does not exaggerate instability relative to genuinely new samples.
+
+4.11 KernelSHAP budget
+  Quadrupling the coalition budget did not reduce KernelSHAP's error. The
+  cause was shap's default feature truncation (Section 7.1), not sampling.
+
+4.12 Faithfulness settings
+  Ratio of top-k to random-k prediction gap, Framingham:
+      k = 1: 3.9-7.2     k = 3: 2.2-3.1     k = 5: 1.7-2.2
+  for both replacement rules (random background row; background mean).
+  Top-k beats random-k in at least 75% of patients in every setting (the
+  minimum is at k = 1 for the random forest).
+
+4.13 Correlated blood-pressure error
+  Making systolic and diastolic errors correlated at 0.7 (an assumed value)
+  changes noise-robustness scores by 0.007 or less.
+
+4.14 PENDING on Kaggle
+  - Hyperparameters re-tuned inside every bootstrap (D-07). 12 of 30 were
+    done on the laptop before it ran out of memory; the full 30, with the
+    tuned-once reference recomputed in the same environment, are running.
+  - Second and third independently drawn subsamples for the sample-size
+    experiment (D-28).
+  - BRFSS KernelSHAP re-run without truncation (D-32).
+
+================================================================================
+5. CLAIMS-EVIDENCE MATRIX
+================================================================================
+
+C1 Faithful
+   Evidence : top-3 replacement moves log-odds 2.2-3.3x more than random-3;
+              97-100% of patients; both datasets.
+   Tests    : exact-Shapley ground truth (T2); k = 1, 3, 5; two replacement
+              rules; model-randomisation check.
+   Limits   : replaced inputs can be unrealistic combinations (Hase et al.
+              2021); no retraining-based test (ROAR).
+   Status   : SUPPORTED.
+
+C2 Plausible (Framingham)
+   Evidence : cosine 0.90-0.96 with Ref-A; random level 0.65-0.74; same top
+              three groups for every model and explainer; 1.5-6% of
+              attribution on unreferenced features.
+   Tests    : bootstrap range; complete cases; KernelSHAP gives the same.
+   Limits   : both equation-based references come from one paper; 6 groups;
+              the independent reference (INTERHEART) disagrees on lipids.
+   Status   : SUPPORTED for "matches a published risk equation". NOT a claim
+              of clinical validity.
+
+C3 Not reproducible per patient on small data
+   Evidence : Framingham bootstrap top-3 0.52-0.70; 4-47% of patients below
+              0.5.
+   Tests    : 5 metrics; grouped features; 3 other splits; path-dependent
+              TreeSHAP; other imputation; complete cases; bootstrap vs
+              disjoint samples; convergence in number of bootstraps.
+   Limits   : signs are stable (4.4); hyperparameters fixed (PENDING test);
+              one cohort of this size.
+   Status   : SUPPORTED, and must be worded as "order of leading features".
+
+C4 Sample-size effect
+   Evidence : BRFSS at 15 / 34 / 135 / 910 events per predictor: top-3 rises
+              monotonically for LR, XGB, RF and both MLP explainers between 34
+              and 910; AUC moves 0.83 -> 0.85.
+   Tests    : hyperparameters re-tuned at each size; disjoint-sample check.
+   Limits   : post-hoc experiment; one subsample per size (PENDING
+              replication); between 15 and 34 events per predictor three of
+              five rows are flat.
+   Status   : SUPPORTED as exploratory. "Largely" is justified by BRFSS at
+              34 events per predictor (0.63-0.75) against Framingham
+              (0.52-0.70); the remaining gap is unexplained.
+
+C5 Model class matters more than explainer
+   Evidence : model swap 0.52-0.79 / 0.54-0.92; explainer swap 0.79-1.00 /
+              0.73-0.99; ICC for model class 0.67 / 0.82 against 0.96 / 0.96
+              for explainer.
+   Tests    : paired difference with CI; without RF; Shapley-type only.
+   Limits   : explainers tested are all attribution methods of the Shapley /
+              path family. LIME, counterfactuals and rule methods were not
+              tested, so the claim is about THESE explainers.
+   Status   : SUPPORTED within that scope.
+
+C6 SMOTE
+   Evidence : mean predicted risk 0.33-0.43 against 0.152 (Framingham) and
+              0.16-0.34 against 0.094 (BRFSS); no AUC gain; top-3 agreement
+              with the no-resampling explanation 0.49-0.60 (Framingham
+              flexible models).
+   Limits   : base models only; hyperparameters not re-tuned for SMOTE; plain
+              SMOTE interpolates yes/no features (SMOTE-NC not tried);
+              class weighting not compared.
+   Status   : SUPPORTED; agrees with van den Goorbergh 2022 and Rai 2025.
+
+C7 Background sample
+   Evidence : redrawing 100 background rows changes top-3 membership (0.80-0.93
+              agreement); ICC 0.96.
+   Tests    : 50 / 100 / 200 rows; 200-row tree lines corrected (7.2).
+   Limits   : 100 patients, 5-10 draws.
+   Status   : SUPPORTED as "small in magnitude, enough to reorder near-ties".
+
+C8 Seed-only understates
+   Evidence : paired differences in 4.5.
+   Status   : SUPPORTED on Framingham; small on BRFSS.
+
+C9 Noise test as a flag
+   Evidence : Spearman 0.39-0.60 (Framingham), 0.05-0.40 (BRFSS).
+   Limits   : many correlations computed; no held-out test of the flag.
+   Status   : DESCRIPTIVE ONLY. Should be presented as an observation, not a
+              method.
+
+================================================================================
+6. DESIGN CHOICES, ALTERNATIVES, AND WHY
+================================================================================
+"Tested" means the alternative was actually run and the result is in Section 4.
+
+ #   Choice made                    Alternative                 Tested?  Outcome / reason
+ --  -----------------------------  --------------------------  -------  ----------------
+ 1   One fixed 80/20 split          Other splits                YES      stability unchanged (4.7); AUC varies
+                                    Cross-validation            no       needs a fixed patient set for per-
+                                                                         patient comparison across models
+ 2   Bootstrap of training rows     80% subsampling             YES      higher agreement, as expected (4.10)
+                                    Disjoint new samples        YES      bootstrap is not inflated (4.10)
+ 3   100 / 50 bootstraps            More                        YES      half-sample check: change <= 0.02
+ 4   Hyperparameters tuned once     Re-tune per bootstrap       PENDING  12 of 30 done locally
+ 5   No class resampling            SMOTE                       YES      miscalibrates, changes explanations
+                                    Class weights               no       not needed: unweighted models are
+                                                                         calibrated-in-the-large already
+ 6   Median / mode imputation       Iterative imputation        YES      no more effect than a seed (4.8)
+                                    Complete cases              YES      no effect (4.1)
+                                    Multiple imputation         no       cannot be applied at prediction time
+                                                                         (Sperrin et al. 2020)
+ 7   Interventional Shapley         Path-dependent TreeSHAP     YES      same stability conclusion (4.9)
+                                    Conditional Shapley         no       needs a model of the feature
+                                    (Aas et al. 2021)                    distribution; answers "true to data",
+                                                                         a different question (Chen 2020)
+ 8   Real training rows as          SMOTE-balanced background   no       would explain against a population
+     background, 100 rows                                                that does not exist
+                                    50 / 200 rows, redraws      YES      measured (C7)
+ 9   Explain log-odds               Probability                 partly   RF TreeSHAP is on probability;
+                                                                         KernelSHAP on log-odds for all four
+ 10  Top-3 Jaccard as headline      Top-1, top-5, Spearman,     YES      conclusions identical (4.2)
+                                    RBO, cosine
+ 11  Chance-corrected reporting     Raw scores only             n/a      Nogueira et al. 2018
+ 12  Raw features                   Grouped features            YES      instability persists (4.3)
+ 13  Reference = risk equation      Guideline classes (draft)   n/a      measures evidence strength, not
+     Shapley values                                                      importance
+                                    Clinician rankings          no       no access to clinicians (user)
+                                    INTERHEART                  YES      secondary; disagrees on lipids
+ 14  Cosine on group shares         Kendall tau                 YES      too coarse with 6 groups; reported
+ 15  Noise from published           Fixed % of range (draft)    n/a      not a clinical quantity
+     within-person variation        Half the published level    YES      reported as "low"
+                                    Correlated BP errors        YES      no effect (4.13)
+ 16  Faithfulness k = 3,            k = 1, 5; mean replacement  YES      holds (4.12)
+     marginal replacement           Retraining (ROAR)           no       cost; out of scope
+ 17  One-source-at-a-time           Fully crossed design        no       cost: 4 models x 6 explainers x 110
+     variance decomposition                                              retrains x noise x backgrounds
+ 18  LR, RF, XGBoost, MLP           EBM, FT-Transformer,        no       time; stated as scope
+                                    TabPFN, LightGBM
+ 19  SHAP family, IG, EG            LIME, Anchors, DiCE         no       time; stated as scope. C5 is limited
+                                                                         to the tested family
+ 20  RF depth capped at 12          Uncapped                    no       TreeSHAP cost; capped RF matches LR
+                                                                         on BRFSS (0.848 vs 0.847)
+ 21  MLP 64-32, fixed epochs        Tuned architecture          no       continuity with the draft; MLP is
+                                                                         within 0.006 AUC of the best model
+ 22  KernelSHAP default budget      4x budget                   YES      no gain; real issue was truncation
+ 23  500 explained patients         More                        n/a      CIs reported; widths about +/-0.01
+ 24  Two public datasets            Clinical EHR cohort         no       no access
+ 25  Laptop + Kaggle                One environment             n/a      pinned versions verified equal
+
+================================================================================
+7. ERRORS THE AUDIT FOUND
+================================================================================
+
+7.1 KernelSHAP silently kept only 10 features  (Decision D-32)
+  shap 0.52's KernelExplainer, by default, fits a regularised regression that
+  keeps 10 features and sets the rest to exactly zero. With 15 features, 5 were
+  zeroed per patient; with 21, 11 were zeroed.
+  Found because KernelSHAP's error against exact values did not shrink with
+  budget. Confirmed directly: with the regularisation off, KernelSHAP on LR
+  equals exact linear SHAP to 1e-07.
+  Fix: l1_reg=False. Framingham re-run locally; BRFSS re-run PENDING on Kaggle.
+  Effect on Framingham results:
+      a patient's KernelSHAP top-3 before vs after: 0.976-0.999 agreement
+      model-swap agreement: 0.515-0.786 before, 0.512-0.788 after
+      explainer-swap: LR 0.999 -> 1.000; XGB 0.996 -> 0.998; others +/-0.01
+      model-class ICC 0.669 -> 0.668; explainer ICC median 0.960 -> 0.964
+      faithfulness and plausibility of KernelSHAP rows: unchanged to 2 decimals
+  No conclusion changes. All Framingham KernelSHAP tables were regenerated.
+  BRFSS KernelSHAP numbers quoted elsewhere are still the truncated ones until
+  the pending run lands; the truncation was heavier there (11 of 21).
+
+7.2 Tree explainer capped the background at 100 rows  (D-27)
+  Reported earlier. Fixed; affected lines recomputed.
+
+7.3 Random-forest TreeSHAP additivity
+  The earlier concern (worst case 5% on Framingham) is narrowed: against exact
+  Shapley values the error is 0.28% of the total for the patients tested. The
+  rare large-error patients were not individually traced.
+
+7.4 Expectation errors (not code errors), already recorded
+  Calibration direction of the risk equation; laptop capacity; glucose
+  variation value; two invalid INTERHEART mappings.
+
+================================================================================
+8. QUESTIONS A HOSTILE REVIEWER WILL ASK
+================================================================================
+
+Q1 "Instability on Framingham is just a bad model. AUC is 0.70."
+   The published risk equation scores 0.718 on the same file and PREVENT-type
+   equations validate near 0.70; this is the ceiling of the data, not a
+   modelling failure. LR, the stablest model, is also the best. And BRFSS at
+   AUC 0.83-0.84 with 15-34 events per predictor shows the same instability.
+
+Q2 "The bootstrap overstates instability."
+   Tested against disjoint new samples: no (4.10).
+
+Q3 "You fixed hyperparameters, so it is not a full instability analysis."
+   Correct as run; re-tuning per bootstrap is PENDING. If it lowers agreement,
+   reported instability is a lower bound, which strengthens C3.
+
+Q4 "Top-3 overlap is arbitrary."
+   Same conclusions under top-1, top-5, Spearman, RBO; cosine reported too.
+
+Q5 "Correlated features swapping places is trivial instability."
+   Grouping them does not remove it (4.3).
+
+Q6 "Your reference is circular: Framingham equation on Framingham data."
+   The equation's coefficients come from a different, larger Framingham
+   sample (8,491 people) and a different outcome; they were applied untrained.
+   Still one source family, which is declared; INTERHEART is the independent
+   check and it disagrees on lipids for a stated measurement reason.
+
+Q7 "Plausibility is not correctness."
+   Agreed and stated. Faithfulness is tested separately (C1).
+
+Q8 "Model matters more than explainer only because your explainers are all
+    Shapley variants."
+   Agreed; C5 is scoped to that family. Integrated Gradients, the one
+   non-Shapley method, is the largest explainer effect seen (0.81).
+
+Q9 "One split."
+   Three more splits give the same stability results (4.7).
+
+Q10 "The sample-size experiment was designed after seeing the data."
+   Yes; labelled exploratory. Replication with new subsamples is PENDING.
+
+Q11 "Two environments."
+   All pinned libraries verified identical; LR and RF reproduce to four
+   decimals across them.
+
+Q12 "Is there anything new here?"
+   Individual pieces have precedent (Riley & Collins for predictions; Hwang
+   et al. for SHAP multiplicity; Salih et al. for model dependence). New, as
+   far as the non-systematic survey could tell: (a) decomposition of
+   explanation variation by source on cardiovascular tabular data with
+   measurement-calibrated noise; (b) the events-per-predictor dose-response
+   for explanation stability with a disjoint-sample check; (c) a risk-equation
+   Shapley reference; (d) the demonstration that a common SMOTE pipeline
+   creates an explanation artefact. No "first" claim should be made without a
+   database search.
+
+Q13 "No clinicians, no real clinical deployment."
+   True. This is a methods audit on public data and must be titled as one.
+
+================================================================================
+9. WEAKNESSES THAT REMAIN
+================================================================================
+
+  Serious
+   - Two public datasets, one with no codebook, one a prevalence survey.
+     No electronic-health-record cohort, no external validation site.
+   - No clinician input anywhere.
+   - Variance decomposition has no interaction terms.
+   - Explainer family is narrow (see Q8).
+  Moderate
+   - C4 and C7 rest on analyses added after the protocol freeze.
+   - Reference built from one paper; only 6 groups.
+   - BRFSS noise model covers 3 of 21 features and uses an assumed
+     categorisation; BRFSS and Framingham robustness are not comparable.
+   - Warren 2010 and Andresen 2003 confirmed from abstracts only.
+   - Literature survey is not systematic.
+  Minor
+   - RF TreeSHAP on probability scale; rare additivity outliers untraced.
+   - MLP architecture not tuned.
+   - torch version differs between the two environments.
+
+================================================================================
+10. WHERE THIS CAN BE PUBLISHED: AN HONEST VIEW
+================================================================================
+
+This is my judgement, not something a test can confirm.
+
+  Strengths a reviewer will see: a frozen protocol with a decision register;
+  ground-truth verification of every explainer; chance-corrected metrics with
+  intervals; a sample-size dose-response with a disjoint-sample check;
+  sensitivity analyses for most analysis choices; reproducible code; negative
+  findings about the authors' own earlier draft reported openly.
+
+  What caps the venue: public benchmark data only, no clinicians, narrow
+  explainer family, findings that extend known results more than they
+  overturn anything.
+
+  Realistic targets, in descending ambition:
+   - BMC Medical Informatics and Decision Making, Computers in Biology and
+     Medicine, Journal of Biomedical Informatics, Artificial Intelligence in
+     Medicine: plausible; the last two are a stretch without clinical data.
+   - PLOS One, Scientific Reports, PLOS Digital Health: a sound-methods paper
+     of this kind fits their criteria well.
+   - ML4H or a similar workshop track: good fit for the methods contribution.
+  Not realistic without new data or clinician involvement: Lancet Digital
+  Health, npj Digital Medicine, Nature Machine Intelligence, NeurIPS/ICML main
+  track.
+
+  No one can guarantee acceptance. What can be said is that the specific
+  failure modes that sink papers of this type (leakage, uncorrected metrics,
+  unverified explainers, single-seed claims, overclaimed novelty) have each
+  been tested for and either ruled out or declared.
+
+================================================================================
+11. PENDING ITEMS
+================================================================================
+  [ ] Kaggle run xai-heart-audit-run: re-tuning per bootstrap; replication
+      subsamples for the sample-size experiment.
+  [ ] Kaggle run xai-heart-kernel-fix: BRFSS KernelSHAP without truncation and
+      the tables that depend on it.
+  [ ] After both: regenerate BRFSS variance, class-share and swap tables;
+      update Sections 4.14, 5 (C4), 6 (row 4), 7.1.
+  [ ] Database-protocol literature search before any novelty wording.
+================================================================================

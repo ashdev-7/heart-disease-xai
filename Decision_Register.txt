@@ -388,6 +388,28 @@ D-31  Linking analysis: Spearman correlation across patients between
   correlations are computed, so they are descriptive, not tests.
   Status: descriptive, declared.
 
+D-32  KernelSHAP run with l1_reg=False (correction, found in the audit)
+  Finding [E, results/audit_report.txt A7, A7b]: shap 0.52's KernelExplainer
+    by default keeps 10 features and sets the rest to exactly zero (5 of 15 on
+    Framingham, 11 of 21 on BRFSS). Its error against exact Shapley values did
+    not shrink with a 4x budget; with l1_reg=False it matches exact linear
+    SHAP to 1e-07 and exact enumeration to 0.5% or better.
+  Evidence: Lundberg & Lee 2017 [K] describe the regularisation as optional;
+    Covert & Lee 2021 [V] analyse the unregularised estimator.
+  Action: all Framingham KernelSHAP results regenerated (top-3 conclusions
+    unchanged to 0.01); BRFSS regenerated on Kaggle.
+  Status: corrected.
+
+D-33  Validation audit (2026-10-05)
+  Three audits recorded in Validation_and_Defence.txt: correctness against
+  ground truth; sensitivity of conclusions to analysis choices on stored
+  results; re-running of design alternatives (other splits, re-tuning,
+  imputation, path-dependent TreeSHAP, subsampling, disjoint samples,
+  faithfulness settings, correlated noise). D-04's complete-case check done.
+  New limit on a claim: attribution SIGNS are stable (96-100%); instability
+  concerns the ORDER of leading features.
+  Status: done except the items marked pending in that file.
+
 --------------------------------------------------------------------------------
 F. OPEN ITEMS
 --------------------------------------------------------------------------------

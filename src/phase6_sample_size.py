@@ -21,7 +21,9 @@ from common import MLP, NATIVE, OUT, SEED, Prep, load, make_model, sigmoid
 from metrics import boot_ci, corrected, expected_jaccard, ranks_desc
 
 warnings.filterwarnings("ignore")
-N_BOOT, N_PAT, BUDGET = 30, 200, 510
+import os
+
+N_BOOT, N_PAT, BUDGET = 30, 200, float(os.environ.get("XAI_BUDGET", 510))
 ROOT = OUT / "brfss" / "sample_size"
 PAIRS = [(m, e) for m in ("lr", "rf", "xgb", "mlp") for e in NATIVE[m]]
 d = load("brfss")
@@ -47,9 +49,10 @@ def pair_scores(phi):
 if sys.argv[1] == "run":
     n = int(sys.argv[2])
     t0 = time.time()
-    RES = ROOT / f"n{n}"
+    sub_seed = int(sys.argv[3]) if len(sys.argv) > 3 else SEED       # optional: a different subsample
+    RES = ROOT / (f"n{n}" if sub_seed == SEED else f"n{n}_s{sub_seed}")
     RES.mkdir(parents=True, exist_ok=True)
-    sub, _ = train_test_split(np.arange(len(ytr_all)), train_size=n, stratify=ytr_all, random_state=SEED)
+    sub, _ = train_test_split(np.arange(len(ytr_all)), train_size=n, stratify=ytr_all, random_state=sub_seed)
     Xs, ys = d["Xtr"].iloc[sub], ytr_all[sub]
     batch = 64 if n < 10000 else 256
 
@@ -104,10 +107,46 @@ if sys.argv[1] == "run":
         print(f"n={n} boot {b + 1}/{N_BOOT} ({time.time() - t0:.0f}s)", flush=True)
     print(f"n={n} COMPLETE", flush=True)
 
+if sys.argv[1] == "indep":
+    # Validation of the bootstrap as a stand-in for "a new sample of the same size":
+    # 30 DISJOINT random samples of n rows from the full training pool (stratified by
+    # shuffling within outcome), same hyperparameters as the bootstrap run at this n.
+    n = int(sys.argv[2])
+    t0 = time.time()
+    RES = ROOT / f"indep{n}"
+    RES.mkdir(parents=True, exist_ok=True)
+    hps = json.loads((ROOT / f"n{n}" / "hyperparameters.json").read_text())
+    rng = np.random.default_rng(SEED)
+    pos, neg = rng.permutation(np.where(ytr_all == 1)[0]), rng.permutation(np.where(ytr_all == 0)[0])
+    npos = int(round(n * ytr_all.mean()))
+    n_avail = min(N_BOOT, len(pos) // npos)            # disjoint samples the positives allow
+    for b in range(n_avail):
+        path = RES / f"boot_{b:03d}.npz"
+        if path.exists():
+            continue
+        if time.time() - t0 > BUDGET:
+            print(f"time budget reached at sample {b}/{N_BOOT}; run again to resume", flush=True)
+            sys.exit(0)
+        rows = np.concatenate([pos[b * npos:(b + 1) * npos], neg[b * (n - npos):(b + 1) * (n - npos)]])
+        pr = Prep().fit(d["Xtr"].iloc[rows])
+        Xb = pr.transform(d["Xtr"].iloc[rows])
+        Xex, Xbg, Xte = pr.transform(d["Xex"].iloc[:N_PAT]), pr.transform(d["Xbg"]), pr.transform(d["Xte"])
+        out = {}
+        for m in ("lr", "rf", "xgb", "mlp"):
+            mdl = make_model(m, hps[m], SEED).fit(Xb, ytr_all[rows])
+            out[f"auc_{m}"] = np.float32(roc_auc_score(yte, mdl.margin(Xte)))
+            out[f"risk_{m}"] = sigmoid(mdl.margin(Xex)).astype(np.float32)
+            for e, fn in NATIVE[m].items():
+                out[f"phi_{m}_{e}"] = fn(mdl, Xex, Xbg).astype(np.float32)
+        np.savez_compressed(path, **out)
+        print(f"n={n} independent sample {b + 1}/{N_BOOT} ({time.time() - t0:.0f}s)", flush=True)
+    print(f"indep n={n} COMPLETE", flush=True)
+
 if sys.argv[1] == "report":
     ch = expected_jaccard(F, 3)
     rows = []
-    sizes = sorted(int(p.name[1:]) for p in ROOT.glob("n*") if len(list(p.glob("boot_*.npz"))) >= N_BOOT)
+    sizes = sorted(int(p.name[1:]) for p in ROOT.glob("n*")
+                   if "_s" not in p.name and len(list(p.glob("boot_*.npz"))) >= N_BOOT)
     for n in sizes + [len(ytr_all)]:
         if n == len(ytr_all):
             files = sorted((OUT / "brfss" / "variants").glob("boot_*.npz"))[:N_BOOT]
@@ -142,5 +181,36 @@ if sys.argv[1] == "report":
            "Mean test AUC across the bootstrap models:", auc.to_string(), "",
            "Prediction instability (mean SD of predicted risk across bootstraps):", rsd.to_string(), "",
            "Full detail with confidence intervals: results/brfss/sample_size.csv"]
+    extra = []
+    for p in sorted(ROOT.glob("n*_s*")):
+        files = sorted(p.glob("boot_*.npz"))[:N_BOOT]
+        if len(files) < N_BOOT:
+            continue
+        Z = [np.load(f) for f in files]
+        n0 = int(p.name[1:].split("_s")[0])
+        for m, e in PAIRS:
+            j3, _ = pair_scores(np.stack([z[f"phi_{m}_{e}"] for z in Z]))
+            first = t[(t.n == n0) & (t.model == m) & (t.explainer == e)].top3.iloc[0]
+            extra.append(dict(n=n0, subsample=p.name.split("_s")[1], model=m, explainer=e,
+                              first_subsample=first, second_subsample=j3.mean()))
+    if extra:
+        txt += ["", "Replication with a second, independently drawn subsample of the same size:",
+                pd.DataFrame(extra).round(3).to_string(index=False)]
+    ind = []
+    for p in sorted(ROOT.glob("indep*")):
+        files = sorted(p.glob("boot_*.npz"))[:N_BOOT]
+        if len(files) < 20:
+            continue
+        Z = [np.load(f) for f in files]
+        n0 = int(p.name[5:])
+        for m, e in PAIRS:
+            j3, _ = pair_scores(np.stack([z[f"phi_{m}_{e}"] for z in Z]))
+            first = t[(t.n == n0) & (t.model == m) & (t.explainer == e)].top3.iloc[0]
+            ind.append(dict(n=n0, samples=len(files), model=m, explainer=e, bootstrap_of_one_sample=first,
+                            independent_disjoint_samples=j3.mean(), difference=j3.mean() - first))
+    if ind:
+        txt += ["", "Is the bootstrap a fair stand-in for drawing a new sample? 30 bootstraps of one sample of",
+                "n rows versus 30 DISJOINT samples of n rows from the 202,944-row pool (same hyperparameters):",
+                pd.DataFrame(ind).round(3).to_string(index=False)]
     (OUT / "brfss" / "sample_size_report.txt").write_text("\n".join(txt), encoding="utf-8")
     print("\n".join(txt))

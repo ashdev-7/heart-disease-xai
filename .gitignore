@@ -19,3 +19,5 @@ results/*/variants/
 # Kaggle upload bundle (contains data)
 kaggle/bundle/
 kaggle/kernel/
+kaggle/kernel_audit/
+kaggle/kernel_fix/

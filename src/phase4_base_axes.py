@@ -51,7 +51,8 @@ def native(m, e, X, bg=None):
 def kernel(m, X, seed, bg=None):
     np.random.seed(seed)
     ex = shap.KernelExplainer(models[m].margin, Xbg if bg is None else bg)
-    return np.asarray(ex.shap_values(X, silent=True))
+    # l1_reg=False: shap's default keeps only 10 features and sets the rest to zero (D-32)
+    return np.asarray(ex.shap_values(X, silent=True, l1_reg=False))
 
 
 def agree_row(label, Ra, Rb):
@@ -70,12 +71,18 @@ log("=" * 78)
 log(f"Chance level of top-3 / top-5 Jaccard for {F} features: {CH3:.3f} / {CH5:.3f}")
 
 # ------------------------------------------------------------------ KernelSHAP
+if STAGE == "kernel1":                                      # one model at a time (memory / time limits)
+    m = sys.argv[3]
+    np.save(RES / f"kernel_part_{m}.npy", kernel(m, Xex, SEED).astype(np.float32))
+    log(f"kernel part saved for {m}")
+
 if STAGE in ("kernel", "all"):
     log("\n--- KernelSHAP on the four base models (log-odds, 100 background rows) ---")
     out = {}
     for m in ("lr", "xgb", "mlp", "rf"):
         t = time.time()
-        out[m] = kernel(m, Xex, SEED).astype(np.float32)
+        part = RES / f"kernel_part_{m}.npy"                 # written by the kernel1 stage
+        out[m] = np.load(part) if part.exists() else kernel(m, Xex, SEED).astype(np.float32)
         add = np.abs(out[m].sum(1) + models[m].margin(Xbg).mean() - models[m].margin(Xex)).max()
         log(f"  {m:<4} {time.time() - t:6.0f}s   additivity error {add:.1e}")
     np.savez_compressed(RES / "kernel.npz", **out)

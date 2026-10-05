@@ -15,12 +15,14 @@ root = Path(__file__).resolve().parents[1]
 k = root / "kaggle"
 b = k / "bundle"
 shutil.rmtree(b, ignore_errors=True)
-(b / "seed_results" / "brfss").mkdir(parents=True)
-shutil.copytree(root / "src", b / "src", ignore=shutil.ignore_patterns("__pycache__"))
-(b / "data").mkdir()
+(b / "seed_results" / "brfss").mkdir(parents=True, exist_ok=True)
+shutil.copytree(root / "src", b / "src", ignore=shutil.ignore_patterns("__pycache__"), dirs_exist_ok=True)
+(b / "data").mkdir(exist_ok=True)
 for f in (root / "data").glob("*.csv"):
     shutil.copy(f, b / "data" / f.name)
 shutil.copy(root / "results" / "brfss" / "hyperparameters.json", b / "seed_results" / "brfss")
+(b / "seed_results" / "framingham").mkdir(exist_ok=True)
+shutil.copy(root / "results" / "framingham" / "hyperparameters.json", b / "seed_results" / "framingham")
 (b / "dataset-metadata.json").write_text(json.dumps({
     "title": "xai-heart-bundle", "id": f"{user}/xai-heart-bundle",
     "licenses": [{"name": "other"}]}, indent=2))

@@ -37,3 +37,17 @@ rf     0.0208  0.0210  0.0150  0.0073
 xgb    0.0224  0.0220  0.0152  0.0093
 
 Full detail with confidence intervals: results/brfss/sample_size.csv
+
+Is the bootstrap a fair stand-in for drawing a new sample? 30 bootstraps of one sample of
+n rows versus 30 DISJOINT samples of n rows from the 202,944-row pool (same hyperparameters):
+   n  samples model   explainer  bootstrap_of_one_sample  independent_disjoint_samples  difference
+3392       30    lr linear_shap                    0.750                         0.675      -0.075
+3392       30    rf   tree_shap                    0.615                         0.616       0.001
+3392       30   xgb   tree_shap                    0.585                         0.589       0.004
+3392       30   mlp          ig                    0.635                         0.601      -0.034
+3392       30   mlp          eg                    0.667                         0.632      -0.036
+7580       26    lr linear_shap                    0.746                         0.749       0.004
+7580       26    rf   tree_shap                    0.702                         0.625      -0.077
+7580       26   xgb   tree_shap                    0.634                         0.625      -0.009
+7580       26   mlp          ig                    0.634                         0.667       0.032
+7580       26   mlp          eg                    0.670                         0.690       0.021
