@@ -38,6 +38,34 @@ xgb    0.0224  0.0220  0.0152  0.0093
 
 Full detail with confidence intervals: results/brfss/sample_size.csv
 
+Replication with a second, independently drawn subsample of the same size:
+    n subsample model   explainer  first_subsample  second_subsample
+30000         7    lr linear_shap            0.868             0.863
+30000         7    rf   tree_shap            0.738             0.774
+30000         7   xgb   tree_shap            0.736             0.749
+30000         7   mlp          ig            0.791             0.798
+30000         7   mlp          eg            0.817             0.819
+ 3392        11    lr linear_shap            0.750             0.752
+ 3392        11    rf   tree_shap            0.615             0.687
+ 3392        11   xgb   tree_shap            0.585             0.637
+ 3392        11   mlp          ig            0.635             0.628
+ 3392        11   mlp          eg            0.667             0.670
+ 3392         7    lr linear_shap            0.750             0.647
+ 3392         7    rf   tree_shap            0.615             0.621
+ 3392         7   xgb   tree_shap            0.585             0.582
+ 3392         7   mlp          ig            0.635             0.582
+ 3392         7   mlp          eg            0.667             0.645
+ 7580        11    lr linear_shap            0.746             0.822
+ 7580        11    rf   tree_shap            0.702             0.745
+ 7580        11   xgb   tree_shap            0.634             0.683
+ 7580        11   mlp          ig            0.634             0.726
+ 7580        11   mlp          eg            0.670             0.741
+ 7580         7    lr linear_shap            0.746             0.786
+ 7580         7    rf   tree_shap            0.702             0.717
+ 7580         7   xgb   tree_shap            0.634             0.624
+ 7580         7   mlp          ig            0.634             0.622
+ 7580         7   mlp          eg            0.670             0.668
+
 Is the bootstrap a fair stand-in for drawing a new sample? 30 bootstraps of one sample of
 n rows versus 30 DISJOINT samples of n rows from the 202,944-row pool (same hyperparameters):
    n  samples model   explainer  bootstrap_of_one_sample  independent_disjoint_samples  difference

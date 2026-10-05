@@ -496,3 +496,170 @@ model   explainer  with_outcome  without_outcome
   xgb   tree_shap         0.856            0.837
   mlp          ig         0.888            0.884
   mlp          eg         0.853            0.890
+
+==============================================================================
+AUDIT 3 - DESIGN ALTERNATIVES RE-RUN (Framingham)   2026-10-05 13:56
+==============================================================================
+Per-patient top-3 agreement across 30 resamples, 200 patients (chance 0.129).
+
+A1 Other train/test splits (same hyperparameters). 'main' = the protocol's split, same 30
+   bootstrap seeds. Base-model test AUC in brackets.
+model   explainer  main  split1  auc1  split2  auc2  split3  auc3
+   lr linear_shap 0.682   0.686 0.742   0.719 0.751   0.720 0.736
+   rf   tree_shap 0.528   0.533 0.722   0.524 0.727   0.520 0.692
+  xgb   tree_shap 0.580   0.616 0.737   0.611 0.736   0.559 0.716
+  mlp          ig 0.515   0.538 0.740   0.559 0.748   0.509 0.730
+  mlp          eg 0.574   0.612 0.740   0.623 0.748   0.581 0.730
+
+A2 Hyperparameters re-tuned inside every bootstrap vs tuned once (same 30 bootstraps)
+   reference computed in the same environment as the re-tuned runs: yes
+model   explainer  tuned_once  retuned  difference  diff_lo  diff_hi
+   lr linear_shap       0.682    0.679      -0.004   -0.005   -0.002
+   rf   tree_shap       0.528    0.528       0.000    0.000    0.000
+  xgb   tree_shap       0.585    0.440      -0.145   -0.160   -0.129
+   lr choices across bootstraps: {'C': 0.1} x28; {'C': 0.01} x2
+   rf choices across bootstraps: {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 12} x30
+   xgb choices across bootstraps: {'n_estimators': 600, 'max_depth': 4, 'learning_rate': 0.05} x30
+
+A3 Regression (iterative) imputation instead of median: agreement of each patient's
+   explanation with the median-imputation explanation (500 patients; 56 have imputed values)
+model   explainer  auc_iterative  top3_all  top3_complete_cases  top3_imputed_cases  spearman
+   lr linear_shap          0.701     0.990                0.990               0.991     0.990
+   rf   tree_shap          0.659     0.833                0.833               0.830     0.940
+  xgb   tree_shap          0.688     0.888                0.893               0.852     0.963
+  mlp          ig          0.695     0.938                0.943               0.902     0.979
+  mlp          eg          0.695     0.969                0.974               0.929     0.979
+
+A4 Path-dependent TreeSHAP ('true to the data') instead of interventional
+model  bootstrap_top3_interventional  bootstrap_top3_path_dependent  same_model_agreement
+   rf                          0.528                          0.545                 0.791
+  xgb                          0.580                          0.583                 0.842
+
+A5 80% subsampling without replacement instead of the bootstrap
+   (two 80% subsamples share about 80% of their rows; two bootstraps share fewer distinct
+   rows, so subsampling is expected to give higher agreement)
+model   explainer  bootstrap  subsample_80pct
+   lr linear_shap      0.682            0.837
+   rf   tree_shap      0.528            0.638
+  xgb   tree_shap      0.580            0.727
+  mlp          ig      0.515            0.722
+  mlp          eg      0.574            0.768
+
+A7 KernelSHAP budget vs exact Shapley values (20 patients; default budget is 2,078)
+model  coalitions  max_error_pct_of_total  top3_vs_exact  spearman_vs_exact
+   lr         500                   1.261          1.000              0.964
+   lr        2078                   1.261          1.000              0.968
+   lr        8000                   1.261          1.000              0.971
+  xgb         500                   1.088          1.000              0.974
+  xgb        2078                   1.088          1.000              0.976
+  xgb        8000                   1.088          1.000              0.976
+  mlp         500                   2.606          1.000              0.962
+  mlp        2078                   2.606          0.975              0.969
+  mlp        8000                   2.606          0.975              0.971
+
+A8 Faithfulness ratio (top-k gap / random-k gap) for k = 1, 3, 5 and two replacement rules
+replacement       background mean             background row            
+k                               1     3     5              1     3     5
+model explainer                                                         
+lr    linear_shap            5.90  2.75  2.09           5.19  2.60  2.02
+mlp   eg                     5.54  2.72  2.08           5.08  2.55  1.96
+      ig                     5.64  2.75  2.07           5.08  2.53  1.91
+rf    tree_shap              5.09  2.40  1.75           3.86  2.19  1.73
+xgb   tree_shap              7.22  3.10  2.16           6.25  2.95  2.09
+   smallest share of patients where top-k beats random-k: 0.746
+
+A11 Blood-pressure errors independent (0.0) vs correlated (0.7, an assumption)
+bp_error_correlation    0.0    0.7
+model explainer                   
+lr    linear_shap     0.842  0.847
+mlp   eg              0.834  0.832
+      ig              0.819  0.820
+rf    tree_shap       0.682  0.681
+xgb   tree_shap       0.825  0.832
+
+==============================================================================
+AUDIT 3 - DESIGN ALTERNATIVES RE-RUN (Framingham)   2026-10-05 14:16
+==============================================================================
+Per-patient top-3 agreement across 30 resamples, 200 patients (chance 0.129).
+
+A1 Other train/test splits (same hyperparameters). 'main' = the protocol's split, same 30
+   bootstrap seeds. Base-model test AUC in brackets.
+model   explainer  main  split1  auc1  split2  auc2  split3  auc3
+   lr linear_shap 0.682   0.686 0.742   0.719 0.751   0.720 0.736
+   rf   tree_shap 0.528   0.533 0.722   0.524 0.727   0.520 0.692
+  xgb   tree_shap 0.580   0.616 0.737   0.611 0.736   0.559 0.716
+  mlp          ig 0.515   0.538 0.740   0.559 0.748   0.509 0.730
+  mlp          eg 0.574   0.612 0.740   0.623 0.748   0.581 0.730
+
+A2 Hyperparameters re-tuned inside every bootstrap vs tuned once (same 30 bootstraps)
+   reference computed in the same environment as the re-tuned runs: yes
+model   explainer  tuned_once  retuned  difference  diff_lo  diff_hi
+   lr linear_shap       0.682    0.679      -0.004   -0.005   -0.002
+   rf   tree_shap       0.528    0.528       0.000    0.000    0.000
+  xgb   tree_shap       0.585    0.440      -0.145   -0.160   -0.129
+   lr choices across bootstraps: {'C': 0.1} x28; {'C': 0.01} x2
+   rf choices across bootstraps: {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 12} x30
+   xgb choices across bootstraps: {'n_estimators': 600, 'max_depth': 4, 'learning_rate': 0.05} x30
+
+A2b Leak-free re-tuning: grouped folds keep all copies of a bootstrapped row in one fold
+model   explainer  tuned_once  retuned_grouped  difference  diff_lo  diff_hi                                                                                                                                                                                                                                                                                                                                    choices
+   lr linear_shap       0.682            0.692       0.010    0.002    0.017                                                                                                                                                                                                                                                                                                             {'C': 0.01} x26; {'C': 0.1} x4
+  xgb   tree_shap       0.580            0.577      -0.003   -0.005   -0.002                                                                                                                                                                                                          {'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05} x28; {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.05} x2
+   rf   tree_shap       0.528            0.575       0.047    0.032    0.062 {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 6} x17; {'n_estimators': 300, 'min_samples_leaf': 25, 'max_depth': 12} x7; {'n_estimators': 300, 'min_samples_leaf': 25, 'max_depth': 6} x3; {'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 12} x2; {'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 6} x1
+   (tuned_once here is the laptop main run; grouped re-tuning was also run on the laptop)
+
+A3 Regression (iterative) imputation instead of median: agreement of each patient's
+   explanation with the median-imputation explanation (500 patients; 56 have imputed values)
+model   explainer  auc_iterative  top3_all  top3_complete_cases  top3_imputed_cases  spearman
+   lr linear_shap          0.701     0.990                0.990               0.991     0.990
+   rf   tree_shap          0.659     0.833                0.833               0.830     0.940
+  xgb   tree_shap          0.688     0.888                0.893               0.852     0.963
+  mlp          ig          0.695     0.938                0.943               0.902     0.979
+  mlp          eg          0.695     0.969                0.974               0.929     0.979
+
+A4 Path-dependent TreeSHAP ('true to the data') instead of interventional
+model  bootstrap_top3_interventional  bootstrap_top3_path_dependent  same_model_agreement
+   rf                          0.528                          0.545                 0.791
+  xgb                          0.580                          0.583                 0.842
+
+A5 80% subsampling without replacement instead of the bootstrap
+   (two 80% subsamples share about 80% of their rows; two bootstraps share fewer distinct
+   rows, so subsampling is expected to give higher agreement)
+model   explainer  bootstrap  subsample_80pct
+   lr linear_shap      0.682            0.837
+   rf   tree_shap      0.528            0.638
+  xgb   tree_shap      0.580            0.727
+  mlp          ig      0.515            0.722
+  mlp          eg      0.574            0.768
+
+A7 KernelSHAP budget vs exact Shapley values (20 patients; default budget is 2,078)
+model  coalitions  max_error_pct_of_total  top3_vs_exact  spearman_vs_exact
+   lr         500                   1.261          1.000              0.964
+   lr        2078                   1.261          1.000              0.968
+   lr        8000                   1.261          1.000              0.971
+  xgb         500                   1.088          1.000              0.974
+  xgb        2078                   1.088          1.000              0.976
+  xgb        8000                   1.088          1.000              0.976
+  mlp         500                   2.606          1.000              0.962
+  mlp        2078                   2.606          0.975              0.969
+  mlp        8000                   2.606          0.975              0.971
+
+A8 Faithfulness ratio (top-k gap / random-k gap) for k = 1, 3, 5 and two replacement rules
+replacement       background mean             background row            
+k                               1     3     5              1     3     5
+model explainer                                                         
+lr    linear_shap            5.90  2.75  2.09           5.19  2.60  2.02
+mlp   eg                     5.54  2.72  2.08           5.08  2.55  1.96
+      ig                     5.64  2.75  2.07           5.08  2.53  1.91
+rf    tree_shap              5.09  2.40  1.75           3.86  2.19  1.73
+xgb   tree_shap              7.22  3.10  2.16           6.25  2.95  2.09
+   smallest share of patients where top-k beats random-k: 0.746
+
+A11 Blood-pressure errors independent (0.0) vs correlated (0.7, an assumption)
+bp_error_correlation    0.0    0.7
+model explainer                   
+lr    linear_shap     0.842  0.847
+mlp   eg              0.834  0.832
+      ig              0.819  0.820
+rf    tree_shap       0.682  0.681
+xgb   tree_shap       0.825  0.832

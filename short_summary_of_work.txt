@@ -283,7 +283,9 @@ S6. DECISION REGISTER AND PROTOCOL FREEZE
   31 decisions (D-01 to D-31). Declared deviations from the literature:
     D-01 single 80/20 split (needed for a fixed set of patients)
     D-06 100 / 50 bootstraps, fewer than Riley & Collins' examples
-    D-07 hyperparameters tuned once -> reported instability is a lower bound
+    D-07 hyperparameters tuned once. Tested 2026-10-05: leak-free re-tuning
+         inside every bootstrap changes agreement by -0.003 to +0.047, so this
+         is neither a lower nor an upper bound. (Naive re-tuning leaks.)
     D-11 random forest depth capped at 12 (TreeSHAP cost)
   Decisions D-28 to D-31 were added AFTER the freeze and are labelled as
   amendments; the sample-size experiment is exploratory.
@@ -518,6 +520,12 @@ S15. SAMPLE-SIZE EXPERIMENT (exploratory)     (src/phase6_sample_size.py)
      Test AUC over the same range: 0.828-0.837 -> 0.847-0.850.
      At 34 events per predictor BRFSS gives 0.63-0.75; Framingham itself gives
      0.52-0.70.
+  Replication (2026-10-05): with 3, 3 and 2 independently drawn subsamples at
+     the three smaller sizes, the MEAN agreement rises at every step for all
+     five rows (LR 0.72 / 0.79 / 0.87 / 0.96; XGB 0.60 / 0.65 / 0.74 / 0.85).
+     One subsample can move a cell by about 0.10 at small sizes, so the flat
+     step from 15 to 34 above is subsample noise. Bootstrapping one sample was
+     also checked against drawing disjoint new samples: no systematic gap.
 
 --------------------------------------------------------------------------------
 S16. VARIANCE DECOMPOSITION                   (src/phase6_variance.py)
@@ -660,7 +668,8 @@ S17. PER-PATIENT LINKING                      (src/phase6_shares_linking.py)
   Design
    - One train/test split per dataset. Performance has confidence intervals,
      but everything is conditional on that split.
-   - Hyperparameters tuned once, so reported instability is a lower bound.
+   - Hyperparameters tuned once. Leak-free re-tuning per bootstrap was tested
+     on Framingham and changes nothing material; not tested on BRFSS.
    - Variance decomposition is one source at a time; no interactions.
    - Sample-size experiment and background-sample factor were added after the
      protocol freeze. One subsample per size.

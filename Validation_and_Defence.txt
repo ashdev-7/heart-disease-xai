@@ -7,9 +7,8 @@ Written 2026-10-05. Raw output of every test: results/audit_report.txt.
 Code: src/audit1_correctness.py, audit2_sensitivity.py, audit3_alternatives.py,
 phase6_sample_size.py (indep mode).
 
-STATUS LINE (updated 2026-10-05): the BRFSS KernelSHAP correction has landed
-and is integrated. One Kaggle run (re-tuning per bootstrap; replication of the
-sample-size experiment) was still running and is marked PENDING.
+STATUS LINE (final, 2026-10-05): every test in this file has been run. Nothing
+is pending except the literature search noted in Section 11.
 
 CONTENTS
   1. What "validated" means here, and what it cannot mean
@@ -211,13 +210,56 @@ T4 Determinism
   Making systolic and diastolic errors correlated at 0.7 (an assumed value)
   changes noise-robustness scores by 0.007 or less.
 
-4.14 PENDING on Kaggle
-  - Hyperparameters re-tuned inside every bootstrap (D-07). 12 of 30 were
-    done on the laptop before it ran out of memory; the full 30, with the
-    tuned-once reference recomputed in the same environment, are running.
-  - Second and third independently drawn subsamples for the sample-size
-    experiment (D-28).
-  - (Done) BRFSS KernelSHAP re-run without truncation (D-32); see 7.1.
+4.14 Re-tuning hyperparameters inside every bootstrap (the deviation in D-07)
+  Two versions were run on the same 30 Framingham bootstraps, 200 patients.
+
+  (a) Ordinary 5-fold CV inside each bootstrap sample (run on Kaggle, with the
+      tuned-once reference recomputed in the same environment)
+        model   tuned once   re-tuned   difference (95% CI)
+        LR      0.682        0.679      -0.004 (-0.005 to -0.002)
+        RF      0.528        0.528       0.000 (same setting chosen 30 of 30)
+        XGB     0.585        0.440      -0.145 (-0.160 to -0.129)
+      XGBoost chose its most complex setting (600 trees, depth 4) in 30 of 30
+      bootstraps, against 100 trees, depth 2 when tuned on the real data.
+      Cause: a bootstrap sample contains copies of the same row; ordinary
+      K-fold puts copies on both sides of a fold, so the validation fold is
+      not independent and complex models are rewarded.
+
+  (b) Leak-free version: grouped folds keep all copies of a row together
+        model   tuned once   re-tuned   difference (95% CI)
+        LR      0.682        0.692      +0.010 (+0.002 to +0.017)
+        XGB     0.580        0.577      -0.003 (-0.005 to -0.002)
+        RF      0.528        0.575      +0.047 (+0.032 to +0.062)
+      XGBoost now chooses 100 trees, depth 2 in the bootstraps, as on the real
+      data. The random forest often chooses a shallower setting (depth 6 in 17
+      of 30), which is slightly MORE stable.
+
+  Conclusion: with correct re-tuning, per-patient agreement is the same as
+  with hyperparameters tuned once (differences -0.003 to +0.047). Fixing the
+  hyperparameters did not hide instability, and the earlier statement that the
+  reported instability is "a lower bound" is withdrawn: it is neither clearly
+  a lower nor an upper bound. Separately, naive re-tuning inside bootstrap
+  samples is itself a pitfall that inflates apparent instability (XGBoost
+  0.585 -> 0.440); this is worth one paragraph in the paper.
+  Caveat: (b) was run on the laptop and compared with the laptop main run;
+  (a) on Kaggle. LR and RF reproduce across the two to three decimals.
+
+4.15 Replication of the sample-size experiment with new subsamples
+  Two further independently drawn subsamples at 3,392 and 7,580 rows and one
+  at 30,000 (Kaggle), added to the original one. Per-patient top-3 agreement,
+  mean over subsamples (range in brackets):
+      events per predictor   15                34                135               910
+      training rows          3,392 (3 draws)   7,580 (3 draws)   30,000 (2)        202,944 (1)
+      LR  linear SHAP        0.72 (0.65-0.75)  0.79 (0.75-0.82)  0.87 (0.86-0.87)  0.96
+      MLP Expected Grad.     0.66 (0.65-0.67)  0.69 (0.67-0.74)  0.82 (0.82-0.82)  0.89
+      MLP Integr. Grad.      0.62 (0.58-0.64)  0.66 (0.62-0.73)  0.79 (0.79-0.80)  0.88
+      RF  TreeSHAP           0.64 (0.62-0.69)  0.72 (0.70-0.75)  0.76 (0.74-0.77)  0.86
+      XGB TreeSHAP           0.60 (0.58-0.64)  0.65 (0.62-0.68)  0.74 (0.74-0.75)  0.85
+  The means rise at every step for all five rows. A single subsample can move
+  a cell by up to about 0.10 at the two smallest sizes, so the first run's
+  apparent plateau between 15 and 34 events per predictor was subsample noise.
+  The ranges at 3,392 and 7,580 overlap for four of the five rows; the clear
+  separations are between 7,580, 30,000 and 202,944.
 
 ================================================================================
 5. CLAIMS-EVIDENCE MATRIX
@@ -248,8 +290,9 @@ C3 Not reproducible per patient on small data
    Tests    : 5 metrics; grouped features; 3 other splits; path-dependent
               TreeSHAP; other imputation; complete cases; bootstrap vs
               disjoint samples; convergence in number of bootstraps.
-   Limits   : signs are stable (4.4); hyperparameters fixed (PENDING test);
-              one cohort of this size.
+   Limits   : signs are stable (4.4); one cohort of this size.
+              Re-tuning hyperparameters per bootstrap (leak-free) leaves the
+              result unchanged (4.14).
    Status   : SUPPORTED, and must be worded as "order of leading features".
 
 C4 Sample-size effect
@@ -257,9 +300,11 @@ C4 Sample-size effect
               monotonically for LR, XGB, RF and both MLP explainers between 34
               and 910; AUC moves 0.83 -> 0.85.
    Tests    : hyperparameters re-tuned at each size; disjoint-sample check.
-   Limits   : post-hoc experiment; one subsample per size (PENDING
-              replication); between 15 and 34 events per predictor three of
-              five rows are flat.
+   Tests    : also replicated with 2 further subsamples at the two smallest
+              sizes and 1 at 30,000 (4.15): means rise at every step.
+   Limits   : post-hoc experiment; 2-3 subsamples per size; a single
+              subsample can move a cell by about 0.10 at small sizes, and the
+              15 vs 34 events-per-predictor ranges overlap.
    Status   : SUPPORTED as exploratory. "Largely" is justified by BRFSS at
               34 events per predictor (0.63-0.75) against Framingham
               (0.52-0.70); the remaining gap is unexplained.
@@ -314,7 +359,8 @@ C9 Noise test as a flag
  2   Bootstrap of training rows     80% subsampling             YES      higher agreement, as expected (4.10)
                                     Disjoint new samples        YES      bootstrap is not inflated (4.10)
  3   100 / 50 bootstraps            More                        YES      half-sample check: change <= 0.02
- 4   Hyperparameters tuned once     Re-tune per bootstrap       PENDING  12 of 30 done locally
+ 4   Hyperparameters tuned once     Re-tune per bootstrap       YES      no change when re-tuned without
+                                                                         leakage; naive re-tuning leaks (4.14)
  5   No class resampling            SMOTE                       YES      miscalibrates, changes explanations
                                     Class weights               no       not needed: unweighted models are
                                                                          calibrated-in-the-large already
@@ -421,8 +467,9 @@ Q2 "The bootstrap overstates instability."
    Tested against disjoint new samples: no (4.10).
 
 Q3 "You fixed hyperparameters, so it is not a full instability analysis."
-   Correct as run; re-tuning per bootstrap is PENDING. If it lowers agreement,
-   reported instability is a lower bound, which strengthens C3.
+   Tested (4.14). Re-tuned inside every bootstrap with leak-free folds,
+   agreement changes by -0.003 to +0.047. We also show that the common way of
+   re-tuning inside bootstrap samples leaks and inflates instability.
 
 Q4 "Top-3 overlap is arbitrary."
    Same conclusions under top-1, top-5, Spearman, RBO; cosine reported too.
@@ -448,7 +495,8 @@ Q9 "One split."
    Three more splits give the same stability results (4.7).
 
 Q10 "The sample-size experiment was designed after seeing the data."
-   Yes; labelled exploratory. Replication with new subsamples is PENDING.
+   Yes; labelled exploratory. Replicated with further subsamples (4.15) and
+   checked against disjoint samples (4.10).
 
 Q11 "Two environments."
    All pinned libraries verified identical; LR and RF reproduce to four
@@ -525,10 +573,11 @@ This is my judgement, not something a test can confirm.
 ================================================================================
 11. PENDING ITEMS
 ================================================================================
-  [ ] Kaggle run xai-heart-audit-run: re-tuning per bootstrap; replication
-      subsamples for the sample-size experiment.
-  [x] Kaggle run xai-heart-kernel-fix: BRFSS KernelSHAP without truncation;
-      BRFSS variance, class-share and swap tables regenerated.
-  [ ] After the audit run: update Sections 4.14, 5 (C3, C4), 6 (row 4).
+  [x] Kaggle run xai-heart-kernel-fix: BRFSS KernelSHAP without truncation.
+  [x] Kaggle run xai-heart-audit-run: re-tuning per bootstrap; sample-size
+      replication. Versions verified: scikit-learn 1.8.0, xgboost 3.1.3,
+      shap 0.52.0, numpy 2.2.6, torch 2.11.0+cpu.
+  [x] Leak-free re-tuning (laptop).
   [ ] Database-protocol literature search before any novelty wording.
+  [ ] Paper rewrite and figures.
 ================================================================================

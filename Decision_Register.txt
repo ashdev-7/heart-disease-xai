@@ -410,6 +410,28 @@ D-33  Validation audit (2026-10-05)
   concerns the ORDER of leading features.
   Status: done except the items marked pending in that file.
 
+D-34  Outcome of testing the D-07 deviation (hyperparameters tuned once)
+  [E, results/audit_report.txt A2 and A2b; Validation_and_Defence.txt 4.14]
+  Ordinary K-fold re-tuning inside a bootstrap sample leaks, because copies of
+  one row fall on both sides of a fold. XGBoost then picks its most complex
+  setting in 30 of 30 bootstraps and per-patient agreement falls from 0.585 to
+  0.440. With grouped folds (all copies of a row in one fold) the choices match
+  those made on the real data and agreement is unchanged: LR +0.010,
+  XGB -0.003, RF +0.047.
+  Consequences: (1) D-07's wording "reported instability is a LOWER BOUND" is
+  withdrawn; (2) Riley & Collins' advice to repeat tuning in each bootstrap
+  needs grouped folds when the tuning itself uses cross-validation. No source
+  was found that states this for explanation stability; it is our own check.
+  Status: deviation tested; conclusion unchanged.
+
+D-35  Replication of the sample-size experiment (D-28)
+  [E, results/brfss/sample_size_report.txt; Validation_and_Defence.txt 4.15]
+  2 further subsamples at 3,392 and 7,580 rows, 1 at 30,000. Mean agreement
+  rises at every step for all five model/explainer rows. Between-subsample
+  spread is up to about 0.10 at the two smallest sizes; results are reported as
+  mean and range, not from one subsample.
+  Status: replicated; still exploratory (added after the freeze).
+
 --------------------------------------------------------------------------------
 F. OPEN ITEMS
 --------------------------------------------------------------------------------

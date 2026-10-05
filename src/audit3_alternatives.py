@@ -133,6 +133,44 @@ if STAGE == "retune":
         print(path.name, {k: v for k, v in hps.items() if k != "mlp"}, flush=True)
     print("retune COMPLETE")
 
+# ----------------------------------------------------------------- A2b leak-free re-tuning
+if STAGE == "retune_grouped":
+    # In a bootstrap sample the same original row appears several times. Ordinary K-fold
+    # puts copies of one row in both the training and the validation fold, which rewards
+    # over-complex models. Grouped folds keep all copies of a row together.
+    from sklearn.model_selection import StratifiedGroupKFold
+    which = tuple(sys.argv[2].split(",")) if len(sys.argv) > 2 else ("lr", "rf", "xgb")
+    grids = {
+        "lr": [dict(C=c) for c in (0.001, 0.01, 0.1, 1, 10, 100)],
+        "rf": [dict(n_estimators=300, min_samples_leaf=l, max_depth=dp) for l in (5, 10, 25) for dp in (6, 12)],
+        "xgb": [dict(n_estimators=k, max_depth=dp, learning_rate=0.05) for dp in (2, 3, 4) for k in (100, 300, 600)],
+    }
+    for b in range(N_RES):
+        path = AUD / f"retunegrp_{'-'.join(which)}_boot{b:02d}.npz"
+        if path.exists():
+            continue
+        if out_of_time():
+            sys.exit(0)
+        rows = np.random.default_rng(1000 + b).integers(0, len(YTR), len(YTR))
+        Xb, yb = d["Xtr"].iloc[rows], YTR[rows]
+        hps = dict(HPS)
+        cv = StratifiedGroupKFold(5, shuffle=True, random_state=SEED)
+        for name in which:
+            sc = []
+            for hp in grids[name]:
+                ls = []
+                for tr, va in cv.split(Xb, yb, groups=rows):
+                    pr = Prep().fit(Xb.iloc[tr])
+                    mdl = make_model(name, hp, SEED).fit(pr.transform(Xb.iloc[tr]), yb[tr])
+                    ls.append(log_loss(yb[va], sigmoid(mdl.margin(pr.transform(Xb.iloc[va])))))
+                sc.append(np.mean(ls))
+            hps[name] = grids[name][int(np.argmin(sc))]
+        out = fit_explain(Xb, yb, XEX, d["Xbg"], hps, which=which)
+        out["hp"] = np.array(json.dumps({k: hps[k] for k in which}))
+        np.savez_compressed(path, **out)
+        print(path.name, {k: hps[k] for k in which}, flush=True)
+    print("retune_grouped COMPLETE")
+
 # ----------------------------------------------------------------- A2 reference (same environment)
 if STAGE == "fixedref":
     for b in range(N_RES):
@@ -353,6 +391,25 @@ if STAGE == "report":
         for m in ("lr", "rf", "xgb"):
             log(f"   {m} choices across bootstraps: " + "; ".join(
                 f"{k} x{v}" for k, v in hp[m].astype(str).value_counts().items()))
+        log("")
+        log("A2b Leak-free re-tuning: grouped folds keep all copies of a bootstrapped row in one fold")
+        rows = []
+        for tag in sorted({f.name.split("_boot")[0] for f in AUD.glob("retunegrp_*_boot*.npz")}):
+            fg = sorted(AUD.glob(f"{tag}_boot*.npz"))
+            if len(fg) < N_RES:
+                continue
+            hpg = pd.DataFrame([json.loads(str(np.load(f)["hp"])) for f in fg])
+            for m in tag.replace("retunegrp_", "").split("-"):
+                e = list(NATIVE[m])[0]
+                v = pair_top3(np.stack([np.load(f)[f"phi_{m}_{e}"] for f in fg]))
+                r0 = ref[(m, e)]
+                lo, hi = boot_ci(v - r0)
+                rows.append(dict(model=m, explainer=e, tuned_once=r0.mean(), retuned_grouped=v.mean(),
+                                 difference=(v - r0).mean(), diff_lo=lo, diff_hi=hi,
+                                 choices="; ".join(f"{k} x{c}" for k, c in hpg[m].astype(str).value_counts().items())))
+        if rows:
+            log(pd.DataFrame(rows).round(3).to_string(index=False))
+            log("   (tuned_once here is the laptop main run; grouped re-tuning was also run on the laptop)")
 
     if (AUD / "impute.csv").exists():
         log("\nA3 Regression (iterative) imputation instead of median: agreement of each patient's")
