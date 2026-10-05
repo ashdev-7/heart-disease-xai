@@ -263,6 +263,20 @@ T4 Determinism
   The ranges at 3,392 and 7,580 overlap for four of the five rows; the clear
   separations are between 7,580, 30,000 and 202,944.
 
+4.16 Checks added while writing the paper (results/audit_report.txt S8, S9)
+  Near-ties (post hoc). The gap between a patient's third and fourth
+  attribution, as a share of total absolute attribution (median 1.5-3.1%),
+  correlates with bootstrap reproducibility at 0.29-0.70 on Framingham and
+  0.76-0.84 on BRFSS. This supports the mechanism stated in the paper and is
+  the strongest per-patient correlate found.
+  Published equation on the same test patients. On the 835 eligible test
+  patients the untrained equation scores AUC 0.701 (0.653-0.750). LR, MLP and
+  XGB do not differ from it (+0.001, -0.005, -0.018; intervals include zero);
+  RF is 0.036 lower (95% CI 0.001 to 0.069).
+  Sources of variation, wording. On Framingham the ICC for model class (0.67)
+  and for bootstrap (median 0.68) are about equal, so model class is the
+  largest source on BRFSS only; on Framingham the two are joint largest.
+
 ================================================================================
 5. CLAIMS-EVIDENCE MATRIX
 ================================================================================
@@ -581,5 +595,8 @@ This is my judgement, not something a test can confirm.
       shap 0.52.0, numpy 2.2.6, torch 2.11.0+cpu.
   [x] Leak-free re-tuning (laptop).
   [ ] Database-protocol literature search before any novelty wording.
-  [ ] Paper rewrite and figures.
+  [x] Paper written and proofread (2026-10-05); 53 references, each checked
+      against an online record.
+  [ ] Push branch protocol-v1 and tag protocol-v1.0 to GitHub so the paper's
+      code-availability statement is true.
 ================================================================================
