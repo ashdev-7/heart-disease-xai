@@ -705,3 +705,119 @@ H4 Number of seeds: per-patient seed agreement from the first 5 seeds vs all 10
   xgb tree_shap: 5 seeds 0.868, 10 seeds 0.869
   mlp ig: 5 seeds 0.848, 10 seeds 0.848
   mlp eg: 5 seeds 0.906, 10 seeds 0.903
+
+==============================================================================
+AUDIT 5 - ANALYSIS SETTINGS, CHECKED FROM STORED EXPLANATIONS   2026-10-05 18:27
+==============================================================================
+
+--- framingham: 100 bootstrap retrains, 10 seed retrains, 15 features ---
+
+A1 Number of explained patients: top-3 agreement in two random halves of the 500
+  lr  linear_shap  bootstrap: first 250 0.702, last 250 0.705
+  rf  tree_shap    bootstrap: first 250 0.520, last 250 0.514; seed: 0.820, 0.810
+  xgb tree_shap    bootstrap: first 250 0.579, last 250 0.581; seed: 0.877, 0.860
+  mlp ig           bootstrap: first 250 0.534, last 250 0.523; seed: 0.848, 0.847
+  mlp eg           bootstrap: first 250 0.586, last 250 0.584; seed: 0.897, 0.909
+
+A2 Number of bootstrap retrains
+  lr  linear_shap  first 25 bootstraps 0.680, all 100 0.704
+  rf  tree_shap    first 25 bootstraps 0.526, all 100 0.517
+  xgb tree_shap    first 25 bootstraps 0.578, all 100 0.580
+  mlp ig           first 25 bootstraps 0.516, all 100 0.528
+  mlp eg           first 25 bootstraps 0.575, all 100 0.585
+
+A3 Choice of k: top-k agreement, raw (chance-corrected)
+  lr  linear_shap  k=1 boot 0.82 (0.80) | k=2 boot 0.69 (0.66) | k=3 boot 0.70 (0.66) | k=4 boot 0.72 (0.66) | k=5 boot 0.70 (0.62)
+  rf  tree_shap    k=1 boot 0.74 (0.72) seed 0.94 (0.94) | k=2 boot 0.58 (0.54) seed 0.86 (0.85) | k=3 boot 0.52 (0.45) seed 0.82 (0.79) | k=4 boot 0.51 (0.41) seed 0.80 (0.76) | k=5 boot 0.53 (0.40) seed 0.81 (0.76)
+  xgb tree_shap    k=1 boot 0.79 (0.77) seed 0.96 (0.96) | k=2 boot 0.62 (0.59) seed 0.86 (0.84) | k=3 boot 0.58 (0.52) seed 0.87 (0.85) | k=4 boot 0.58 (0.50) seed 0.89 (0.86) | k=5 boot 0.59 (0.48) seed 0.85 (0.81)
+  mlp ig           k=1 boot 0.69 (0.67) seed 0.94 (0.93) | k=2 boot 0.53 (0.48) seed 0.87 (0.86) | k=3 boot 0.53 (0.46) seed 0.85 (0.83) | k=4 boot 0.55 (0.46) seed 0.85 (0.83) | k=5 boot 0.58 (0.46) seed 0.85 (0.81)
+  mlp eg           k=1 boot 0.76 (0.74) seed 0.94 (0.94) | k=2 boot 0.61 (0.57) seed 0.91 (0.90) | k=3 boot 0.59 (0.52) seed 0.90 (0.89) | k=4 boot 0.59 (0.51) seed 0.91 (0.89) | k=5 boot 0.60 (0.49) seed 0.89 (0.86)
+
+A4 Rank-biased overlap at three persistence values
+  lr  linear_shap  p=0.8 boot 0.816 | p=0.9 boot 0.836 | p=0.95 boot 0.849
+  rf  tree_shap    p=0.8 boot 0.718 seed 0.908 | p=0.9 boot 0.754 seed 0.915 | p=0.95 boot 0.777 seed 0.920
+  xgb tree_shap    p=0.8 boot 0.760 seed 0.920 | p=0.9 boot 0.785 seed 0.920 | p=0.95 boot 0.801 seed 0.922
+  mlp ig           p=0.8 boot 0.719 seed 0.914 | p=0.9 boot 0.760 seed 0.920 | p=0.95 boot 0.784 seed 0.924
+  mlp eg           p=0.8 boot 0.753 seed 0.933 | p=0.9 boot 0.781 seed 0.934 | p=0.95 boot 0.799 seed 0.936
+
+A5 How pairs are formed
+  lr  linear_shap  all pairs of bootstraps 0.704; each bootstrap against the base model 0.779
+  rf  tree_shap    all pairs of bootstraps 0.517; each bootstrap against the base model 0.601
+  xgb tree_shap    all pairs of bootstraps 0.580; each bootstrap against the base model 0.668
+  mlp ig           all pairs of bootstraps 0.528; each bootstrap against the base model 0.616
+  mlp eg           all pairs of bootstraps 0.585; each bootstrap against the base model 0.674
+
+--- brfss: 50 bootstrap retrains, 10 seed retrains, 21 features ---
+
+A1 Number of explained patients: top-3 agreement in two random halves of the 500
+  lr  linear_shap  bootstrap: first 250 0.954, last 250 0.947
+  rf  tree_shap    bootstrap: first 250 0.853, last 250 0.861; seed: 0.949, 0.945
+  xgb tree_shap    bootstrap: first 250 0.853, last 250 0.825; seed: 0.946, 0.931
+  mlp ig           bootstrap: first 250 0.890, last 250 0.879; seed: 0.909, 0.897
+  mlp eg           bootstrap: first 250 0.893, last 250 0.879; seed: 0.910, 0.901
+
+A2 Number of bootstrap retrains
+  lr  linear_shap  first 25 bootstraps 0.953, all 50 0.951
+  rf  tree_shap    first 25 bootstraps 0.855, all 50 0.857
+  xgb tree_shap    first 25 bootstraps 0.838, all 50 0.839
+  mlp ig           first 25 bootstraps 0.881, all 50 0.884
+  mlp eg           first 25 bootstraps 0.885, all 50 0.886
+
+A3 Choice of k: top-k agreement, raw (chance-corrected)
+  lr  linear_shap  k=1 boot 0.96 (0.96) | k=2 boot 0.93 (0.92) | k=3 boot 0.95 (0.95) | k=4 boot 0.97 (0.96) | k=5 boot 0.98 (0.97)
+  rf  tree_shap    k=1 boot 0.93 (0.93) seed 0.97 (0.97) | k=2 boot 0.87 (0.86) seed 0.96 (0.96) | k=3 boot 0.86 (0.84) seed 0.95 (0.94) | k=4 boot 0.91 (0.90) seed 0.97 (0.97) | k=5 boot 0.94 (0.93) seed 0.98 (0.98)
+  xgb tree_shap    k=1 boot 0.88 (0.87) seed 0.94 (0.94) | k=2 boot 0.84 (0.83) seed 0.93 (0.93) | k=3 boot 0.84 (0.82) seed 0.94 (0.93) | k=4 boot 0.85 (0.83) seed 0.93 (0.92) | k=5 boot 0.88 (0.86) seed 0.95 (0.94)
+  mlp ig           k=1 boot 0.94 (0.93) seed 0.95 (0.94) | k=2 boot 0.88 (0.87) seed 0.90 (0.89) | k=3 boot 0.88 (0.87) seed 0.90 (0.89) | k=4 boot 0.91 (0.89) seed 0.93 (0.92) | k=5 boot 0.92 (0.90) seed 0.94 (0.93)
+  mlp eg           k=1 boot 0.94 (0.94) seed 0.95 (0.94) | k=2 boot 0.89 (0.88) seed 0.91 (0.91) | k=3 boot 0.89 (0.88) seed 0.91 (0.90) | k=4 boot 0.91 (0.90) seed 0.92 (0.91) | k=5 boot 0.92 (0.91) seed 0.93 (0.92)
+
+A4 Rank-biased overlap at three persistence values
+  lr  linear_shap  p=0.8 boot 0.963 | p=0.9 boot 0.959 | p=0.95 boot 0.957
+  rf  tree_shap    p=0.8 boot 0.932 seed 0.976 | p=0.9 boot 0.938 seed 0.976 | p=0.95 boot 0.941 seed 0.975
+  xgb tree_shap    p=0.8 boot 0.900 seed 0.958 | p=0.9 boot 0.909 seed 0.962 | p=0.95 boot 0.915 seed 0.964
+  mlp ig           p=0.8 boot 0.936 seed 0.948 | p=0.9 boot 0.938 seed 0.950 | p=0.95 boot 0.940 seed 0.951
+  mlp eg           p=0.8 boot 0.938 seed 0.948 | p=0.9 boot 0.938 seed 0.949 | p=0.95 boot 0.938 seed 0.949
+
+A5 How pairs are formed
+  lr  linear_shap  all pairs of bootstraps 0.951; each bootstrap against the base model 0.966
+  rf  tree_shap    all pairs of bootstraps 0.857; each bootstrap against the base model 0.888
+  xgb tree_shap    all pairs of bootstraps 0.839; each bootstrap against the base model 0.879
+  mlp ig           all pairs of bootstraps 0.884; each bootstrap against the base model 0.909
+  mlp eg           all pairs of bootstraps 0.886; each bootstrap against the base model 0.904
+
+==============================================================================
+AUDIT 4 - SETTINGS FIXED BY OUR OWN CHOICE   dataset: framingham   2026-10-05 18:20
+==============================================================================
+500 explained patients; chance level of top-3 agreement 0.129
+
+H1 Random forest with 1,000 trees instead of 300
+  1,000 trees: test AUC 0.6639 (used 0.6650); top-3 agreement with the used setting 0.897 (95% CI 0.879-0.914); seed-to-seed for this model 0.815   [2 min]
+
+H2 XGBoost with learning rate 0.1 and no subsampling (depth and trees re-chosen by 5-fold CV)
+  chosen: depth 2, 50 trees
+  learning rate 0.1, no subsampling: test AUC 0.6862 (used 0.6838); top-3 agreement with the used setting 0.856 (95% CI 0.836-0.877); seed-to-seed for this model 0.869   [3 min]
+
+H3 MLP with hidden layers 128-64 instead of 64-32 (same optimiser settings and epochs)
+  128-64, Expected Gradients: test AUC 0.6950 (used 0.6957); top-3 agreement with the used setting 0.908 (95% CI 0.891-0.925); seed-to-seed for this model 0.903   [3 min]
+  128-64, Integrated Gradients: test AUC 0.6950 (used 0.6957); top-3 agreement with the used setting 0.863 (95% CI 0.843-0.882); seed-to-seed for this model 0.848   [3 min]
+
+H3b MLP with learning rate 0.001, weight decay 0.0001, dropout 0.1 (epochs re-chosen by early stopping)
+  epochs chosen: 14 (used setting: 62)
+  alternative optimiser, Expected Gradients: test AUC 0.6878 (used 0.6957); top-3 agreement with the used setting 0.809 (95% CI 0.788-0.831); seed-to-seed for this model 0.903   [3 min]
+  alternative optimiser, Integrated Gradients: test AUC 0.6878 (used 0.6957); top-3 agreement with the used setting 0.738 (95% CI 0.715-0.762); seed-to-seed for this model 0.848   [3 min]
+
+H4 Number of seeds: per-patient seed agreement from the first 5 seeds vs all 10
+  rf tree_shap: 5 seeds 0.807, 10 seeds 0.815
+  xgb tree_shap: 5 seeds 0.868, 10 seeds 0.869
+  mlp ig: 5 seeds 0.848, 10 seeds 0.848
+  mlp eg: 5 seeds 0.906, 10 seeds 0.903
+
+H5 Wider search grids. 'at edge' = the tuned value was the smallest or largest offered.
+   CV log loss: used setting vs best in the wider grid; then the wider-grid model is explained.
+  LR : used C=0.1 (at edge of original grid: False); CV loss used 0.38023, best in wider grid 0.38023 at C=0.1
+  LR with C=0.1: test AUC 0.7021 (used 0.7021); top-3 agreement with the used setting 1.000 (95% CI 1.000-1.000); seed-to-seed for this model n/a (deterministic)   [3 min]
+  XGB: used depth 2, 100 trees (depth at edge: True; trees at edge: True); CV loss used 0.38395, best in wider grid 0.38373 at depth 1, 200 trees
+  XGB depth 1, 200 trees: test AUC 0.6904 (used 0.6838); top-3 agreement with the used setting 0.791 (95% CI 0.769-0.812); seed-to-seed for this model 0.869   [3 min]
+  RF : used leaf 5, depth 12 (leaf at edge: True; depth at edge: True); CV loss used 0.38327, best in wider grid 0.38327 at leaf 5, depth 12
+  RF leaf 5, depth 12: test AUC 0.6650 (used 0.6650); mean leaves per tree 159
+
+Audit 4 complete for framingham in 4 min

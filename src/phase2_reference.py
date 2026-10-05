@@ -16,11 +16,9 @@ import statsmodels.api as sm
 from scipy.stats import kendalltau
 from sklearn.metrics import roc_auc_score
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data"
-OUT = ROOT / "results"
+from common import DATA, OUT, SEED
+
 OUT.mkdir(exist_ok=True)
-SEED = 42
 
 lines = []
 

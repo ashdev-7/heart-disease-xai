@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 # Paths can be redirected (e.g. on Kaggle: read-only input, writable /kaggle/working).
 DATA = Path(os.environ.get("XAI_DATA", ROOT / "data"))
 OUT = Path(os.environ.get("XAI_OUT", ROOT / "results"))
-SEED = 42
+# Master seed: controls the train/test split, explained patients, background rows and
+# base-model seed. 42 is the pre-specified value; another value gives a replication run.
+SEED = int(os.environ.get("XAI_SEED", 42))
 N_EXPLAIN = 500
 N_BACKGROUND = 100
 

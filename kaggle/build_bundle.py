@@ -21,6 +21,10 @@ shutil.copytree(root / "src", b / "src", ignore=shutil.ignore_patterns("__pycach
 for f in (root / "data").glob("*.csv"):
     shutil.copy(f, b / "data" / f.name)
 shutil.copy(root / "results" / "brfss" / "hyperparameters.json", b / "seed_results" / "brfss")
+# main-run BRFSS base explanations, needed by audit4_settings.py on Kaggle
+(b / "seed_results" / "brfss" / "variants").mkdir(exist_ok=True)
+shutil.copy(root / "results" / "brfss" / "variants" / "base.npz", b / "seed_results" / "brfss" / "variants")
+shutil.copy(root / "results" / "brfss" / "multiplicity_per_patient.npz", b / "seed_results" / "brfss")
 (b / "seed_results" / "framingham").mkdir(exist_ok=True)
 shutil.copy(root / "results" / "framingham" / "hyperparameters.json", b / "seed_results" / "framingham")
 (b / "dataset-metadata.json").write_text(json.dumps({

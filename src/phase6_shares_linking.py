@@ -13,50 +13,53 @@ PAIRS = [(m, e) for m in ("lr", "rf", "xgb", "mlp") for e in NATIVE[m]]
 pd.set_option("display.width", 250)
 
 # ----------------------------------------------------------- BRFSS class shares
-RES = OUT / "brfss"
-d = load("brfss")
-FEATS = d["features"]
-gm = pd.read_csv(OUT / "group_map.csv").query("dataset == 'brfss'").set_index("feature").group
-cls = gm.reindex(FEATS).str.replace(" (Ref-E only)", "", regex=False)
-CLASSES = ["Referenced", "Downstream", "Prior disease", "Access / social", "Unreferenced"]
-ref = pd.read_csv(OUT / "reference_importance.csv").query("dataset == 'brfss'")
-refD = {r: ref[ref.reference == r].set_index("item").importance for r in ref.reference.unique()}
-base, kern = np.load(RES / "variants" / "base.npz"), np.load(RES / "kernel.npz")
-boots = [np.load(f) for f in sorted((RES / "variants").glob("boot_*.npz"))]
+if (OUT / "brfss" / "kernel.npz").exists():
+    RES = OUT / "brfss"
+    d = load("brfss")
+    FEATS = d["features"]
+    gm = pd.read_csv(OUT / "group_map.csv").query("dataset == 'brfss'").set_index("feature").group
+    cls = gm.reindex(FEATS).str.replace(" (Ref-E only)", "", regex=False)
+    CLASSES = ["Referenced", "Downstream", "Prior disease", "Access / social", "Unreferenced"]
+    ref = pd.read_csv(OUT / "reference_importance.csv").query("dataset == 'brfss'")
+    refD = {r: ref[ref.reference == r].set_index("item").importance for r in ref.reference.unique()}
+    base, kern = np.load(RES / "variants" / "base.npz"), np.load(RES / "kernel.npz")
+    boots = [np.load(f) for f in sorted((RES / "variants").glob("boot_*.npz"))]
 
-out = ["=" * 78, "BRFSS - WHERE THE ATTRIBUTION GOES, BY FEATURE CLASS", "=" * 78,
-       "Classes: " + "; ".join(f"{c}: {', '.join(cls[cls == c].index)}" for c in CLASSES), ""]
-rows = []
-for m, e in PAIRS + [(m, "kernel_shap") for m in ("lr", "rf", "xgb", "mlp")]:
-    phi = kern[m] if e == "kernel_shap" else base[f"phi_{m}_{e}"]
-    imp = pd.Series(np.abs(phi).mean(0), index=FEATS)
-    share = imp.groupby(cls).sum() / imp.sum()
-    row = dict(model=m, explainer=e, **{c: share.get(c, 0.0) for c in CLASSES})
-    if e != "kernel_shap":
-        bs = []
-        for bz in boots:
-            i = pd.Series(np.abs(bz[f"phi_{m}_{e}"]).mean(0), index=FEATS)
-            bs.append(i[cls == "Downstream"].sum() / i.sum())
-        row["downstream_boot_lo"], row["downstream_boot_hi"] = np.percentile(bs, [2.5, 97.5])
-    for rname, short in (("Ref-D (PAR)", "tau_PAR"), ("Ref-D (ln OR)", "tau_lnOR")):
-        r = refD[rname]
-        row[short] = kendalltau(imp[r.index], r.to_numpy())[0]
-    row["top5"] = " > ".join(imp.sort_values(ascending=False).index[:5])
-    rows.append(row)
-tab = pd.DataFrame(rows)
-tab.to_csv(RES / "class_shares.csv", index=False)
-out.append(tab.drop(columns="top5").round(3).to_string(index=False))
-out += ["", "downstream_boot_lo/hi: 2.5th-97.5th percentile of the downstream share across 50 bootstrap models.",
-        "tau_PAR / tau_lnOR: Kendall tau between mean |attribution| and INTERHEART attributable risk /",
-        "odds ratio on the 8 mapped items (secondary; see protocol 4.7).", "", "Top five features:"]
-out += [f"  {r.model:<4}{r.explainer:<12} {r.top5}" for r in tab.itertuples()]
-(RES / "class_shares_report.txt").write_text("\n".join(out), encoding="utf-8")
-print("\n".join(out))
+    out = ["=" * 78, "BRFSS - WHERE THE ATTRIBUTION GOES, BY FEATURE CLASS", "=" * 78,
+           "Classes: " + "; ".join(f"{c}: {', '.join(cls[cls == c].index)}" for c in CLASSES), ""]
+    rows = []
+    for m, e in PAIRS + [(m, "kernel_shap") for m in ("lr", "rf", "xgb", "mlp")]:
+        phi = kern[m] if e == "kernel_shap" else base[f"phi_{m}_{e}"]
+        imp = pd.Series(np.abs(phi).mean(0), index=FEATS)
+        share = imp.groupby(cls).sum() / imp.sum()
+        row = dict(model=m, explainer=e, **{c: share.get(c, 0.0) for c in CLASSES})
+        if e != "kernel_shap":
+            bs = []
+            for bz in boots:
+                i = pd.Series(np.abs(bz[f"phi_{m}_{e}"]).mean(0), index=FEATS)
+                bs.append(i[cls == "Downstream"].sum() / i.sum())
+            row["downstream_boot_lo"], row["downstream_boot_hi"] = np.percentile(bs, [2.5, 97.5])
+        for rname, short in (("Ref-D (PAR)", "tau_PAR"), ("Ref-D (ln OR)", "tau_lnOR")):
+            r = refD[rname]
+            row[short] = kendalltau(imp[r.index], r.to_numpy())[0]
+        row["top5"] = " > ".join(imp.sort_values(ascending=False).index[:5])
+        rows.append(row)
+    tab = pd.DataFrame(rows)
+    tab.to_csv(RES / "class_shares.csv", index=False)
+    out.append(tab.drop(columns="top5").round(3).to_string(index=False))
+    out += ["", "downstream_boot_lo/hi: 2.5th-97.5th percentile of the downstream share across 50 bootstrap models.",
+            "tau_PAR / tau_lnOR: Kendall tau between mean |attribution| and INTERHEART attributable risk /",
+            "odds ratio on the 8 mapped items (secondary; see protocol 4.7).", "", "Top five features:"]
+    out += [f"  {r.model:<4}{r.explainer:<12} {r.top5}" for r in tab.itertuples()]
+    (RES / "class_shares_report.txt").write_text("\n".join(out), encoding="utf-8")
+    print("\n".join(out))
 
 # ------------------------------------------------------------------- linking
-THR = {"framingham": 0.20, "brfss": float(d["ytr"].mean())}
+THR = {"framingham": 0.20, "brfss": float(load("brfss")["ytr"].mean())}
 for ds, noise_level in (("framingham", "high"), ("brfss", "retest")):
     R = OUT / ds
+    if not (R / "multiplicity_per_patient.npz").exists() or not (R / "base_axes_per_patient.npz").exists():
+        continue
     mp = np.load(R / "multiplicity_per_patient.npz")
     bp = np.load(R / "base_axes_per_patient.npz")
     b0 = np.load(R / "variants" / "base.npz")

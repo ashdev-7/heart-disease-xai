@@ -21,3 +21,4 @@ kaggle/bundle/
 kaggle/kernel/
 kaggle/kernel_audit/
 kaggle/kernel_fix/
+kaggle/kernel_*/

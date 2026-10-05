@@ -25,7 +25,7 @@ d = load(DS)
 F = len(d["features"])
 hps = json.loads((RES / "hyperparameters.json").read_text())
 # same-environment reference: the laptop's no-resampling base explanations
-ref_dir = OUT / "brfss_local_discarded" if DS == "brfss" else RES
+ref_dir = OUT / "brfss_local_discarded" if (DS == "brfss" and (OUT / "brfss_local_discarded").exists()) else RES
 base = np.load(ref_dir / "variants" / "base.npz")
 perf0 = pd.read_csv(ref_dir / "performance.csv").set_index("model")
 
