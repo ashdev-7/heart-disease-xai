@@ -821,3 +821,47 @@ H5 Wider search grids. 'at edge' = the tuned value was the smallest or largest o
   RF leaf 5, depth 12: test AUC 0.6650 (used 0.6650); mean leaves per tree 159
 
 Audit 4 complete for framingham in 4 min
+
+==============================================================================
+AUDIT 4 - SETTINGS FIXED BY OUR OWN CHOICE   dataset: brfss   2026-10-05 12:59
+==============================================================================
+500 explained patients; chance level of top-3 agreement 0.090
+
+H1 Random forest with 1,000 trees instead of 300
+  1,000 trees: test AUC 0.8482 (used 0.8481); top-3 agreement with the used setting 0.971 (95% CI 0.960-0.980); seed-to-seed for this model 0.947   [10 min]
+
+H2 XGBoost with learning rate 0.1 and no subsampling (depth and trees re-chosen by 5-fold CV)
+  chosen: depth 4, 100 trees
+  learning rate 0.1, no subsampling: test AUC 0.8504 (used 0.8509); top-3 agreement with the used setting 0.907 (95% CI 0.889-0.924); seed-to-seed for this model 0.938   [10 min]
+
+H3 MLP with hidden layers 128-64 instead of 64-32 (same optimiser settings and epochs)
+  128-64, Expected Gradients: test AUC 0.8486 (used 0.8486); top-3 agreement with the used setting 0.970 (95% CI 0.959-0.980); seed-to-seed for this model 0.905   [11 min]
+  128-64, Integrated Gradients: test AUC 0.8486 (used 0.8486); top-3 agreement with the used setting 0.981 (95% CI 0.972-0.989); seed-to-seed for this model 0.903   [11 min]
+
+H3b MLP with learning rate 0.001, weight decay 0.0001, dropout 0.1 (epochs re-chosen by early stopping)
+  epochs chosen: 34 (used setting: 18)
+  alternative optimiser, Expected Gradients: test AUC 0.8491 (used 0.8486); top-3 agreement with the used setting 0.790 (95% CI 0.767-0.814); seed-to-seed for this model 0.905   [12 min]
+  alternative optimiser, Integrated Gradients: test AUC 0.8491 (used 0.8486); top-3 agreement with the used setting 0.627 (95% CI 0.604-0.648); seed-to-seed for this model 0.903   [12 min]
+
+H4 Number of seeds: per-patient seed agreement from the first 5 seeds vs all 10
+  seed variants not available in this run
+
+H5 Wider search grids. 'at edge' = the tuned value was the smallest or largest offered.
+   CV log loss: used setting vs best in the wider grid; then the wider-grid model is explained.
+  LR : used C=0.1 (at edge of original grid: False); CV loss used 0.23826, best in wider grid 0.23826 at C=0.1
+  LR with C=0.1: test AUC 0.8468 (used 0.8468); top-3 agreement with the used setting 1.000 (95% CI 1.000-1.000); seed-to-seed for this model n/a (deterministic)   [13 min]
+  XGB: used depth 4, 300 trees (depth at edge: True; trees at edge: False); CV loss used 0.23580, best in wider grid 0.23580 at depth 4, 300 trees
+  XGB depth 4, 300 trees: test AUC 0.8509 (used 0.8509); top-3 agreement with the used setting 1.000 (95% CI 1.000-1.000); seed-to-seed for this model 0.938   [17 min]
+  RF : used leaf 50, depth 12 (leaf at edge: True; depth at edge: True); CV loss used 0.23843, best in wider grid 0.23752 at leaf 25, depth 16
+  RF leaf 25, depth 16: test AUC 0.8487 (used 0.8481); mean leaves per tree 1783
+  RF leaf 25, depth 16: test AUC 0.8487 (used 0.8481); top-3 agreement with the used setting 0.912 (95% CI 0.895-0.929); seed-to-seed for this model 0.947   [32 min]
+
+H9 Survey-noise model with a different banding of the day-count items
+  used (0, 1-13, 14+): change rates GenHlth 0.211, PhysHlth 0.292, MentHlth 0.330; top-3 robustness lr 0.950, xgb 0.933
+  alternative (0, 1-7, 8+): change rates GenHlth 0.211, PhysHlth 0.292, MentHlth 0.330; top-3 robustness lr 0.950, xgb 0.933
+
+Audit 4 complete for brfss in 35 min
+Note on H9: under the noise model used (a changed answer is redrawn from the item's marginal
+distribution with probability r), agreement is po = (1 - r) + r*pe, so kappa = 1 - r for ANY
+banding of the answers. The calibrated rates (0.292 = 1 - 0.71, 0.330 = 1 - 0.67) confirm it.
+The banding of the day-count items therefore cannot affect the result; it is not a free choice.
