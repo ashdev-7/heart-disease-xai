@@ -1,0 +1,747 @@
+================================================================================
+SUMMARY OF WORK
+Reliability of explanations for heart-disease prediction models
+================================================================================
+Written 2026-10-04. Covers everything done on 2026-10-03 and 2026-10-04.
+Every number below comes from a file in results/ or from the paper/source it
+names. Where something was not checked, it says so.
+
+CONTENTS
+  1. The whole thing in one page
+  2. Where we started: the draft paper and what was wrong with it
+  3. Master data flow diagram
+  4. Step by step: operations, expectation, outcome (with a diagram per step)
+  5. Expectations against outcomes, in one table
+  6. What the draft claimed against what the data show
+  7. Mistakes and corrections made along the way
+  8. Limitations
+  9. Where everything is
+ 10. What is not done yet
+
+================================================================================
+1. THE WHOLE THING IN ONE PAGE
+================================================================================
+
+Question we ended up answering
+  When a heart-disease risk model explains one patient's prediction, how much
+  of that explanation is fixed by the patient, and how much changes with
+  (a) the model class, (b) the explanation method, (c) the training sample,
+  (d) the random seed, (e) ordinary measurement noise, (f) the explainer's
+  background sample?
+
+Material
+  Two datasets : Framingham (4,240 people, 10-year coronary heart disease)
+                 BRFSS 2015 (253,680 survey respondents, existing heart disease)
+  Four models  : logistic regression (LR), random forest (RF), XGBoost (XGB),
+                 neural network (MLP, 64-32)
+  Explainers   : exact linear SHAP (LR), TreeSHAP (RF, XGB), Integrated
+                 Gradients and Expected Gradients (MLP), KernelSHAP (all four)
+  Retrains     : Framingham 10 seeds + 100 bootstraps; BRFSS 10 seeds + 50
+                 bootstraps; every retrain explained for the same 500 patients
+  References   : D'Agostino 2008 risk equation, INTERHEART 2004
+
+Answer in five lines
+  1. Explanations are FAITHFUL. Replacing a patient's top-3 features moves the
+     prediction 2.2-3.3 times more than replacing 3 random features.
+  2. Explanations are PLAUSIBLE. Grouped importance matches the published risk
+     equation (cosine 0.90-0.96; random assignment scores about 0.65-0.74).
+  3. The ORDER of a patient's leading features is NOT REPRODUCIBLE on small
+     data. On Framingham a patient's top-3 features agree only 0.52-0.70
+     between two bootstrap retrains (chance = 0.13). The DIRECTION of those
+     features (raises or lowers risk) is stable: same sign 96-100% of the time.
+  4. That instability is mostly a sample-size effect. Shrinking BRFSS to
+     Framingham's size reproduces it; accuracy barely changes meanwhile.
+  5. Which MODEL you use changes the explanation more than which EXPLAINER you
+     use. SMOTE damages calibration and changes explanations.
+
+The draft paper's two headline claims do not survive: "no method is clinically
+aligned" came from the hand-built reference, and "exact SHAP is worse than
+approximate SHAP" came from comparing different models trained with SMOTE.
+
+================================================================================
+2. WHERE WE STARTED
+================================================================================
+
+The draft
+  Title   : Evaluating the Reliability and Clinical Consistency of
+            Explainability Methods in Deep Learning-Based Heart Disease
+            Prediction
+  Design  : LR, RF, MLP trained with SMOTE; SHAP and Integrated Gradients;
+            three tests (stability under 1/2/5% noise on 30 patients,
+            agreement across 10 seeds, Kendall tau against a ranking built from
+            ACC/AHA 2019 recommendation classes); pass/fail verdicts.
+  Claims  : no method reaches clinical alignment (tau >= 0.60);
+            MLP-SHAP (approximate) beats RF-SHAP (exact);
+            explanations are consistent across seeds (rho > 0.95) yet unstable
+            per patient ("dissociation");
+            "first systematic, pre-specified framework".
+
+Eleven problems found on review (2026-10-03)
+   1  The clinical reference used guideline recommendation classes as if they
+      were a ranking of predictive importance. They measure strength of
+      evidence for treating a factor.
+   2  Kendall tau on 15 features with 8 tied; no confidence interval, no
+      chance level. One verdict turned on 0.395 against a 0.40 cutoff.
+   3  "Approximate beats exact" compared RF+TreeSHAP with MLP+KernelSHAP:
+      model and explainer both changed.
+   4  The "dissociation" compared a global ranking with per-patient rankings.
+   5  Counterfactuals (DiCE) announced, no results; the notebook only
+      installed the package.
+   6  "Pre-registered" with no registration; one threshold was changed after
+      seeing the models.
+   7  Seed test run on Framingham only, yet "replicates on both datasets".
+   8  Stability metric averaged rank shift over all features (tail-dominated).
+   9  Agreement with logistic regression used as if LR were the truth.
+  10  Weak models, one small MLP, no XGBoost, single split, SMOTE never tested.
+  11  No test that explanations reflect the model at all (faithfulness).
+  Plus citation errors (Krishna et al. 2022 mis-titled and mis-described).
+
+================================================================================
+3. MASTER DATA FLOW DIAGRAM
+================================================================================
+
+  [Draft paper]      [Kaggle CSVs]            [Published literature]
+       |              Framingham, BRFSS        about 230 works
+       v                    |                          |
+  (S1) REVIEW  ------------ | -------------------------+
+       | 11 problems        |                          |
+       v                    |                          v
+  (S2) LITERATURE SURVEY <--+------------------ (web searches, papers read)
+       | gaps, closest prior work
+       v
+  (S3) REDESIGN: question, grid, four axes, three analyses
+       |
+       v
+  (S4) PHASE 1 DATA VALIDATION ----> stop rule 1 -----> PASS
+       |
+       v
+  (S5) PHASE 2 REFERENCE ----------> stop rule 2 -----> PASS
+       |   D'Agostino equation applied to data; Ref-A, Ref-B, Ref-C, Ref-D
+       v
+  (S6) DECISION REGISTER + PROTOCOL FREEZE (git tag protocol-v1.0)
+       |
+       v
+  (S7) PHASE 3 MODELS
+       |   tune once -> base models -> 10 seed retrains + 100/50 bootstraps
+       |   Framingham on laptop; BRFSS on Kaggle (laptop ran out of memory)
+       v
+  (S8) PHASE 4 EXPLANATIONS for the same 500 patients, every model variant
+       |
+       +--> (S9)  AXIS F  faithfulness
+       +--> (S10) AXIS R  robustness to measurement noise
+       +--> (S11) AXIS M  multiplicity across retraining
+       +--> (S12) AXIS P  plausibility against references
+       +--> (S13) explainer swap, model swap, noise floor, background redraw
+       |
+       v
+  (S14) SMOTE arm     (S15) sample-size experiment
+       |
+       v
+  (S16) VARIANCE DECOMPOSITION   (S17) PER-PATIENT LINKING
+       |
+       v
+  results/*.txt, *.csv  ->  [paper rewrite: NOT DONE YET]
+
+Records kept alongside
+  Literature_Survey.txt          what others have done
+  Methodology_and_Data_Flow.txt  the protocol, with an amendment log
+  Decision_Register.txt          31 decisions, each with evidence and status
+  notes_for_self.txt             dated log, one entry per request
+
+================================================================================
+4. STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+S1. REVIEW OF THE DRAFT
+--------------------------------------------------------------------------------
+  [draft .docx] --extract text--> read
+  [notebook .ipynb] --extract cells--> compare code with paper's claims
+                                   --> list of 11 problems
+
+  Operations : read the paper; read the notebook's reference ranking, noise
+               loop, seed loop, Kendall tau code; searched for DiCE usage.
+  Not done   : the notebook was not re-run at this stage.
+  Outcome    : verdict "not complete; novelty overclaimed" (Section 2 above).
+
+--------------------------------------------------------------------------------
+S2. LITERATURE SURVEY
+--------------------------------------------------------------------------------
+  [about 60 web searches] + [about 25 pages opened] + [background knowledge]
+        --> Literature_Survey.txt  (18 strands, about 230 works)
+
+  Operations : searched explanation evaluation theory, robustness,
+               multiplicity/Rashomon, Shapley critiques, clinical XAI,
+               cardiology XAI, CVD risk scores, SMOTE, reporting standards.
+               Tagged every entry [V] opened, [S] snippet only, [K] from memory.
+  Not done   : no formal database protocol (PubMed/Scopus); cannot prove
+               completeness.
+  Expectation: the draft's "first systematic framework" claim would not hold.
+  Outcome    : confirmed. Every component had precedent (Qureshi 2026,
+               Brankovic 2023, Hwang 2026, Salih 2025, IELF 2025, Li 2020).
+               The combination on tabular cardiovascular data was not found.
+               No standard exists for turning guidelines into an importance
+               reference.
+
+--------------------------------------------------------------------------------
+S3. REDESIGN
+--------------------------------------------------------------------------------
+  [11 problems] + [survey gaps] --> new question (Section 1)
+                                --> grid: 2 datasets x 4 models x crossed
+                                    explainers x training variants
+                                --> four axes F, R, M, P
+                                --> three analyses: variance decomposition,
+                                    linking, model-vs-explainer
+
+  Scope cuts agreed with the user (limited time): no DiCE, no LIME, no EBM, no
+  clinician rankings, no third dataset, hyperparameters not re-tuned per
+  bootstrap.
+
+--------------------------------------------------------------------------------
+S4. PHASE 1 - DATA VALIDATION          (src/phase1_data_validation.py)
+--------------------------------------------------------------------------------
+  [framingham.csv] [brfss.csv]
+        |
+        +--> D1 hash, shape, event counts, cohort summary, coding per column
+        +--> D2 ranges, impossible values, missing values, duplicate rows
+        +--> D3 plain logistic regression, no resampling, train-only
+        |       preprocessing; coefficients with 95% CI; test AUC with CI
+        v
+     STOP RULE 1: wrong-signed major risk factor or AUC out of range -> stop
+
+  Expectation: AUC about 0.70 (Framingham) and 0.81-0.85 (BRFSS); age, blood
+               pressure, smoking, diabetes positive.
+  Outcome    : PASS.
+     Framingham 4,240 x 16; 644 events (15.2%); glucose missing in 388 rows;
+       no impossible values; test AUC 0.702 (95% CI 0.654-0.746).
+     BRFSS 253,680 x 22; 23,893 cases (9.42%); no missing values; test AUC
+       0.847 (0.842-0.852).
+     Both match the draft's row and event counts exactly.
+  Finding not anticipated: BRFSS has 23,899 exact duplicate rows. Disease
+     prevalence among them is 0.9% against 10.8% elsewhere, so they are healthy
+     respondents giving identical answers, not copy errors. Kept.
+  Not done   : BRFSS was not rebuilt from the raw CDC file.
+
+--------------------------------------------------------------------------------
+S5. PHASE 2 - REFERENCE CONSTRUCTION      (src/phase2_reference.py)
+--------------------------------------------------------------------------------
+  [D'Agostino 2008 coefficients]     [Framingham rows, age 30-74, no stroke]
+            |                                   |
+            +---------> apply equation, untrained (4,146 rows)
+                               |
+                               +--> D4 AUC, calibration by tenth  --> STOP RULE 2
+                               +--> refit same form, compare coefficients
+                               v
+            Ref-A: exact Shapley values of the equation on our data
+                   (7 inputs, 128 coalitions, 200 background rows)
+            Ref-B: lipid-model coefficient x SD of the variable
+  [INTERHEART 2004 Table 3] --> Ref-C (Framingham groups), Ref-D (BRFSS items)
+
+  Feature groups (Framingham): Age; Sex; Blood pressure (sysBP, diaBP,
+    prevalentHyp, BPMeds); Smoking (currentSmoker, cigsPerDay); Glycaemia
+    (diabetes, glucose); Adiposity (BMI); Lipids (totChol); Unreferenced
+    (education, heartRate, prevalentStroke).
+
+  Expectation: equation AUC 0.65-0.75; predicted risk ABOVE observed, because
+               the equation predicts all cardiovascular disease and the target
+               is heart disease only.
+  Outcome    : PASS on discrimination: AUC 0.718 (0.695-0.739); 0.712 in men and
+               in women. Predicted and observed rise together across tenths
+               (Kendall tau 0.96).
+               Calibration expectation WRONG: observed 14.8% is above predicted
+               12.4% (ratio 1.20). Cause not established; consistent with an
+               older, higher-risk cohort (49% current smokers).
+               Refit: ln age 3.21 vs published 2.92; ln systolic BP 2.40 vs
+               2.33; diabetes 0.71 vs 0.66; smoking 0.39 vs 0.66; BMI not
+               significant.
+     Ref-A importance shares: Age 28%, Sex 23%, Smoking 22%, Blood pressure
+               20%, Adiposity 5%, Glycaemia 2%.
+     Ref-A vs Ref-B cosine 0.99, but both come from the same paper.
+  Finding not anticipated: INTERHEART ranks diabetes 3rd of 4 by odds ratio but
+     last by attributable risk. Mean |SHAP| is a population measure, so it must
+     be compared with attributable risk, not with odds ratios. Ref-C and Ref-D
+     were changed accordingly.
+  Finding not anticipated: a published 7-input equation with no training
+     (0.718) does as well as every model in the draft (0.666-0.698).
+
+  INTERHEART values, read from the paper itself (fully adjusted, 99% CI):
+     ApoB/ApoA1 3.25, psychosocial 2.67, diabetes 2.37, smoking current+former
+     2.04 (current 2.87), hypertension 1.91, abdominal obesity 1.62, fruit and
+     vegetables 0.70, exercise 0.86, alcohol 0.91. Hypertension and diabetes
+     are self-reported. BMI and alcohol were dropped from the BRFSS mapping
+     after reading the paper (BMI non-significant next to waist/hip ratio;
+     alcohol is a different exposure).
+
+--------------------------------------------------------------------------------
+S6. DECISION REGISTER AND PROTOCOL FREEZE
+--------------------------------------------------------------------------------
+  [each design choice] --literature check--> Decision_Register.txt
+                                              (alternatives, evidence, status)
+  [protocol + register + code] --> git commit 84ff8c9, tag protocol-v1.0
+                                   BEFORE any retrain or reliability score
+
+  31 decisions (D-01 to D-31). Declared deviations from the literature:
+    D-01 single 80/20 split (needed for a fixed set of patients)
+    D-06 100 / 50 bootstraps, fewer than Riley & Collins' examples
+    D-07 hyperparameters tuned once -> reported instability is a lower bound
+    D-11 random forest depth capped at 12 (TreeSHAP cost)
+  Decisions D-28 to D-31 were added AFTER the freeze and are labelled as
+  amendments; the sample-size experiment is exploratory.
+
+--------------------------------------------------------------------------------
+S7. PHASE 3 - MODELS AND TRAINING VARIANTS   (src/common.py, phase3_models.py)
+--------------------------------------------------------------------------------
+  [dataset] --stratified 80/20 split (seed 42)--> train | test
+  [test]    --stratified draw--> 500 explained patients (fixed)
+  [train]   --random draw-----> 100 background rows (fixed, real data)
+
+  [train] --5-fold CV on log loss--> hyperparameters (tuned ONCE)
+          --fit--> BASE models (seed 42)
+          --refit, seeds 0-9--> 10 SEED variants (RF, XGB, MLP)
+          --resample rows with replacement, refit--> BOOTSTRAP variants
+                                                    (100 Framingham, 50 BRFSS)
+  In every variant: imputation (median; mode for yes/no columns) and
+  standardisation are refitted on that variant's training rows. No resampling
+  for class imbalance.
+
+  Chosen hyperparameters
+    Framingham: LR C=0.1; RF 300 trees, leaf 5, depth 12; XGB depth 2, 100
+                trees, rate 0.05; MLP 62 epochs
+    BRFSS     : LR C=0.1; RF leaf 50, depth 12; XGB depth 4, 300 trees;
+                MLP 18 epochs
+
+  Expectation: on Framingham LR at least as good as the flexible models (about
+               34 events per predictor; van der Ploeg 2014 says flexible models
+               need over 10 times more than LR).
+  Outcome (base models, test set)
+                 Framingham AUC (95% CI)     slope     BRFSS AUC (95% CI)   slope
+     LR          0.702 (0.652-0.746)         0.79      0.847 (0.841-0.852)  0.99
+     MLP         0.696 (0.647-0.740)         0.75      0.849 (0.843-0.853)  1.10
+     XGB         0.684 (0.632-0.732)         0.83      0.851 (0.846-0.856)  0.99
+     RF          0.665 (0.614-0.713)         0.69      0.848 (0.843-0.853)  1.19
+     As expected. On BRFSS all four are within 0.004 AUC.
+
+  Where it ran: Framingham on the laptop. BRFSS on Kaggle, because the laptop
+     (7.6 GB RAM) had its jobs stopped three times for low memory. Library
+     versions on Kaggle were verified from the run log: scikit-learn 1.8.0,
+     xgboost 3.1.3, shap 0.52.0, numpy 2.2.6 (identical to the laptop);
+     torch 2.11.0 vs 2.9.1 (not pinned). Kaggle run took 5.2 hours.
+
+--------------------------------------------------------------------------------
+S8. PHASE 4 - EXPLANATIONS
+--------------------------------------------------------------------------------
+  [model variant] + [500 patients] + [100 background rows]
+        |
+        +--> LR  : exact linear SHAP        phi_j = w_j (x_j - mean_bg_j)
+        +--> RF  : TreeSHAP, interventional (probability scale)
+        +--> XGB : TreeSHAP, interventional (log-odds)
+        +--> MLP : Integrated Gradients (mean baseline, 256 steps)
+        |          Expected Gradients (100 baselines x 16 steps)
+        +--> all four base models: KernelSHAP (log-odds, default budget)
+        v
+     attribution array [variant, patient, feature] saved per variant
+
+  Exactness checks (does the explanation add up to the model output?)
+     linear SHAP 5e-07; XGB TreeSHAP 2e-06 to 5e-06; KernelSHAP 2e-07 to 1e-06
+     IG: error 1.3% at 64 steps -> raised to 256 steps (0.4%)
+     Expected Gradients 0.3-0.7%
+     RF TreeSHAP on Framingham: mean error 0.3%, worst case 5%. Cause not
+       found. Declared. (BRFSS: 0.0001.)
+
+--------------------------------------------------------------------------------
+S9. AXIS F - FAITHFULNESS                    (src/phase4_base_axes.py)
+--------------------------------------------------------------------------------
+  [explanation] --> top-3 features of each patient
+  [patient row] --replace those 3 features with values from a random
+                  background row (20 draws)--> change in log-odds = gap_top3
+               --replace 3 RANDOM features--> gap_random3
+               --replace the bottom-3-------> gap_bottom3
+
+  Expectation: no prior expectation recorded for size; the draft had no such
+               test.
+  Outcome    : gap_top3 / gap_random3
+                 Framingham 2.2 (RF) to 3.0 (XGB); top beats random in 97-100%
+                 of patients
+                 BRFSS 3.0 to 3.3; 99-100% of patients
+               Bottom-3 gap is near zero for native explainers.
+               All explainers are faithful and about equally so.
+
+--------------------------------------------------------------------------------
+S10. AXIS R - ROBUSTNESS TO MEASUREMENT NOISE
+--------------------------------------------------------------------------------
+  Framingham
+  [patient row] --add noise (20 draws)--> re-explain --> compare top-3 with
+                                                         the clean explanation
+     noise per feature from published within-person variation:
+       systolic and diastolic BP 8.6% (Warren 2010, office readings 6 weeks
+       apart); cholesterol 5.95%, glucose 5.6% (Ricos database); heart rate
+       3 bpm (Quer 2020). "Low" level = half. Age, BMI, cigarettes and yes/no
+       items held fixed.
+  BRFSS
+     change rates calibrated so a simulated re-interview reproduces published
+     agreement (Andresen 2003): GenHlth kappa 0.75 -> 21% change rate;
+     PhysHlth 0.71 -> 29%; MentHlth 0.67 -> 33%. Other items held fixed.
+
+  Expectation: the draft reported RF as the least stable; expected again.
+  Outcome (top-3 agreement, clean vs re-measured)
+                         Framingham high   low      BRFSS re-interview
+     LR  linear SHAP     0.846             0.919    0.950
+     MLP Expected Grad.  0.832             0.905    0.942
+     XGB TreeSHAP        0.829             0.902    0.933
+     MLP Integr. Grad.   0.818             0.895    0.945
+     RF  TreeSHAP        0.673             0.783    0.918
+     Predicted class flips in 4-8% of re-measurements (Framingham, 20% risk
+     threshold) and about 2% (BRFSS). Excluding flipped draws changes scores by
+     under 0.01. RF is the least stable, as expected.
+
+--------------------------------------------------------------------------------
+S11. AXIS M - MULTIPLICITY ACROSS RETRAINING   (src/phase5_multiplicity.py)
+--------------------------------------------------------------------------------
+  [attributions, all variants] --rank features per patient per variant-->
+     for every PAIR of variants, per patient:
+        top-3 Jaccard, top-5 Jaccard, Spearman, rank-biased overlap
+     --> mean over pairs = that patient's score
+     --> mean over 500 patients, bootstrap CI over patients
+     also: same for the global ranking (mean |attribution|)
+     also: chance level; score on half the bootstraps (convergence)
+
+  Expectation: bootstrap agreement lower than seed agreement (Riley & Collins
+               2023); worst on Framingham's flexible models.
+  Outcome (per-patient top-3 agreement; chance 0.129 Framingham, 0.090 BRFSS)
+                         Framingham           BRFSS
+                         seed    bootstrap    seed    bootstrap
+     LR  linear SHAP     n/a     0.704        n/a     0.951
+     XGB TreeSHAP        0.869   0.580        0.938   0.839
+     MLP Expected Grad.  0.903   0.585        0.905   0.886
+     MLP Integr. Grad.   0.848   0.528        0.903   0.884
+     RF  TreeSHAP        0.815   0.517        0.947   0.857
+     Share of Framingham patients with bootstrap agreement below 0.5:
+       LR 4%, XGB 21%, MLP-EG 22%, MLP-IG 36%, RF 47%.
+     Convergence: half vs all bootstraps differ by 0.02 or less (Framingham)
+       and 0.003 or less (BRFSS).
+     Prediction SD across bootstraps: Framingham 0.021-0.034; BRFSS 0.003-0.009.
+  Replication of the draft: global-ranking Spearman across SEEDS is 0.96-0.99
+     on Framingham, the same as the draft's 0.95-0.997. The draft's number was
+     right; it measured the mildest possible form of retraining.
+
+--------------------------------------------------------------------------------
+S12. AXIS P - PLAUSIBILITY                    (src/phase5_plausibility.py)
+--------------------------------------------------------------------------------
+  [attributions] --sum within feature group, absolute value-->
+     importance per group --normalise--> shares
+     --cosine with Ref-A and Ref-B on shared groups-->
+     context: random reassignment of shares to groups (null), spread across
+     bootstrap models, per-patient cosine with Ref-A
+
+  Expectation: unknown. The draft found tau 0.25-0.56 and called it failure.
+  Outcome (Framingham, base models; bootstrap range in brackets)
+                         cosine vs Ref-A       vs Ref-B   unreferenced share
+     LR  linear SHAP     0.955 (0.914-0.978)   0.971      1.9%
+     MLP Expected Grad.  0.940 (0.895-0.970)   0.954      4.8%
+     MLP Integr. Grad.   0.938 (0.910-0.977)   0.952      5.4%
+     RF  TreeSHAP        0.909 (0.843-0.930)   0.970      5.5%
+     XGB TreeSHAP        0.900 (0.826-0.928)   0.928      1.5%
+     Random reassignment: mean 0.65-0.74; every model beats 95-98% of them.
+     Every model and explainer ranks the same top three groups:
+        Age > Blood pressure > Smoking
+     Per-patient cosine with Ref-A: 0.84 (RF) to 0.93 (LR).
+     Against INTERHEART (Ref-C): poor (tau -0.33 to 0). Lipids rank first
+        there (ApoB/ApoA1) and near last here (total cholesterol only).
+  BRFSS (src/phase6_shares_linking.py): 65-72% of attribution on established
+     risk factors; 19-25% on consequences of disease (GenHlth, PhysHlth,
+     DiffWalk); 3-6% prior stroke; 4-7% access/social. Kendall tau with
+     INTERHEART on 8 mapped items 0.26-0.40.
+
+--------------------------------------------------------------------------------
+S13. EXPLAINER SWAP, MODEL SWAP, NOISE FLOOR, BACKGROUND REDRAW
+--------------------------------------------------------------------------------
+  same model, native explainer vs KernelSHAP   --> explainer effect
+  same explainer (KernelSHAP), model vs model  --> model effect
+  KernelSHAP re-run 5 times, nothing changed   --> estimator noise floor
+  same model and patient, 5 fresh background samples --> background effect
+
+  Expectation: explainer effect small for Shapley-type methods; model effect
+               larger (Salih 2025). Background effect present (Yuan 2022) but
+               its size was not anticipated, and it was not in the protocol as
+               a separate source.
+  Outcome (per-patient top-3 agreement)
+                                   Framingham     BRFSS
+     (KernelSHAP numbers are from the corrected run, 2026-10-05; see Section 7)
+     KernelSHAP re-run             0.97-1.00      0.99-1.00
+     KernelSHAP vs exact (LR)      1.000          1.000
+     kernel vs native: XGB         0.998          0.997
+                       MLP-EG      0.954          0.979
+                       MLP-IG      0.810          0.951
+                       RF          0.786          0.725   (partly a scale
+                                                           difference)
+     model vs model                0.51-0.79      0.54-0.93
+        LR-MLP highest (0.79; 0.93), pairs with RF lowest (0.51-0.56; 0.54-0.75)
+     background redraw, 100 rows   0.80-0.93      0.80-0.85
+
+--------------------------------------------------------------------------------
+S14. SMOTE ARM                                (src/phase6_smote_arm.py)
+--------------------------------------------------------------------------------
+  [train] --SMOTE (k=5)--> balanced training set --same hyperparameters-->
+     4 models --> test-set calibration; explanations for the same 500 patients
+     --> compare with the no-resampling base models
+
+  Expectation: miscalibration without AUC gain (van den Goorbergh 2022);
+               changed explanations (Rai 2025).
+  Outcome    : as expected, and stronger than anticipated on explanations.
+     Mean predicted risk on the untouched test set
+        Framingham 0.33-0.43 (true 0.152); BRFSS 0.16-0.34 (true 0.094)
+     AUC: Framingham RF 0.665 -> 0.649, MLP 0.696 -> 0.676, LR 0.702 -> 0.697,
+          XGB 0.684 -> 0.686; BRFSS all within -0.009.
+     Per-patient top-3 agreement with the no-resampling explanation
+        Framingham LR 0.85, XGB 0.60, MLP-EG 0.60, MLP-IG 0.53, RF 0.49
+        BRFSS      LR 0.97, RF 0.76, MLP-EG 0.76, XGB 0.75, MLP-IG 0.74
+     On Framingham, SMOTE puts EDUCATION in the top five of RF and XGB (and
+     heart rate in the MLP's). Without SMOTE it is not there.
+
+--------------------------------------------------------------------------------
+S15. SAMPLE-SIZE EXPERIMENT (exploratory)     (src/phase6_sample_size.py)
+--------------------------------------------------------------------------------
+  [BRFSS train] --fixed stratified subsample of n rows-->
+     re-tune hyperparameters --> 30 bootstraps of the subsample -->
+     explain the same 200 patients (same background) --> top-3 agreement
+
+  Expectation: agreement falls as n falls; at Framingham's events-per-predictor
+               ratio BRFSS should look like Framingham.
+  Outcome    : as expected.
+     events per predictor   15      34      135     910
+     training rows          3,392   7,580   30,000  202,944
+     LR  linear SHAP        0.750   0.746   0.868   0.957
+     MLP Expected Grad.     0.667   0.670   0.817   0.888
+     MLP Integr. Grad.      0.635   0.634   0.791   0.884
+     RF  TreeSHAP           0.615   0.702   0.738   0.859
+     XGB TreeSHAP           0.585   0.634   0.736   0.852
+     Test AUC over the same range: 0.828-0.837 -> 0.847-0.850.
+     At 34 events per predictor BRFSS gives 0.63-0.75; Framingham itself gives
+     0.52-0.70.
+
+--------------------------------------------------------------------------------
+S16. VARIANCE DECOMPOSITION                   (src/phase6_variance.py)
+--------------------------------------------------------------------------------
+  [attribution] --> share = |phi_j| / sum |phi_j|   (per explanation)
+  For ONE source at a time (others held at base), 100 patients:
+     one-way ANOVA per feature, patients as groups
+     between-patient variance, within-patient (source) variance, summed over
+     features
+     ICC = between / (between + within)
+  ICC near 1: explanations differ because patients differ.
+  ICC low  : the source moves explanations about as much as patients differ.
+
+  Outcome (median ICC across model/explainer combinations)
+     source                        Framingham   BRFSS
+     model class                   0.67         0.84
+     training-data bootstrap       0.68         0.98
+     measurement noise             0.85         0.91
+     background sample             0.96         0.96
+     explainer (native vs kernel)  0.96         1.00
+     seed                          0.96         0.99
+  Not a full crossed design: interactions between sources are not estimated.
+  Note: the background sample looks small here (0.96) but changed top-3
+     membership in 7-20% of cases (S13). Both are true: small shifts in share
+     flip features that are nearly tied in rank.
+
+--------------------------------------------------------------------------------
+S17. PER-PATIENT LINKING                      (src/phase6_shares_linking.py)
+--------------------------------------------------------------------------------
+  per patient: bootstrap agreement, noise agreement, faithfulness ratio,
+     plausibility, predicted risk, distance from threshold, prediction SD
+     --> Spearman correlations across 500 patients
+
+  Expectation: patients near the decision threshold have less stable
+               explanations.
+  Outcome    : mostly NOT supported.
+     Framingham: bootstrap agreement vs distance from the 20% threshold
+        0.08-0.23, except RF 0.44. Bootstrap vs noise agreement 0.39-0.60.
+        Faithfulness and plausibility vs stability: below 0.22.
+     BRFSS: bootstrap vs noise 0.05-0.40; bootstrap agreement falls with
+        prediction SD (rho -0.27 to -0.41, except XGB +0.04).
+     Reading: a noise test (no retraining needed) partly flags patients whose
+     explanations will not reproduce, on the small dataset. Descriptive only;
+     many correlations were computed.
+
+================================================================================
+5. EXPECTATIONS AGAINST OUTCOMES
+================================================================================
+
+  Expectation                                     Outcome            Verdict
+  ----------------------------------------------  -----------------  ---------
+  Plain LR AUC about 0.70 / 0.81-0.85             0.702 / 0.847      as expected
+  Published equation AUC 0.65-0.75 on our data    0.718              as expected
+  Equation over-predicts (CVD vs CHD)             under-predicts     WRONG
+  LR at least as good as flexible models, Fram.   yes                as expected
+  Bootstrap agreement below seed agreement        yes, by 0.2-0.35   as expected
+  Small data less stable than big data            yes                as expected
+  Sample size explains the gap                    yes (experiment)   supported
+  SMOTE miscalibrates, no AUC gain                yes                as expected
+  SMOTE changes explanations                      yes, strongly      as expected
+  Explainer effect small, model effect larger     yes                as expected
+  Background sample is a minor setting            7-20% top-3 change underestimated
+  Explanations are clinically implausible (draft) cosine 0.90-0.96   WRONG
+  Unstable patients sit near the threshold        weak link          not supported
+  Kaggle run 4-6 hours                            5.2 hours          as estimated
+  Laptop can run BRFSS                            stopped 3 times    WRONG
+  Glucose within-person variation 4.5%            5.6%               my error
+
+================================================================================
+6. WHAT THE DRAFT CLAIMED AGAINST WHAT THE DATA SHOW
+================================================================================
+
+  Draft: no method reaches clinical alignment (tau < 0.60).
+  Data : with correlated features grouped and a reference that measures
+         importance, every model matches the published equation (cosine
+         0.90-0.96 against a random level of about 0.7) and all rank
+         Age > Blood pressure > Smoking.
+
+  Draft: approximate SHAP on the MLP beats exact SHAP on the RF.
+  Data : KernelSHAP and the native explainer agree closely on the same model
+         (0.95-1.00 for LR, XGB, MLP-EG). The difference the draft saw is
+         between MODELS. The RF's odd ranking (education 4th) appears with
+         SMOTE and not without it.
+
+  Draft: explanations are consistent across retraining (rho > 0.95).
+  Data : reproduced for seed-only retraining (0.96-0.99). Under bootstrap of
+         the training data, a Framingham patient's top-3 agrees 0.52-0.70 and
+         global top-3 agrees 0.63-0.75.
+
+  Draft: "dissociation" between population consistency and patient stability.
+  Data : once both are measured at the same level and under the same kind of
+         retraining, there is no dissociation to explain; the per-patient
+         instability tracks training-set size.
+
+  Draft: MLP-IG stability depends on the proportion of yes/no features.
+  Data : not tested by us in that form. The Framingham-BRFSS difference in
+         noise robustness cannot be compared in size because the noise models
+         differ.
+
+  Draft: verdicts TRUSTWORTHY / USE WITH CAUTION / DO NOT USE.
+  Data : no verdicts are issued. Results are reported with chance levels and
+         confidence intervals.
+
+================================================================================
+7. MISTAKES AND CORRECTIONS ALONG THE WAY
+================================================================================
+
+  - I first excluded BRFSS from any clinical reference. The user questioned
+    it; INTERHEART (case-control, self-reported risk factors) is the matching
+    design. Added as a secondary reference.
+  - I gave glucose within-person variation as 4.5%. The database value is 5.6%.
+  - I mapped BMI and alcohol to INTERHEART factors. Reading the paper showed
+    neither mapping is valid. Removed.
+  - A secondary source had the INTERHEART psychosocial interval wrong;
+    corrected from the paper (2.21-3.22).
+  - I expected the risk equation to over-predict; it under-predicts.
+  - I ran two jobs at once on a 7.6 GB laptop; both were stopped for low
+    memory. A later single job was also stopped. BRFSS moved to Kaggle.
+  - My Kaggle time estimate (4-6 h) left out the later stages when I first
+    explained it; the run took 5.2 h.
+  - The tree explainer silently used 100 of 200 background rows in one
+    sensitivity test. Found from a warning in the Kaggle log, confirmed by a
+    direct test, fixed, and the affected lines recomputed.
+  - Integrated Gradients at 64 steps was off by 1.3%; raised to 256 steps.
+  - Random-forest TreeSHAP on Framingham has an unexplained additivity error
+    (0.3% mean, 5% worst case). Not fixed; declared. Against exact Shapley
+    values it is within 0.3% for the patients tested.
+  - KernelSHAP (found in the 2026-10-05 audit): the library's default kept
+    only 10 features and set the rest to zero (5 of 15 on Framingham, 11 of 21
+    on BRFSS). Fixed and re-run on both datasets; top-3 results moved by 0.01
+    at most on Framingham and the explainers now agree more closely on BRFSS.
+    No conclusion changed. See Validation_and_Defence.txt, Section 7.1.
+  - The Kaggle API token was pasted into the chat. It is stored only outside
+    the repository. It should be regenerated.
+
+================================================================================
+8. LIMITATIONS
+================================================================================
+
+  Design
+   - One train/test split per dataset. Performance has confidence intervals,
+     but everything is conditional on that split.
+   - Hyperparameters tuned once, so reported instability is a lower bound.
+   - Variance decomposition is one source at a time; no interactions.
+   - Sample-size experiment and background-sample factor were added after the
+     protocol freeze. One subsample per size.
+   - No clinician judged any explanation.
+  Data
+   - The Kaggle Framingham file has no formal codebook; HDL cholesterol is
+     absent; the outcome label could not be checked against the cohort.
+   - BRFSS is a cross-sectional survey of existing disease; BRFSS was not
+     rebuilt from the raw CDC file.
+   - Glucose is 9.2% imputed on Framingham; the planned complete-case
+     sensitivity check has NOT been run.
+  Reference
+   - Ref-A and Ref-B come from one paper; the only independent reference
+     (INTERHEART) shares 3-4 groups and uses different lipid measures.
+   - The risk equation predicts all cardiovascular disease; the target is
+     coronary heart disease.
+   - Only 6-7 feature groups, so cosine is high by default.
+  Noise models
+   - Framingham noise is independent across features; blood pressure figure is
+     visit-to-visit, not same-day. Warren 2010 and Andresen 2003 were confirmed
+     from abstracts only.
+   - BRFSS noise covers 3 of 21 features; the days-variable categories
+     (0, 1-13, 14+) are my assumption.
+   - Robustness numbers are not comparable in size between the two datasets.
+  Explanations
+   - RF TreeSHAP explains probability, the others log-odds.
+   - Marginal (interventional) Shapley values evaluate models on unrealistic
+     feature combinations when features are correlated.
+  Environment
+   - Framingham ran on the laptop, BRFSS on Kaggle; torch version differs.
+  Literature
+   - The survey is not a formal systematic review; no "first" claim is safe
+     without a database search.
+
+================================================================================
+9. WHERE EVERYTHING IS
+================================================================================
+
+  Documents
+    Literature_Survey.txt            related work, 18 strands
+    Methodology_and_Data_Flow.txt    protocol v1.0 + amendment log
+    Decision_Register.txt            D-01 to D-31
+    notes_for_self.txt               dated log, Entries 1-20
+    short_summary_of_work.txt        this file
+  Code (src/)
+    common.py                    data split, preprocessing, models, explainers
+    metrics.py                   agreement metrics and chance levels
+    phase1_data_validation.py    S4
+    phase2_reference.py          S5
+    phase3_models.py             S7, S8 (native explainers)
+    phase4_base_axes.py          S9, S10, S13
+    phase5_multiplicity.py       S11
+    phase5_plausibility.py       S12
+    phase6_smote_arm.py          S14
+    phase6_sample_size.py        S15
+    phase6_variance.py           S16
+    phase6_shares_linking.py     S12 (BRFSS), S17
+    fix_background_200.py        correction for the background cap
+    bench_timing.py              timing used to set the bootstrap count
+    kaggle/run_brfss.py, kaggle/build_bundle.py   the Kaggle run
+  Results (results/)
+    data_validation_report.txt, reference_validation_report.txt
+    <dataset>/performance.csv, explainer_checks.txt, hyperparameters.json
+    <dataset>/multiplicity_report.txt, base_axes_report.txt
+    <dataset>/variance_report.txt, linking_report.txt, smote_report.txt
+    framingham/plausibility_report.txt
+    brfss/class_shares_report.txt, sample_size_report.txt
+    <dataset>/variants/*.npz     raw attributions (not in git)
+  Git
+    branch protocol-v1, tag protocol-v1.0 (freeze), latest commit 6febd43 at
+    the time of writing. Nothing pushed.
+
+================================================================================
+10. WHAT IS NOT DONE YET
+================================================================================
+
+  - The paper has not been rewritten. No figures have been made.
+  - (Done 2026-10-05) Complete-case check for imputed glucose: no effect.
+    A full validation audit was also run; see Validation_and_Defence.txt.
+  - Citation corrections in the draft's reference list.
+  - A database-protocol literature search before any novelty claim.
+  - Full texts of Warren 2010 and Andresen 2003.
+  - Regenerating the Kaggle token.
+================================================================================

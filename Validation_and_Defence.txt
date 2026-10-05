@@ -7,8 +7,9 @@ Written 2026-10-05. Raw output of every test: results/audit_report.txt.
 Code: src/audit1_correctness.py, audit2_sensitivity.py, audit3_alternatives.py,
 phase6_sample_size.py (indep mode).
 
-STATUS LINE: 2 items were still running on Kaggle when this was written and
-are marked PENDING. Everything else is complete.
+STATUS LINE (updated 2026-10-05): the BRFSS KernelSHAP correction has landed
+and is integrated. One Kaggle run (re-tuning per bootstrap; replication of the
+sample-size experiment) was still running and is marked PENDING.
 
 CONTENTS
   1. What "validated" means here, and what it cannot mean
@@ -216,7 +217,7 @@ T4 Determinism
     tuned-once reference recomputed in the same environment, are running.
   - Second and third independently drawn subsamples for the sample-size
     experiment (D-28).
-  - BRFSS KernelSHAP re-run without truncation (D-32).
+  - (Done) BRFSS KernelSHAP re-run without truncation (D-32); see 7.1.
 
 ================================================================================
 5. CLAIMS-EVIDENCE MATRIX
@@ -264,9 +265,9 @@ C4 Sample-size effect
               (0.52-0.70); the remaining gap is unexplained.
 
 C5 Model class matters more than explainer
-   Evidence : model swap 0.52-0.79 / 0.54-0.92; explainer swap 0.79-1.00 /
-              0.73-0.99; ICC for model class 0.67 / 0.82 against 0.96 / 0.96
-              for explainer.
+   Evidence : model swap 0.51-0.79 / 0.54-0.93; explainer swap 0.79-1.00 /
+              0.73-1.00; ICC for model class 0.67 / 0.84 against 0.96 / 1.00
+              for explainer (corrected KernelSHAP).
    Tests    : paired difference with CI; without RF; Shapley-type only.
    Limits   : explainers tested are all attribution methods of the Shapley /
               path family. LIME, counterfactuals and rule methods were not
@@ -370,16 +371,29 @@ C9 Noise test as a flag
   Found because KernelSHAP's error against exact values did not shrink with
   budget. Confirmed directly: with the regularisation off, KernelSHAP on LR
   equals exact linear SHAP to 1e-07.
-  Fix: l1_reg=False. Framingham re-run locally; BRFSS re-run PENDING on Kaggle.
+  Fix: l1_reg=False. Framingham re-run locally; BRFSS re-run on Kaggle in the
+  same environment as the original BRFSS run (base models refitted there
+  reproduce the first run exactly: max difference 0.0).
   Effect on Framingham results:
       a patient's KernelSHAP top-3 before vs after: 0.976-0.999 agreement
       model-swap agreement: 0.515-0.786 before, 0.512-0.788 after
       explainer-swap: LR 0.999 -> 1.000; XGB 0.996 -> 0.998; others +/-0.01
       model-class ICC 0.669 -> 0.668; explainer ICC median 0.960 -> 0.964
       faithfulness and plausibility of KernelSHAP rows: unchanged to 2 decimals
-  No conclusion changes. All Framingham KernelSHAP tables were regenerated.
-  BRFSS KernelSHAP numbers quoted elsewhere are still the truncated ones until
-  the pending run lands; the truncation was heavier there (11 of 21).
+  Effect on BRFSS results (truncation was heavier: 11 of 21 features zeroed):
+      KernelSHAP top-3 per patient, before vs after: 0.955-0.991 agreement
+      KernelSHAP vs exact linear SHAP on LR: 0.991 -> 1.000 (error 9e-08)
+      explainer swap: XGB 0.954 -> 0.997; MLP-EG 0.973 -> 0.979;
+                      MLP-IG 0.947 -> 0.951; RF 0.726 -> 0.725
+      model swap: 0.54-0.92 before, 0.54-0.93 after
+      model-class ICC 0.82 -> 0.84; explainer ICC median 0.96 -> 0.997
+      KernelSHAP noise floor: 0.97-1.00 -> 0.99-1.00
+      paired explainer-minus-model difference: +0.237 -> +0.240
+  The correction makes the explainers agree MORE closely with each other,
+  which strengthens claim C5. No conclusion changes. All KernelSHAP tables for
+  both datasets were regenerated; superseded tables are marked in the
+  base_axes reports and the truncated files are kept as
+  kernel_default_truncated.npz.
 
 7.2 Tree explainer capped the background at 100 rows  (D-27)
   Reported earlier. Fixed; affected lines recomputed.
@@ -513,9 +527,8 @@ This is my judgement, not something a test can confirm.
 ================================================================================
   [ ] Kaggle run xai-heart-audit-run: re-tuning per bootstrap; replication
       subsamples for the sample-size experiment.
-  [ ] Kaggle run xai-heart-kernel-fix: BRFSS KernelSHAP without truncation and
-      the tables that depend on it.
-  [ ] After both: regenerate BRFSS variance, class-share and swap tables;
-      update Sections 4.14, 5 (C4), 6 (row 4), 7.1.
+  [x] Kaggle run xai-heart-kernel-fix: BRFSS KernelSHAP without truncation;
+      BRFSS variance, class-share and swap tables regenerated.
+  [ ] After the audit run: update Sections 4.14, 5 (C3, C4), 6 (row 4).
   [ ] Database-protocol literature search before any novelty wording.
 ================================================================================

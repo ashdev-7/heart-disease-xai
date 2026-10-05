@@ -10,12 +10,12 @@ Conventional bands (Koo & Li 2016, from rater studies): <0.5 poor, 0.5-0.75 mode
 Summary across model / explainer combinations, most disruptive source first:
                                   icc_min  icc_median  icc_max
 source                                                        
-model class (KernelSHAP)            0.817       0.817    0.817
+model class (KernelSHAP)            0.841       0.841    0.841
 measurement noise                   0.854       0.907    0.924
 background draw                     0.951       0.955    0.959
-explainer (native vs KernelSHAP)    0.805       0.959    0.988
 training-data bootstrap             0.960       0.978    0.994
 seed                                0.986       0.991    0.997
+explainer (native vs KernelSHAP)    0.831       0.997    1.000
 
 Detail:
                           source    model          explainer  levels   icc  icc_lo  icc_hi  within_share_of_total  within_sd
@@ -38,11 +38,11 @@ Detail:
                             seed      mlp                 eg      10 0.986   0.984   0.989                  0.014      0.021
                measurement noise      mlp                 eg      20 0.907   0.887   0.921                  0.093      0.054
                  background draw      mlp                 eg      10 0.955   0.944   0.962                  0.045      0.038
-explainer (native vs KernelSHAP)       lr linear_shap+kernel       2 0.988   0.986   0.990                  0.012      0.021
-explainer (native vs KernelSHAP)       rf   tree_shap+kernel       2 0.805   0.752   0.840                  0.195      0.082
-explainer (native vs KernelSHAP)      xgb   tree_shap+kernel       2 0.948   0.927   0.964                  0.052      0.046
-explainer (native vs KernelSHAP)      mlp       ig+eg+kernel       3 0.970   0.964   0.974                  0.030      0.032
-        model class (KernelSHAP) all four        kernel_shap       4 0.817   0.780   0.845                  0.183      0.088
+explainer (native vs KernelSHAP)       lr linear_shap+kernel       2 1.000   1.000   1.000                  0.000      0.000
+explainer (native vs KernelSHAP)       rf   tree_shap+kernel       2 0.831   0.781   0.863                  0.169      0.071
+explainer (native vs KernelSHAP)      xgb   tree_shap+kernel       2 1.000   1.000   1.000                  0.000      0.001
+explainer (native vs KernelSHAP)      mlp       ig+eg+kernel       3 0.993   0.992   0.994                  0.007      0.015
+        model class (KernelSHAP) all four        kernel_shap       4 0.841   0.811   0.866                  0.159      0.075
 
 within_sd: root of the summed within-patient variance of the share vector, i.e. the typical
 size of the shift in a patient's attribution shares caused by that source.
