@@ -663,3 +663,24 @@ mlp   eg              0.834  0.832
       ig              0.819  0.820
 rf    tree_shap       0.682  0.681
 xgb   tree_shap       0.825  0.832
+
+S8 Near-ties: does the gap between a patient's 3rd and 4th attribution (base model, as a share of
+   total absolute attribution) predict that patient's bootstrap top-3 agreement? Spearman rho; and mean
+   agreement for patients in the lowest and highest third of that gap.
+   framingham lr  linear_shap  rho +0.703   lowest third 0.623   highest third 0.815   median gap 0.031
+   framingham rf  tree_shap    rho +0.373   lowest third 0.472   highest third 0.582   median gap 0.015
+   framingham xgb tree_shap    rho +0.293   lowest third 0.540   highest third 0.624   median gap 0.027
+   framingham mlp ig           rho +0.299   lowest third 0.504   highest third 0.564   median gap 0.023
+   framingham mlp eg           rho +0.422   lowest third 0.546   highest third 0.648   median gap 0.025
+   brfss      lr  linear_shap  rho +0.840   lowest third 0.867   highest third 0.999   median gap 0.020
+   brfss      rf  tree_shap    rho +0.827   lowest third 0.742   highest third 0.971   median gap 0.015
+   brfss      xgb tree_shap    rho +0.835   lowest third 0.711   highest third 0.967   median gap 0.016
+   brfss      mlp ig           rho +0.756   lowest third 0.796   highest third 0.982   median gap 0.019
+   brfss      mlp eg           rho +0.762   lowest third 0.796   highest third 0.989   median gap 0.019
+
+S9 D'Agostino BMI equation on the SAME held-out test set as the trained models: 835 of 848 test patients eligible, 128 events
+   equation AUC 0.701 (95% CI 0.653 to 0.750)
+   lr   AUC on the same 835 patients 0.702; model minus equation +0.001 (95% CI -0.017 to +0.020)
+   mlp  AUC on the same 835 patients 0.696; model minus equation -0.005 (95% CI -0.027 to +0.016)
+   xgb  AUC on the same 835 patients 0.683; model minus equation -0.018 (95% CI -0.043 to +0.009)
+   rf   AUC on the same 835 patients 0.665; model minus equation -0.036 (95% CI -0.069 to -0.001)

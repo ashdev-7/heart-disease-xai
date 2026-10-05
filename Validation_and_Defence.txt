@@ -162,8 +162,10 @@ T4 Determinism
       MLP Expected Grad.     0.574   0.612    0.623    0.581
       RF  TreeSHAP           0.528   0.533    0.524    0.520
       MLP Integr. Grad.      0.515   0.538    0.559    0.509
-  Stability results move by at most 0.05 across splits; the ordering of the
-  models is unchanged. Base-model test AUC DOES move with the split
+  Stability results move by at most 0.05 across splits. Logistic regression
+  is the most reproducible on every split; the order of the other four rows
+  changes between splits (correction 2026-10-05: an earlier version of this
+  file said the ordering was unchanged, which the table above contradicts). Base-model test AUC DOES move with the split
   (LR 0.702 on the main split; 0.742, 0.751, 0.736 on the others). The main
   split is the hardest of the four. Performance must be reported as a range.
 
