@@ -3,6 +3,11 @@ master seed (new train/test split, new explained patients, new background rows,
 hyperparameters re-tuned). Second-degree check on every headline result.
 
 DATASET and MASTER_SEED are set at the top. Writes replication_<dataset>.zip.
+
+This is the runner used for the seed-7 replication (results/replication_seed7). It ran
+KernelSHAP last, so the plausibility and variance-report stages, which need its output,
+failed on Kaggle and were re-run locally on the downloaded results. Later replications
+use kaggle/make_jobs.py, which runs the stages in dependency order.
 """
 import glob
 import os

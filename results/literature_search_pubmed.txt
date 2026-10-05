@@ -1,0 +1,952 @@
+PUBMED SEARCH, run 2026-10-06 through NCBI E-utilities (title/abstract fields, no date limit)
+
+====================================================================================================
+Q1 explanation stability in cardiovascular ML: 455 records (top 455 by relevance listed)
+query: (explainab*[tiab] OR interpretab*[tiab] OR SHAP[tiab] OR Shapley[tiab] OR "feature attribution"[tiab] OR "feature importance"[tiab]) AND (stability[tiab] OR instability[tiab] OR reproducib*[tiab] OR robustness[tiab] OR multiplicity[tiab] OR consisten*[tiab]) AND (cardiovascular[tiab] OR "heart disease"[tiab] OR coronary[tiab] OR "heart failure"[tiab] OR "myocardial infarction"[tiab]) AND ("machine learning"[tiab] OR "deep learning"[tiab] OR "neural network"[tiab])
+
+  38057571 | 2023 | Nature | Organ aging signatures in the plasma proteome track health and disease.
+  33688915 | 2021 | JAMA Cardiol | Use of Machine Learning Models to Predict Death After Acute Myocardial Infarction.
+  37730687 | 2023 | Nat Commun | Evidence of a causal and modifiable relationship between kidney function and circulating trimethylamine N-oxide.
+  38301492 | 2024 | J Electrocardiol | Artificial intelligence-enhanced electrocardiography for accurate diagnosis and management of cardiovascular diseases.
+  41572549 | 2026 | Int J Surg | The C-reactive protein-triglyceride glucose index (CTI) predicts mortality in cardiovascular-kidney-metabolic syndrome: a dual-cohort study with machine learning validation.
+  39447292 | 2024 | Ecotoxicol Environ Saf | Identifying cardiovascular disease risk in the U.S. population using environmental volatile organic compounds exposure: A machine learning predictive model based on the SHAP methodology.
+  41314962 | 2025 | Sci Bull (Beijing) | A novel deep learning system for STEMI prognostic prediction from multi-sequence cardiac magnetic resonance.
+  40888124 | 2025 | Circulation | Phenotypic Selectivity of Artificial Intelligence-Enhanced Electrocardiography in Cardiovascular Diagnosis and Risk Prediction.
+  41393286 | 2025 | Front Endocrinol (Lausanne) | Co-occurrence patterns and related risk factors of ischemic heart disease and type 2 diabetes in burden of disability-adjusted life years among people aged 55 years and older across 203 countries and territories.
+  39883922 | 2025 | J Med Internet Res | Risk Factors for Gastrointestinal Bleeding in Patients With Acute Myocardial Infarction: Multicenter Retrospective Cohort Study.
+  40346649 | 2025 | Cardiovasc Diabetol | Combined assessment of stress hyperglycemia ratio and glycemic variability to predict all-cause mortality in critically ill patients with atherosclerotic cardiovascular diseases across different glucose metabolic states: an observational cohort study with machine learning.
+  40916281 | 2025 | Phytomedicine | Multi-omics and experimental validation reveal the mechanism of DanxiaTiaoban decoction in treating atherosclerosis.
+  40496881 | 2025 | EClinicalMedicine | Electrocardiogram-based diagnosis of liver diseases: an externally validated and explainable machine learning approach.
+  41141353 | 2025 | Front Endocrinol (Lausanne) | Establishment and evaluation of a model for clinical feature selection and prediction in gout patients with cardiovascular diseases: a retrospective cohort study.
+  40967934 | 2025 | Br J Anaesth | Preoperative risk prediction of major cardiovascular events in noncardiac surgery using the 12-lead electrocardiogram: an explainable deep learning approach.
+  41204136 | 2025 | BMC Cardiovasc Disord | Glycemic variability and postoperative mortality following cardiac surgery: evidence from a real-world ICU cohort.
+  35399264 | 2022 | Front Physiol | WaSP-ECG: A Wave Segmentation Pretraining Toolkit for Electrocardiogram Analysis.
+  41168299 | 2025 | Sci Rep | Explainable attention-based deep learning for classification and interpretation of heart murmurs using phonocardiograms.
+  41904528 | 2026 | Cardiovasc Diabetol | Association between triglyceride-glucose index and related indicators with heart failure-related mortality in individuals with early-stage cardiovascular-kidney-metabolic syndrome.
+  41239205 | 2025 | BMC Cardiovasc Disord | Relative hyperglycemia and new-onset atrial fibrillation after coronary artery bypass grafting: a focus on stress hyperglycemia ratio.
+  40389651 | 2025 | Commun Med (Lond) | Interpretable machine learning leverages proteomics to improve cardiovascular disease risk prediction and biomarker identification.
+  35882225 | 2022 | Physiol Meas | Visualization deep learning model for automatic arrhythmias classification.
+  34198329 | 2021 | J Am Med Inform Assoc | Interpretable disease prediction using heterogeneous patient records with self-attentive fusion encoder.
+  34890152 | 2022 | Pac Symp Biocomput | Interpretable deep learning prediction of 3d assessment of cardiac function.
+  37600044 | 2023 | Front Cardiovasc Med | Quantitative imaging biomarkers of coronary plaque morphology: insights from EVAPORATE.
+  32179311 | 2020 | Comput Methods Programs Biomed | Decision tree-based diagnosis of coronary artery disease: CART model.
+  38849699 | 2024 | Med Biol Eng Comput | Machine learning models' assessment: trust and performance.
+  37664595 | 2023 | iScience | Atherosclerotic plaque vulnerability quantification system for clinical and biological interpretability.
+  42144611 | 2026 | Cardiovasc Diabetol | Comparative prognostic value of TyG index and TyG-BMI for 90-day all-cause mortality in critically ill older adults with ASCVD: a machine learning analysis of the MIMIC-IV database.
+  41366491 | 2025 | Cardiovasc Diabetol Endocrinol Rep | Real-world prescriptions of GLP-1RAs and SGLT2is in type 2 diabetes prioritise BMI and age over cardiorenal risk: a machine learning-based large cohort analysis.
+  36219164 | 2022 | J Chem Inf Model | cardioToxCSM: A Web Server for Predicting Cardiotoxicity of Small Molecules.
+  42173730 | 2026 | Obes Res Clin Pract | Estimated glucose disposal rate and triglyceride-glucose index jointly predict mortality in advanced cardiovascular-kidney-metabolic syndrome.
+  39682584 | 2024 | Diagnostics (Basel) | Mitigating Algorithmic Bias in AI-Driven Cardiovascular Imaging for Fairer Diagnostics.
+  38732342 | 2024 | Diagnostics (Basel) | A Multi-Stage Approach for Cardiovascular Risk Assessment from Retinal Images Using an Amalgamation of Deep Learning and Computer Vision Techniques.
+  41086948 | 2025 | Diabetes Res Clin Pract | Comparative analysis of cardiometabolic multimorbidity predictors in China and the USA: A machine learning approach.
+  40866986 | 2025 | BMC Med Inform Decis Mak | A heart failure classification model from radial artery pulse wave using LSTM neural networks.
+  39354616 | 2024 | Crit Care | Derivation and validation of generalized sepsis-induced acute respiratory failure phenotypes among critically ill patients: a retrospective study.
+  40999026 | 2025 | Sci Rep | Development and validation of a machine learning model for cardiovascular disease risk prediction in type 2 diabetes patients.
+  41074084 | 2025 | Eur J Med Res | Machine learning-based integration of pericoronary adipose tissue and clinical risk factors for cardiovascular risk prediction in type 2 diabetes: a retrospective cohort study.
+  41808031 | 2026 | BMC Cardiovasc Disord | Association of the atherogenic index of plasma and a novel triglyceride-glucose-body shape index with stroke: insights from NHANES and machine learning approaches.
+  40741049 | 2025 | Front Aging Neurosci | Development and validation of deep learning- and ensemble learning-based biological ages in the NHANES study.
+  41375721 | 2025 | J Clin Med | Applications of Artificial Intelligence as a Prognostic Tool in the Management of Acute Aortic Syndrome and Aneurysm: A Comprehensive Review.
+  41247866 | 2025 | Ann Med | C-reactive protein-triglyceride glucose index in predicting three-vessel coronary artery disease risk: a retrospective study using machine learning approaches.
+  40701371 | 2025 | Ann Epidemiol | Machine learning in epidemiology: An introduction, comparison with traditional methods, and a case study of predicting extreme longevity.
+  40606526 | 2025 | EClinicalMedicine | Prediction cardiovascular deterioration in a paediatric intensive care unit (PicEWS): a machine learning modelling study of routinely collected health-care data.
+  41440865 | 2025 | J Cardiovasc Dev Dis | Shifting Determinants of Mortality Risk After Orthotopic Heart Transplantation Identified by Machine Learning.
+  41299477 | 2025 | BMC Med | Interpretable and reproducible machine learning model for coronary calcification and segment-level stenoses stratification on computed tomography angiography.
+  39559784 | 2024 | IEEE Open J Eng Med Biol | Optimized Clinical Feature Analysis for Improved Cardiovascular Disease Risk Screening.
+  42477581 | 2026 | BMC Cardiovasc Disord | Advanced prediction of cardiovascular-kidney-metabolic syndrome using eight machine learning models and 24 composite indices.
+  37729839 | 2023 | Int J Med Inform | Cardiometabolic risk estimation using exposome data and machine learning.
+  37764721 | 2023 | Nutrients | Predicting Cardiovascular Disease Mortality: Leveraging Machine Learning for Comprehensive Assessment of Health and Nutrition Variables.
+  40864481 | 2025 | G Ital Cardiol (Rome) | [Artificial intelligence-enhanced ECG interpretation: a new era for electrocardiography?].
+  36724593 | 2023 | Comput Methods Programs Biomed | WavelNet: A novel convolutional neural network architecture for arrhythmia classification from electrocardiograms.
+  41029382 | 2025 | Cardiovasc Diabetol | An ensemble machine learning-based risk stratification tool for 30-day mortality prediction in critically ill cardiovascular patients.
+  40779831 | 2025 | Med Image Anal | Interpretable multi-scale deep learning to detect malignancy in cell blocks and cytological smears of pleural effusion and identify aggressive endometrial cancer.
+  29661795 | 2018 | Circ Cardiovasc Imaging | Machine Learning Analysis of Left Ventricular Function to Characterize Heart Failure With Preserved Ejection Fraction.
+  40395549 | 2025 | Front Nutr | The relationship between dietary vitamin B1 and stroke: a machine learning analysis of NHANES data.
+  41282377 | 2025 | Clin Interv Aging | Machine Learning Based Prediction of Postoperative Acute Kidney Injury Risk in Coronary Artery Bypass Grafting Patients.
+  41124652 | 2025 | JMIR Med Inform | Interpretable Machine Learning Model for Predicting and Assessing the Risk of Diabetic Nephropathy: Prediction Model Study.
+  41138205 | 2025 | Am J Physiol Heart Circ Physiol | Quantifying cardiovascular autonomic aging with machine learning.
+  40722571 | 2025 | Diagnostics (Basel) | Machine Learning for Coronary Plaque Characterization: A Multimodal Review of OCT, IVUS, and CCTA.
+  41767383 | 2026 | Front Endocrinol (Lausanne) | Uric acid-to-albumin ratio as a cardiometabolic marker for predicting adverse outcomes in patients with atrial fibrillation: evidence from two independent cohorts.
+  41484685 | 2026 | J Health Popul Nutr | Association between the oxidative balance score and all-cause mortality in patients with cardiovascular disease-cancer comorbidity.
+  36978725 | 2023 | Bioengineering (Basel) | Deep Learning-Based Reconstruction for Cardiac MRI: A Review.
+  41533053 | 2026 | Eur J Pediatr | PODiaCarD: a prototype of a digital twin platform for the management of pediatric obesity and related cardiometabolic complications.
+  40677244 | 2025 | Comput Struct Biotechnol J | Identifying the risk of Kawasaki disease based solely on routine blood test features through novel construction of machine learning models.
+  39353848 | 2025 | J Magn Reson Imaging | Deep-Learning-Based Disease Classification in Patients Undergoing Cine Cardiac MRI.
+  41168766 | 2025 | Lipids Health Dis | Predictive value of systemic inflammation response index for atherosclerotic cardiovascular disease risk in patients with hypercholesterolemia: a machine learning study with dual-cohort validation.
+  42648277 | 2026 | JACC Adv | Multichamber Myocardial Strain for Cardiovascular Risk Stratification in Liver Transplant Recipients Using Interpretable Machine Learning.
+  41154828 | 2025 | Biology (Basel) | Data Augmentation-Enhanced Myocardial Infarction Classification and Localization Using a ResNet-Transformer Cascaded Network.
+  41049383 | 2025 | Front Nutr | A cross-sectional exploration of the dietary inflammation index association with cardiovascular disease in gout: application of machine learning algorithms.
+  40752509 | 2025 | Physiol Meas | Prescreening depression using wearable electrocardiogram and photoplethysmogram data from a psycholinguistic experiment.
+  40319236 | 2025 | BMC Pulm Med | Association between life's crucial 9 and lung health: a population-based study.
+  41049373 | 2025 | Front Nutr | Interpretable prediction of coronary heart disease risk in adults over 50 with accelerated aging using 45 dietary nutrients.
+  42104441 | 2026 | Respir Res | Development and external validation of an interpretable machine-learning model for HFpEF comorbidity risk in COPD patients.
+  41555416 | 2026 | Eur J Med Res | Unveiling the relationship between stress-hyperglycemia ratio and cardiometabolic multimorbidity risk using interpretable machine learning.
+  37557056 | 2023 | Comput Biol Med | Machine learning algorithms to predict major adverse cardiovascular events in patients with diabetes.
+  41176846 | 2026 | Int J Med Inform | Interpretable type 2 diabetes incidence prediction with AutoScore: A model based on standard clinical parameters.
+  41267789 | 2025 | Front Physiol | Heart disease prediction using hybrid TabNet architecture with stacked ensemble learning.
+  35130176 | 2022 | IEEE J Biomed Health Inform | An Explainable Transformer-Based Deep Learning Model for the Prediction of Incident Heart Failure.
+  40383933 | 2025 | JMIR Med Inform | Machine Learning for the Prediction of Acute Kidney Injury in Critically Ill Patients With Coronary Heart Disease: Algorithm Development and Validation.
+  38732312 | 2024 | Diagnostics (Basel) | Pulmonary Hypertension Detection Non-Invasively at Point-of-Care Using a Machine-Learned Algorithm.
+  40944885 | 2025 | Endocrine | Revisiting mortality in acromegaly using machine learning.
+  41386362 | 2026 | Int J Cardiol | Developing explainable machine learning models from biochemical and clinical data to predict all-cause and cause-specific mortality in CVD-cancer comorbidity: A longitudinal study based on NHANES.
+  36650037 | 2023 | J Neurol Neurosurg Psychiatry | Deep learning-based personalised outcome prediction after acute ischaemic stroke.
+  42477630 | 2026 | BMC Med Inform Decis Mak | Explainable machine learning model for early prediction of ICU death in chronic heart failure with pulmonary infection.
+  29572635 | 2018 | Eur Radiol | Automated estimation of image quality for coronary computed tomographic angiography using machine learning.
+  42612361 | 2026 | Comput Biol Med | HRV-anchored autonomic-morphological structured factorization for interpretable multimodal cardiovascular risk prediction.
+  38355512 | 2024 | BMC Med Inform Decis Mak | Enhancing heart failure treatment decisions: interpretable machine learning models for advanced therapy eligibility prediction using EHR data.
+  39708562 | 2025 | Comput Methods Programs Biomed | Machine learning-based predictive models for perioperative major adverse cardiovascular events in patients with stable coronary artery disease undergoing noncardiac surgery.
+  38751135 | 2024 | ESC Heart Fail | Development of interpretable machine learning models to predict in-hospital prognosis of acute heart failure patients.
+  41268094 | 2025 | Food Sci Nutr | Insulin Resistance Indices Predict Mortality in Cardiovascular Disease: A Large-Scale NHANES Study With Machine Learning Validation.
+  41495965 | 2026 | Eur J Cardiovasc Nurs | The voice of decompensation: an explainable machine learning approach to assessing heart failure severity.
+  37951393 | 2024 | Chemosphere | Interpretable machine learning for the identification of estrogen receptor agonists, antagonists, and binders.
+  42620460 | 2026 | Front Nutr | Triglyceride-glucose index and hyperhomocysteinemia within a cardiovascular-kidney-metabolic biomarker network: insights from interpretable machine learning and epidemiological modeling.
+  36294747 | 2022 | J Pers Med | Identification of Patients with Potential Atrial Fibrillation during Sinus Rhythm Using Isolated P Wave Characteristics from 12-Lead ECGs.
+  41424729 | 2025 | Clin Kidney J | Predicting blood pressure variability in hemodialysis using an explainable boosting machine model.
+  38015947 | 2023 | PLoS One | Predicting need for heart failure advanced therapies using an interpretable tropical geometry-based fuzzy neural network.
+  35120761 | 2023 | J Thorac Cardiovasc Surg | A machine learning approach for predicting complications in descending and thoracoabdominal aortic aneurysms.
+  41452880 | 2025 | PLoS One | Enhanced machine learning and hybrid ensemble approaches for Coronary Heart Disease prediction.
+  35071361 | 2021 | Front Cardiovasc Med | Using Innovative Machine Learning Methods to Screen and Identify Predictors of Congenital Heart Diseases.
+  41356835 | 2025 | Front Nutr | Impact of inflammatory and nutritional parameters on mortality in cardiovascular multimorbidity: a comprehensive prognostic analysis based on two datasets.
+  41350345 | 2025 | Sci Rep | Biodata-centric cardiovascular disease prediction using multi-objective genetic algorithm-driven deep ensembles.
+  41301204 | 2025 | Bioengineering (Basel) | Systematic Review of Artificial Intelligence and Electrocardiography for Cardiovascular Disease Diagnosis.
+  40644630 | 2025 | J Med Internet Res | Prediction of Percutaneous Coronary Intervention Success in Patients With Moderate to Severe Coronary Artery Calcification Using Machine Learning Based on Coronary Angiography: Prospective Cohort Study.
+  41233907 | 2025 | Diabetol Metab Syndr | Which insulin resistance indices best predict future frailty progression in a cardiovascular-kidney-metabolic syndrome stage 0-3 population: a national prospective cohort and machine learning study.
+  41267838 | 2025 | Eur Heart J Digit Health | Prognostic stratification of familial hypercholesterolaemia patients using AI algorithms: a gender-specific approach.
+  40686732 | 2025 | Int J Cardiol Cardiovasc Risk Prev | Development and validation of a predictive model for in-hospital mortality in patients with coronary heart disease and renal insufficiency.
+  41144410 | 2026 | IEEE Trans Biomed Eng | Manifold Learning Approaches for Characterizing Photoplethysmographic Signals.
+  41555544 | 2025 | Ren Fail | Machine learning prediction of contrast-induced AKI after PCI using the Systemic Immune-inflammation Index: insights from MIMIC-IV.
+  37869344 | 2023 | Quant Imaging Med Surg | Prognostic prediction of left ventricular myocardial noncompaction using machine learning and cardiac magnetic resonance radiomics.
+  41196937 | 2025 | PLoS One | Interpretable machine learning for cardiovascular risk prediction: Insights from NHANES dietary and health data.
+  41459671 | 2026 | J Biochem Mol Toxicol | Integrating Single-Cell Sequencing, Machine Learning, and Molecular Docking to Elucidate the Molecular Network Linking Myocardial Infarction and DEHP Exposure.
+  41967199 | 2026 | Heart Lung | Association between aspirin use and mortality in critically ill patients with heart failure: a retrospective study using the MIMIC-IV database.
+  39639031 | 2024 | Sci Rep | Cell-free plasma telomere length correlated with the risk of cardiovascular events using machine learning classifiers.
+  41704263 | 2026 | Front Cardiovasc Med | A retrospective cohort and machine learning study on the efficacy, safety, and recurrence prediction of combined EI-VOM and linear ablation in persistent Non-valvular atrial fibrillation.
+  40980177 | 2025 | Front Cardiovasc Med | Correlation between blood urea nitrogen/albumin levels and 30-day all-cause mortality in critically Ill patients with heart failure: a retrospective cohort study and predictive model development based on machine learning.
+  40927097 | 2025 | Rev Cardiovasc Med | Artificial Intelligence in Adult Congenital Heart Disease: Diagnostic and Therapeutic Applications and Future Directions.
+  39186324 | 2024 | J Med Internet Res | Sex-Based Performance Disparities in Machine Learning Algorithms for Cardiac Disease Prediction: Exploratory Study.
+  33027698 | 2021 | Comput Methods Programs Biomed | Ensemble of heterogeneous classifiers for diagnosis and prediction of coronary artery disease with reduced feature subset.
+  37475157 | 2023 | Cardiovasc Res | A machine learning based approach to identify carotid subclinical atherosclerosis endotypes.
+  30537954 | 2018 | BMC Med Inform Decis Mak | Leveraging auxiliary measures: a deep multi-task neural network for predictive modeling in clinical research.
+  42682579 | 2026 | Front Pediatr | Development and internal validation of a monocyte-to-albumin ratio-based risk assessment model for coronary artery lesions in Kawasaki disease.
+  36592608 | 2023 | Comput Biol Med | CED: A case-level explainable paramedical diagnosis via AdaGBDT.
+  38830766 | 2024 | BMJ Health Care Inform | Prediction of coronary artery disease based on facial temperature information captured by non-contact infrared thermography.
+  42680677 | 2026 | Lancet Digit Health | Development and external validation of a contrastive learning foundation model for ECG-based prediction of cardiovascular diseases and outcomes.
+  34789136 | 2022 | Curr Med Imaging | Impact of Several Factors on the Diagnostic Interpretability of Coronary Computed Tomographic Angiography Using a 256-Detector Row CT Scanner.
+  36417477 | 2022 | PLoS One | When less is more powerful: Shapley value attributed ablation with augmented learning for practical time series sensor data classification.
+  42721689 | 2026 | Int Dent J | Periodontitis and Advanced Cardiovascular-Kidney-Metabolic Syndrome: Mediation and Machine Learning-Based Stratification.
+  33148619 | 2020 | BMJ | Consistency of variety of machine learning and statistical models in predicting clinical risks of individual patients: longitudinal cohort study using cardiovascular disease as exemplar.
+  39300773 | 2025 | ESC Heart Fail | Explainable machine learning and online calculators to predict heart failure mortality in intensive care units.
+  36713994 | 2022 | Eur Heart J Digit Health | Can machine learning bring cardiovascular risk assessment to the next level? A methodological study using FOURIER trial data.
+  41064201 | 2025 | Health Sci Rep | Deep Learning for Early Detection of Cardiovascular Diseases From Medical Imaging.
+  40773657 | 2025 | JMIR Med Inform | Machine Learning-Based Analysis of Lifestyle Risk Factors for Atherosclerotic Cardiovascular Disease: Retrospective Case-Control Study.
+  42685169 | 2026 | IEEE J Biomed Health Inform | Three New Transformer-based Scientific Validated Paradigms for Classification of Hypertrophic Cardiomyopathy and Acute Myocardial Infarction Patients Using Transcriptomic Gene Data on GPU cluster.
+  41508027 | 2026 | Arch Public Health | Development and validation of a long-term survival prediction model for older adults with asthma.
+  41645260 | 2026 | Diabetol Metab Syndr | Association between the remnant cholesterol and the risk of new-onset chronic diseases: evidence from CHARLS.
+  41342190 | 2025 | JMIR Bioinform Biotechnol | Optimizing Feature Selection and Machine Learning Algorithms for Early Detection of Prediabetes Risk: Comparative Study.
+  42074854 | 2026 | J Clin Med | Deep Learning and Cardiovascular Diseases: An Updated Narrative Review.
+  42795871 | 2026 | J Clin Med | Self-Rated Health Associated with Chronic Diseases and Types of Physical Activity Among Middle-Aged and Older Adults: A Cross-Sectional Study Using Explainable Machine Learning.
+  41326920 | 2026 | Int J Cardiovasc Imaging | A machine Learning-Based risk stratification using CMR volumetric and strain parameters in patients with hypertrophic cardiomyopathy.
+  39392843 | 2024 | PLoS One | Machine learning-based risk prediction for major adverse cardiovascular events in a Brazilian hospital: Development, external validation, and interpretability.
+  42172727 | 2026 | Int J Med Inform | Development and validation of an interpretable machine learning model for early risk prediction of acute myocardial infarction.
+  42679999 | 2026 | J Lipid Res | Lipoprotein(a) and the C-reactive protein-triglyceride-glucose index in relation to coronary lesion burden in patients with acute coronary syndrome.
+  41401388 | 2025 | J Clin Gastroenterol | Machine Learning-Based Prediction of Short-Term Mortality in Patients With Severe Acute Pancreatitis: A Multicenter Retrospective Cohort Study.
+  42598689 | 2026 | Front Nutr | Sleep duration, sleep quality, and daytime napping in relation to incident cardiometabolic multimorbidity across three national aging cohorts: a prospective, interpretable machine learning study.
+  41211134 | 2025 | Front Physiol | Multi-class: spectral-spatial temporal pyramid network and multi-class classifier-based cardiovascular disease classification.
+  39956346 | 2025 | J Biomed Inform | Enhanced heart failure mortality prediction through model-independent hybrid feature selection and explainable machine learning.
+  42590142 | 2026 | J Clin Med | Clinically Validated XAI for Calcified Plaque Segmentation in Coronary CT Angiography.
+  42324531 | 2026 | Cardiovasc Diabetol | An interpretable machine learning model for predicting postoperative hypotension in type 2 diabetes mellitus undergoing non‑cardiac surgery.
+  40623633 | 2025 | Int J Cardiol | Interpretable hybrid-ensemble acute myocardial infarction diagnosis with clinical transparency.
+  40717924 | 2025 | Sultan Qaboos Univ Med J | Enhancing Delirium Prediction and Prevention in Elderly Patients Through Machine Learning-Based Analysis.
+  31972427 | 2020 | Med Image Anal | Improving cardiac MRI convolutional neural network segmentation on small training datasets and dataset shift: A continuous kernel cut approach.
+  41141684 | 2025 | Transl Pediatr | An integrated and interpretable machine learning framework for Kawasaki disease diagnosis and risk prediction.
+  42259120 | 2026 | Int J Med Inform | Association Between Lactate-to-Albumin Ratio and 28-Day All-Cause Mortality in ICU-Admitted Acute Pancreatitis Patients: Development and Validation of a Machine Learning-Based Predictive Model Integrating Albumin-Corrected Indices.
+  41631372 | 2026 | Curr Opin Lipidol | Machine learning to predict elevated lipoprotein(a).
+  42210929 | 2026 | Front Med (Lausanne) | Interpretable machine learning to predict NOAF in ICU patients with CKD: validation in US and Chinese cohorts.
+  40062267 | 2025 | PeerJ Comput Sci | An explainable multi-objective hybrid machine learning model for reducing heart failure mortality.
+  42155949 | 2026 | J Nutr Health Aging | AI-guided integration of aging-related functional assessment to predict nonresponse to cardiac rehabilitation in heart failure.
+  39539126 | 2024 | Echocardiography | Early Detection of Left Ventricular Dysfunction With Machine Learning-Based Strain Imaging in Aortic Stenosis Patients.
+  40628170 | 2025 | Comput Biol Med | Artificial intelligence and digital twins for the personalised prediction of hypertension risk.
+  40879389 | 2026 | Neurosurgery | Prediction of Response to Spinal Cord Stimulation Using Machine Learning Based on Radiomics and Patient-Reported Outcomes.
+  38358964 | 2024 | PLoS One | Data analytics approach for short- and long-term mortality prediction following acute non-ST-elevation myocardial infarction (NSTEMI) and Unstable Angina (UA) in Asians.
+  42162116 | 2026 | Sci Rep | Multicenter machine learning model for assessing the impact of malignancy on in-hospital mortality in heart failure patients: a clinical decision support system with interpretable artificial intelligence.
+  39280120 | 2024 | Eur J Radiol Open | Using machine learning to predict carotid artery symptoms from CT angiography: A radiomics and deep learning approach.
+  37416920 | 2023 | Front Cardiovasc Med | A machine learning evaluation of patient characteristics associated with prescribing of guideline-directed medical therapy for heart failure.
+  41249696 | 2026 | Clin Rheumatol | Machine learning based on systemic inflammation response index and risk of cardiovascular disease in gout: a retrospective study and clinical validation.
+  42312038 | 2026 | Front Cell Infect Microbiol | Machine learning prediction of sepsis in paralytic ileus using interpretable clinical models.
+  41875367 | 2026 | Eur J Prev Cardiol | Unsupervised Phenomapping of Perioperative Risk in Stable Coronary Artery Disease: Revealing Limitations of the Revised Cardiac Risk Index.
+  40263348 | 2025 | Sci Rep | Ensemble learning with explainable AI for improved heart disease prediction based on multiple datasets.
+  41113710 | 2025 | Front Endocrinol (Lausanne) | Cardiometabolic index as a predictor of major adverse cardiovascular events in atrial fibrillation: insights from a community-based cohort.
+  41300891 | 2025 | Diagnostics (Basel) | RAVE-HD: A Novel Sequential Deep Learning Approach for Heart Disease Risk Prediction in e-Healthcare.
+  42199794 | 2026 | Front Endocrinol (Lausanne) | Plasma protein GDF15 has a good predictive potential for the kidney complications of type 2 diabetes.
+  42661722 | 2026 | Front Digit Health | A systematic review on AI-driven noninvasive fetal ECG processing and analysis methods.
+  41256539 | 2025 | bioRxiv | An Interpretable Deep Learning Framework for Biomarker Discovery in Complex Disease Survival Outcomes.
+  38874694 | 2024 | Intensive Care Med Exp | Explainable Boosting Machine approach identifies risk factors for acute renal failure.
+  41487965 | 2026 | Cardiovasc Ther | A Multicohort Machine Learning Framework to Predict Mortality in Elderly Patients With Heart Disease: Insights From HARLS, SHARE, and HRS.
+  41855468 | 2026 | JMIR Med Inform | Machine Learning-Based Risk Prediction for Coronary Heart Disease Complicated by Hyperhomocysteinemia: Retrospective Study.
+  42206034 | 2026 | Front Immunol | Predictive value of thyroid autoantibodies for coronary heart disease severity in individuals with normal thyroid function based on machine learning and SHAP interpretation.
+  41068236 | 2025 | Sci Rep | Hierarchical random forest model, inflammation and oxidative stress as predictors of the atherogenic index of plasma and diabetes progression.
+  41375866 | 2025 | J Clin Med | Machine Learning-Based Prediction of Early Left Ventricular Function After STEMI.
+  42061194 | 2026 | Environ Int | Multi-omics integration identifies PFOS-associated immune signatures in Kawasaki disease.
+  39202229 | 2024 | Diagnostics (Basel) | A Comparison of Interpretable Machine Learning Approaches to Identify Outpatient Clinical Phenotypes Predictive of First Acute Myocardial Infarction.
+  42564077 | 2026 | Front Endocrinol (Lausanne) | Risk prediction for long-term cardiovascular events in patients with concurrent hypertension, HFpEF, and unstable angina: a multicenter machine learning-assisted cohort study.
+  38505490 | 2024 | Eur Heart J Digit Health | Deep learning from atrioventricular plane displacement in patients with Takotsubo syndrome: lighting up the black-box.
+  39499554 | 2024 | J Med Internet Res | Machine Learning-Based Prediction for Incident Hypertension Based on Regular Health Checkup Data: Derivation and Validation in 2 Independent Nationwide Cohorts in South Korea and Japan.
+  42139271 | 2026 | PLoS One | Multi class photoplethysmography-based deep model for cardiovascular disease classification.
+  39552607 | 2025 | Eur J Clin Invest | Machine learning for stroke in heart failure with reduced ejection fraction but without atrial fibrillation: A post-hoc analysis of the WARCEF trial.
+  41827995 | 2026 | Diagnostics (Basel) | An Open-Source Analysis of Cardiomyopathy Using Machine Learning and Electrocardiograms.
+  37433439 | 2023 | J Natl Compr Canc Netw | Social Determinants of Health and Racial Disparities in Cardiac Events in Breast Cancer.
+  41756605 | 2026 | Digit Health | Predicting cardiovascular risk across cardiovascular-kidney-metabolic syndrome stages in middle-aged and older Chinese adults: An interpretable machine learning analysis.
+  41669844 | 2026 | Hypertension | DNA Methylation Markers for Pregnancy Hypertension via Machine Learning Methods.
+  41153765 | 2025 | Biomedicines | Multidimensional Visualization and AI-Driven Prediction Using Clinical and Biochemical Biomarkers in Premature Cardiovascular Aging.
+  42495075 | 2026 | Front Cardiovasc Med | Development and external validation of a composite biomarker-based machine learning model for sarcopenia risk stratification in patients with cardiovascular disease.
+  40950368 | 2025 | J Cardiovasc Echogr | Artificial Intelligence in Cardiovascular Imaging: Current Applications and New Horizons.
+  36769515 | 2023 | J Clin Med | Predicting Six-Month Re-Admission Risk in Heart Failure Patients Using Multiple Machine Learning Methods: A Study Based on the Chinese Heart Failure Population Database.
+  41458488 | 2025 | Front Med (Lausanne) | Development and validation of an interpretable machine learning model for predicting the risk of non-cardiac surgery postoperative heart failure: a multicenter study.
+  41602906 | 2026 | iScience | AI enhancing differential diagnosis of acute chronic obstructive pulmonary disease and acute heart failure.
+  42152864 | 2026 | Digit Health | Development of a machine learning-based depression risk prediction model for middle-aged and elderly Chinese heart disease patients: Evidence from CHARLS data.
+  38495288 | 2024 | World J Hepatol | Predicting major adverse cardiovascular events after orthotopic liver transplantation using a supervised machine learning model: A cohort study.
+  41192043 | 2026 | Microbiol Res | Microbiome based precision medicine through integrated multiomics and machine learning.
+  33913623 | 2021 | Int J Numer Method Biomed Eng | Combining data assimilation and machine learning to build data-driven models for unknown long time dynamics-Applications in cardiovascular modeling.
+  42611956 | 2026 | Circ Genom Precis Med | Artificial Intelligence and Machine Learning Approaches for Cardiovascular Genomics: A State-of-the-Art Review.
+  40309320 | 2025 | Front Digit Health | Deep conditional generative model for personalization of 12-lead electrocardiograms and cardiovascular risk prediction.
+  42294083 | 2026 | Int J Cardiol Cardiovasc Risk Prev | Clinical subtypes and prognosis of new-onset atrial fibrillation in critically ill patients.
+  40884728 | 2025 | Cell Biochem Biophys | Harnessing Statistical and Machine Learning Approaches to Analyze Oxidized LDL in Clinical Research.
+  38269285 | 2023 | Front Pharmacol | Machine learning-based prediction of composite risk of cardiovascular events in patients with stable angina pectoris combined with coronary heart disease: development and validation of a clinical prediction model for Chinese patients.
+  39615231 | 2025 | Comput Biol Med | Fair and explainable Myocardial Infarction (MI) prediction: Novel strategies for feature selection and class imbalance correction.
+  38438861 | 2024 | BMC Med Inform Decis Mak | Seasonally adjusted laboratory reference intervals to improve the performance of machine learning models for classification of cardiovascular diseases.
+  39443346 | 2024 | Neurosurg Rev | Long-term outcome followed for more than 5 years after revascularization surgery for the treatment of atherosclerotic steno-occlusive disease: poor outcome prediction using machine learning and analysis of the results.
+  39087585 | 2024 | JMIR Med Inform | Unsupervised Feature Selection to Identify Important ICD-10 and ATC Codes for Machine Learning on a Cohort of Patients With Coronary Heart Disease: Retrospective Study.
+  40912644 | 2026 | Ann Vasc Surg | Interpretable Machine Learning Approaches for Identification of Acute Aortic Dissection in Chest Pain Patients.
+  41748644 | 2026 | NPJ Aging | From wrist data to lifespan: elucidating inflammation-driven biological aging via activity rhythms captured by wearable devices.
+  40383057 | 2025 | Comput Biol Med | Exploring interpretable echo analysis using self-supervised parcels.
+  41336826 | 2025 | Annu Int Conf IEEE Eng Med Biol Soc | A Physiological-Model-Based Neural Network Framework for Blood Pressure Estimation from Photoplethysmography Signals.
+  40846740 | 2025 | Sci Rep | Machine learning enhanced expert system for detecting heart failure decompensation using patient reported vitals and electronic health records.
+  41336649 | 2025 | Annu Int Conf IEEE Eng Med Biol Soc | Contrastive Coronary Artery Calcification Image Retrieval in Computed Tomography.
+  41529594 | 2026 | Comput Methods Programs Biomed | Physiological-model-based neural network for modeling the metabolic-heart rate relationship during physical activities.
+  42344498 | 2026 | Front Med (Lausanne) | Enhancing clinically cardiovascular machine learning model for risk prediction via sample augmentation.
+  40770344 | 2025 | BMC Med Inform Decis Mak | Hybrid CNN-Transformer-WOA model with XGBoost-SHAP feature selection for arrhythmia risk prediction in acute myocardial infarction patients.
+  39215022 | 2024 | Sci Rep | Improving privacy-preserving multi-faceted long short-term memory for accurate evaluation of encrypted time-series MRI images in heart disease.
+  40713871 | 2025 | Cardiooncology | Explainable machine learning for neoplasms diagnosis via electrocardiograms: an externally validated study.
+  41049146 | 2025 | Front Vet Sci | Deep learning framework for vertebral heart size and cardiothoracic ratio estimation in dogs and cats using thoracic radiographs.
+  42506312 | 2026 | Med Sci (Basel) | Real-World Pharmacotherapy-Driven Cardiovascular Risk Prediction Using Interpretable Machine Learning and Jordanian EHR Data.
+  41464527 | 2025 | J Clin Med | Risk Analysis in the Lower Silesia Healthy Donors Cohort: Statistical Insights and Machine Learning Classification.
+  41049914 | 2025 | Cureus | Artificial Intelligence in Prehospital Emergency Care: Advancing Triage and Destination Decisions for Time-Critical Conditions.
+  42388751 | 2026 | Front Public Health | Integrating lipid-related composite indices and explainable machine learning for coronary heart disease risk assessment.
+  38977344 | 2024 | Nan Fang Yi Ke Da Xue Xue Bao | [Prediction of risk of in-hospital death in patients with chronic heart failure complicated by lung infections using interpretable machine learning].
+  39477070 | 2025 | Biomed J | Deep learning significantly boosts CRT response prediction using synthetic longitudinal strain data: Training on synthetic data and testing on real patients.
+  42739303 | 2026 | Diagnostics (Basel) | Explainable Machine Learning Models for Predicting Functional and Pain Recovery After Fragility Fracture Surgery.
+  40622521 | 2025 | Curr Atheroscler Rep | Artificial Intelligence-Enabled Point-of-Care Echocardiography: Bringing Precision Imaging to the Bedside.
+  41238596 | 2025 | Sci Rep | HearteXplain: explainable prediction of acute heart failure and identification of hematologic biomarkers using EBMs and Morris sensitivity analysis.
+  42218490 | 2026 | Lipids Health Dis | Machine learning prediction of sudden cardiac death incorporating multiple lipid markers: evidence from the Taiwan Chin Shan community cohort.
+  40023290 | 2025 | Clin Med (Lond) | Risk factors and an interpretability tool of in-hospital mortality in critically ill patients with acute myocardial infarction.
+  39292486 | 2024 | JAMA Cardiol | Tailoring Risk Prediction Models to Local Populations.
+  42787027 | 2026 | Front Endocrinol (Lausanne) | Prognostic value of glycemic variability for ICU and in-hospital all-cause mortality in postoperative patients with upper gastrointestinal cancer: a retrospective cohort study.
+  42174991 | 2026 | Stud Health Technol Inform | Enhancing Explainable AI Stability with Realistic Synthetic Data for Cardiovascular Risk Prediction.
+  39288325 | 2025 | Ophthalmic Epidemiol | Evaluation of Sociomedical Factors on Corneal Donor Recovery Using Machine Learning.
+  41743694 | 2026 | Health Inf Sci Syst | An enhanced heart disease prediction model based on linear Diophantine fuzzy-integrated supervised machine learning.
+  40474184 | 2025 | BMC Med Inform Decis Mak | A systematic comparison of short-term and long-term mortality prediction in acute myocardial infarction using machine learning models.
+  41313957 | 2026 | Public Health | Protective predictors of cardiovascular disease: an explainable AI approach.
+  40843176 | 2025 | Front Cell Dev Biol | Research progress in deep learning-based fundus image analysis for the diagnosis and prediction of hypertension-related diseases.
+  42434360 | 2026 | Front Artif Intell | Deep learning for cardiovascular disease: a comprehensive review of detection and risk forecasting.
+  40167635 | 2025 | Acta Diabetol | Machine learning-based models to predict type 2 diabetes combined with coronary heart disease and feature analysis-based on interpretable SHAP.
+  42489832 | 2026 | Mol Divers | Integrated machine learning and structural bioinformatics guided identification of novel molecular scaffolds as renin inhibitors.
+  41528718 | 2026 | Phys Eng Sci Med | Real-time ECG-based detection of cardiovascular diseases using balanced and interpretable machine learning approaches.
+  42720130 | 2026 | Psychol Health Med | Explainable machine learning for neurocognitive severity clustering and multivariable profiling after acute coronary syndrome.
+  41406646 | 2026 | J Geriatr Oncol | Long-term survival prediction in older women with stage I-II breast cancer using decision tree-based machine learning.
+  42150570 | 2026 | J Breath Res | Exhaled breath performance in diagnosing ischemic heart disease utilizing a machine learning model.
+  41673576 | 2026 | BMC Cardiovasc Disord | Machine learning prediction of cardiovascular disease risk progression from sulfur dioxide exposure in longitudinal population studies in China.
+  41141891 | 2025 | Int J Gen Med | Machine Learning Models for Predicting in-Hospital Cardiac Arrest: A Comparative Analysis with Logistic Regression.
+  41757284 | 2026 | ArXiv | Imaging-Derived Coronary Fractional Flow Reserve: Advances in Physics-Based, Machine Learning, and Physics-Informed Methods.
+  42652947 | 2026 | Life (Basel) | Explainable and High-Performance ECG-Informed Machine Learning and Deep Learning Framework for Cardiovascular Risk Prediction.
+  41155770 | 2025 | Medicina (Kaunas) | Comparison of the Prognostic Performance of Various Machine Learning Models in Patients with Acute Myocardial Infarction: Results from the COREA-AMI Registry.
+  41377800 | 2025 | Prog Rehabil Med | Development and Statistical Validation of a Machine Learning Model for Predicting Functional Outcomes at Discharge after Bipolar Hip Arthroplasty.
+  42786165 | 2026 | Signal Transduct Target Ther | Artificial intelligence in biomarker discovery for diseases: diagnostic and therapeutic prospects.
+  40292490 | 2025 | Nutrients | Tlalpan 2020 Case Study: Enhancing Uric Acid Level Prediction with Machine Learning Regression and Cross-Feature Selection.
+  41457074 | 2025 | Sci Rep | Development and implementation of explainable AI-based machine learning models for predicting hospital stay and treatment costs in cardiovascular patients.
+  40189986 | 2025 | Semin Nucl Med | AI in SPECT Imaging: Opportunities and Challenges.
+  42179975 | 2026 | Int J Cardiol Cardiovasc Risk Prev | Metabolic-inflammatory burden predicts mortality in heart failure across population and ICU cohorts.
+  42052207 | 2026 | Front Artif Intell | Heart disease prediction using rough neutrosophic sets and dual-attention neural networks: RNS-OptiDANet.
+  40002597 | 2025 | Diagnostics (Basel) | Optimized Lightweight Architecture for Coronary Artery Disease Classification in Medical Imaging.
+  40891009 | 2025 | Clin Appl Thromb Hemost | Interpretable Machine Learning Models for Predicting Malignant Ventricular Arrhythmia in Patients with Acute ST-Segment Elevation Myocardial Infarction Based on Systemic Inflammation Index.
+  38746442 | 2024 | Res Sq | Derivation and Validation of Generalized Sepsis-induced Acute Respiratory Failure Phenotypes Among Critically Ill Patients: A Retrospective Study.
+  39773415 | 2025 | J Med Internet Res | Noninvasive Oral Hyperspectral Imaging-Driven Digital Diagnosis of Heart Failure With Preserved Ejection Fraction: Model Development and Validation Study.
+  41800164 | 2026 | Digit Health | Leveraging ensemble learning for predicting 30-day readmission in heart failure ICU patients.
+  41288599 | 2026 | Sleep | Multimodal cardiovascular risk profiling using self-supervised learning of polysomnography.
+  40255861 | 2025 | Depress Anxiety | The Association of Elevated Depression Levels and Life's Essential 8 on Cardiovascular Health With Predicted Machine Learning Models and Interpretations: Evidence From NHANES 2007-2018.
+  42737708 | 2026 | Int J Mol Sci | Risk of Erythritol-Associated Ischemic Stroke: Integrated Genetic, Transcriptomic, and Machine Learning Evidence.
+  42153008 | 2026 | Biomed Eng Comput Biol | Leveraging Clinical Data for Early Heart Disease Prediction: A Machine Learning Approach With Interpretability Analysis.
+  42185599 | 2026 | Sci Rep | Explainable machine learning-driven identification of heart failure biomarkers: a multi-model feature selection approach with SHAP-based interpretability.
+  42270697 | 2026 | Sci Rep | A multi-view autoencoder architecture with self-adaptive feature recalibration and confidence-aware ensemble for heart disease classification.
+  41708742 | 2026 | Sci Rep | Clustering-cum-regression based model and performance analysis for early prediction of heart disease.
+  42688738 | 2026 | Food Sci Nutr | Association Between the Dietary Inflammatory Index and Cardiorenal Anemia Syndrome: Evidence From NHANES and Related-Phenotype Exploration in KNHANES.
+  42155349 | 2026 | Comput Methods Programs Biomed | Detecting cardiovascular diseases using ECG scans and explainable artificial intelligence.
+  41440521 | 2025 | Med Sci (Basel) | Risk of Chronic Kidney Disease and Implications in Patients with Atrial Fibrillation for the Development of Major Adverse Cardiovascular Events with Machine Learning.
+  42311439 | 2026 | Eur Heart J Digit Health | An Artificial Intelligence based model for predicting long-term all-cause mortality after acute Myocardial Infarction (the AIMI model).
+  42652802 | 2026 | J Clin Med | Artificial Intelligence in Cardiovascular Ultrasound: Clinical Applications, Foundation Models, and the Path to Precision Cardiology.
+  41203852 | 2026 | Hypertens Res | Predicting measurement continuity in home blood pressure monitoring using machine learning.
+  40433606 | 2025 | Front Artif Intell | A comprehensive review of machine learning for heart disease prediction: challenges, trends, ethical considerations, and future directions.
+  41336535 | 2025 | Annu Int Conf IEEE Eng Med Biol Soc | Identifying Markers of Cardiac Arrythmias in Patients with Diabetes Mellitus Type 2.
+  42660000 | 2026 | Geriatr Nurs | Beyond predictive performance: Interpretability challenges and feature importance bias in XGBoost-based readmission models.
+  42035089 | 2026 | BMC Med Inform Decis Mak | Predicting disease outcomes from remote monitoring using machine learning: a systematic review.
+  41089741 | 2025 | J Multidiscip Healthc | Machine Learning Models for Differentiating Causes of Dyspnea in Emergency Department Patients: A Retrospective Study.
+  41082434 | 2026 | IEEE J Biomed Health Inform | CFTResNet: A Novel Cross-Domain Diagnosis Framework Guided by Interpretability for Cardiovascular Diseases.
+  39349500 | 2024 | Sci Rep | Enhancing severe hypoglycemia prediction in type 2 diabetes mellitus through multi-view co-training machine learning model for imbalanced dataset.
+  41613150 | 2025 | Front Immunol | Multimodal analysis of TAAD pathogenesis: SHAP-enhanced interpretable models and single-cell sequencing analysis reveal immune microenvironment alterations.
+  41248181 | 2025 | PLoS One | Classifying complex multimorbidity using latent class analysis and machine learning to generate insights into clustering of mental and cardiometabolic conditions.
+  42477085 | 2026 | Sci Rep | Cardiovascular disease prediction using variational recurrent autoencoders with uncertainty estimation.
+  42421984 | 2026 | Digit Health | A two-phase machine learning framework for coronary heart disease risk prediction: Integrating population ecology with individual pathophysiology.
+  41656207 | 2026 | BMC Public Health | Geospatial and machine learning analyses of cardiovascular disease mortality across the continental United States: Identifying associated variables using Shapley values.
+  42263950 | 2026 | Int J Cardiol | A scoping review on aging and cardiovascular diseases - Molecular mediators and artificial intelligence-based advanced diagnostic methods.
+  42307141 | 2026 | Adv Mater | Wearable Flexible Sensors for Cardiovascular Disease Monitoring.
+  40222663 | 2025 | Int J Cardiol | Predicting prolonged length of in-hospital stay in patients with non-ST elevation myocardial infarction (NSTEMI) using artificial intelligence.
+  42556439 | 2026 | Ann Epidemiol | Machine learning classification of prevalent chronic disease using multidimensional social, behavioral, and psychological determinants: A cross-sectional analysis of the 2024 national health interview survey.
+  42026911 | 2026 | Balkan Med J | Machine Learning-Based Magnetocardiography Model Aids in Diagnosing Non-ST-Segment Elevation Acute Coronary Syndrome in Acute Chest Pain.
+  40333100 | 2025 | IEEE J Biomed Health Inform | Enhancing ECG Classification in Cardiac Diagnostics: A Novel Approach Using Adaptive Focal Cross-Entropy Loss Function.
+  42120650 | 2026 | J Mol Neurosci | Development and Validation of a SHAP-Interpretable Machine Learning Model for Stroke Risk Prediction Using Circulating MicroRNA Biomarkers.
+  40870369 | 2025 | Medicina (Kaunas) | Predicting Major Adverse Cardiovascular Events After Cardiac Surgery Using Combined Clinical, Laboratory, and Echocardiographic Parameters: A Machine Learning Approach.
+  40093230 | 2025 | medRxiv | Intraplaque haemorrhage quantification and molecular characterisation using attention based multiple instance learning.
+  39643515 | 2025 | Arch Bronconeumol | The Pivotal Role of Baseline LDCT for Lung Cancer Screening in the Era of Artificial Intelligence.
+  42029002 | 2026 | Eur J Clin Invest | Prehospital Risk Stratification Using Unsupervised Machine Learning in STEMI.
+  40548850 | 2025 | Cardiol Rev | Electrocardiogram-Based Artificial Intelligence for Detection of Low Ejection Fraction: A Contemporary Review.
+  42712632 | 2026 | Front Cardiovasc Med | Cardiac and systemic biological age capture complementary aging signals associated with cardiovascular disease.
+  41289812 | 2026 | Comput Methods Programs Biomed | Developing a novel framework using optimized active stacking and explainable AI for heart disease prediction.
+  41647804 | 2025 | Front Cardiovasc Med | Machine learning-based early warning system for hemodynamic deterioration in cardiovascular ICU patients: a bidirectional cross-validation study.
+  38156332 | 2023 | J Med Imaging (Bellingham) | Coronary stenosis quantification in cardiac computed tomography angiography: multi-factorial optimization of image quality and radiation dose.
+  40163243 | 2025 | Med Biol Eng Comput | Automated detection of retinal artery occlusion in fundus photography via self-supervised deep learning and multimodal interpretability using a multimodal AI chatbot.
+  42562770 | 2026 | J Am Med Inform Assoc | Explainable temporal machine learning of multimorbidity trajectories after acute myocardial infarction: complementing clinical risk scores with mechanistic phenotypes.
+  41694665 | 2025 | J Clin Pract Res | Beyond Conventional Blood Parameters: Novel Hematologic Indices for Interpretable Artificial Intelligence in Acute Myocardial Infarction.
+  41280326 | 2025 | JRSM Cardiovasc Dis | Clinical phenotypes of atrial fibrillation: A review of machine learning applications in personalized treatment.
+  41983595 | 2026 | Nurs Crit Care | Machine Learning Interpretability to Assess the Association Between Time in Tight Range and Mortality in Cardiogenic Shock.
+  40854932 | 2025 | Sci Rep | Assessment of pulse wave velocity through weighted visibility graph metrics from photoplethysmographic signals.
+  42619844 | 2026 | bioRxiv | MetaAMI: A Novel Meta-Learning Approach for Predicting In-Hospital Mortality in Acute Myocardial Infarction.
+  41491933 | 2026 | Curr Opin Nephrol Hypertens | The role of artificial intelligence in hypertension management.
+  41772695 | 2026 | BioData Min | From retina to heart: explainable machine learning using OCT and Clinical covariates for heart failure screening.
+  41629121 | 2026 | Open Heart | Bridging machine learning and clinical practice: a multicentre nomogram for 90-day graft failure risk stratification in heart transplantation.
+  42000550 | 2026 | JACC Adv | Metabolomic Atlas of Cardiovascular Diseases: Mapping Shared and Specific Signatures.
+  42463275 | 2026 | Open Heart | Differentiating HFmr/rEF from HFpEF using standard 12-lead ECG measurements: an interpretable machine learning study.
+  40763138 | 2025 | PLoS One | Machine learning-based predictive modeling of angina pectoris in an elderly community-dwelling population: Results from the PoCOsteo study.
+  42198958 | 2026 | Nan Fang Yi Ke Da Xue Xue Bao | Development and validation of a machine learning-based model for assessing coronary artery disease risk in postmenopausal women: a dual-center retrospective study.
+  41497100 | 2026 | Ann Med Surg (Lond) | Global comorbidity of ischemic heart disease and liver cancer: an ecological analysis of shared risk factors.
+  42094233 | 2026 | ERJ Open Res | Predictive models for mortality readmission events and cardiovascular complications in patients with COPD: a systematic review and meta-analysis.
+  42301221 | 2026 | Curr Opin Cardiol | Advances in artificial intelligence for the evaluation of mitral regurgitation.
+  42323443 | 2026 | Sci Rep | A machine learning-based framework for predicting hypertension using serum hematological factors.
+  42260072 | 2026 | Sci Rep | Benchmarking machine learning architectures for menstrual recovery prediction using physiologically informed synthetic wearable data.
+  41292618 | 2025 | medRxiv | Integrating Infection Burden and Multimodal Biomarkers for Early Detection of Alzheimers Disease: A Sheaf-ML Framework.
+  42244797 | 2026 | Front Cardiovasc Med | Triangulating evidence for cardiometabolic Index: ROC cutoff, spline nonlinearity, and explainable machine learning for CVD high risk.
+  42136833 | 2026 | Front Med (Lausanne) | Multicenter machine learning prediction of postoperative heart failure in elderly patients highlighting inflammatory markers, metabolic comorbidities, and perioperative tachycardia.
+  41788702 | 2026 | Front Med (Lausanne) | Development and validation of a machine learning model to predict comorbid hypertension in patients with type 2 diabetes.
+  42346163 | 2026 | Epidemiologia (Basel) | Machine Learning for Coronary Heart Disease Prediction: Comparative Analysis of Framingham and Cleveland Subset of the UCI Dataset with SHAP-Based Interpretability.
+  42291284 | 2026 | Geohealth | Predicting Daily Cardiovascular Emergencies Using Weather and Air Quality Data: A 23-Year Machine-Learning Analysis in Taiwan.
+  41527165 | 2026 | J Thorac Imaging | Artificial Intelligence in Coronary Computed Tomography: Current Applications, Future Potentials, and Real-world Challenges.
+  41597514 | 2026 | Medicina (Kaunas) | Machine Learning-Based Prediction and Feature Attribution Analysis of Contrast-Associated Acute Kidney Injury in Patients with Acute Myocardial Infarction.
+  42656226 | 2026 | Front Oncol | Predicting treatment-related cardiovascular risks in breast cancer patients: development and validation of an interpretable machine learning model.
+  40243279 | 2025 | Cancer Control | Machine Learning-Based Prediction of Unplanned Readmission Due to Major Adverse Cardiac Events Among Hospitalized Patients with Blood Cancers.
+  42218244 | 2026 | Sci Rep | Explainable ensemble machine learning for predicting diabetes mellitus and identifying key risk factors: a population-based study in northern Bangladesh.
+  40355529 | 2025 | Sci Rep | Application of interpretable machine learning algorithms to predict macroangiopathy risk in Chinese patients with type 2 diabetes mellitus.
+  40351688 | 2025 | Rev Cardiovasc Med | Opportunities and Challenges of Cardiovascular Disease Risk Prediction for Primary Prevention Using Machine Learning and Electronic Health Records: A Systematic Review.
+  42628350 | 2026 | Poult Sci | Machine learning classification of dilated cardiomyopathy severity in commercial broiler chickens.
+  42328589 | 2026 | Front Med (Lausanne) | Machine-learning prediction of impaired outcome in diabetic patients undergoing non-cardiac surgery.
+  41975401 | 2026 | BMC Med Inform Decis Mak | Multimodal deep learning with missing data robustness for enhanced early diagnosis of coronary artery disease using CCTA, clinical, and ECG data.
+  40595873 | 2025 | Sci Rep | An explainable federated blockchain framework with privacy-preserving AI optimization for securing healthcare data.
+  41892847 | 2026 | Med Sci (Basel) | Artificial Intelligence in Cardiovascular Imaging: From Automated Acquisition to Precision Diagnostics and Clinical Decision Support.
+  41303874 | 2025 | Medicina (Kaunas) | Integrative Evaluation of Atrial Function and Electromechanical Coupling as Predictors of Postoperative Atrial Fibrillation.
+  41695746 | 2026 | Front Pediatr | Artificial intelligence for patent ductus arteriosus-a systematic review.
+  40630571 | 2025 | medRxiv | Multicenter Evaluation of Interpretable AI for Coronary Artery Disease Diagnosis from PET Biomarkers.
+  42115996 | 2026 | BMC Med Inform Decis Mak | Explainable retinal deep learning for cardiovascular risk stratification: a multiple modality analysis framework with vascular-centric interpretability and robustness.
+  42669263 | 2026 | Water Res | AI-driven cardiovascular toxicity assessment of emerging contaminants in water: from deep learning phenotyping to LLM-orchestrated risk evaluation.
+  40529992 | 2025 | Front Physiol | A non-invasive prediction model for coronary artery stenosis severity based on multimodal data.
+  42155057 | 2026 | JMIR Med Inform | Machine Learning Prediction Model for Dyslipidemia and Its Association With Atherothrombotic Events in 3 Independent Cohorts From South Korea, Japan, and the United Kingdom: Algorithm Development and Validation Study.
+  41741575 | 2026 | Sci Rep | Personalized multi-agent reinforcement learning framework for adaptive chronic disease therapy management.
+  41191804 | 2025 | Rambam Maimonides Med J | A Narrative Review of Multimodal Data Fusion Strategies for Precision Risk Prediction in Coronary Artery Disease: Advances, Challenges, and Future Informatics Directions.
+  42091071 | 2026 | Physiol Meas | Machine learning-based information flow analysis of ECG signals for long QT syndrome.
+  41953749 | 2026 | Biomed Signal Process Control | Explainable artificial intelligence in electrocardiography: A systematic review.
+  41888699 | 2026 | BMC Cardiovasc Disord | Development and temporal validation of a two-stage ECG-based machine learning model for LVEF screening: a Middle Eastern cohort study.
+  42384558 | 2026 | Pharmacol Res Perspect | Development and Validation of an XGBoost-SHAP Model for Predicting Adverse Outcomes in Elderly Cardiovascular Patients With Polypharmacy: A Retrospective Cohort Study.
+  42548573 | 2026 | Front Endocrinol (Lausanne) | Linear dose-response relationship between TyG-WC index and diastolic dysfunction: insights from restricted cubic spline and machine learning analysis.
+  41677667 | 2026 | Cells | Artificial Intelligence for Exosomal Biomarker Discovery for Cardiovascular Diseases: Multi-Omics Integration, Reproducibility, and Translational Prospects.
+  41759570 | 2026 | Clin Chim Acta | Explainable machine learning framework based on blood biomarkers and routine health information for assistive diagnosis and risk stratification of acute myocardial infarction.
+  41470230 | 2025 | Medicina (Kaunas) | Applications of Artificial Intelligence in Chronic Total Occlusion Revascularization: From Present to Future-A Narrative Review.
+  41122091 | 2025 | Front Cardiovasc Med | Risk prediction for symptomatic ischemic cerebrovascular disease based on ultrasound indicators of carotid plaque neovascularization.
+  42644167 | 2026 | Eur Heart J Digit Health | Multi-horizon machine learning for population-level hypertension risk stratification in the UK Biobank.
+  42234370 | 2026 | Int J Clin Pharm | Development and validation of a machine learning-based clinical decision support tool for stratifying intravenous medication risk in hospitalized patients with heart failure.
+  42020706 | 2026 | Eur J Clin Nutr | Comparative study on the predictive value of PNI and GNRI for all-cause mortality rates of elderly patients in cardiac care unit and cardiovascular intensive care unit.
+  42710561 | 2026 | Environ Pollut | Constructing community- and outcome-specific weather and air health risk indices using explainable machine learning: A multicentre study in 66 Australian communities.
+  42307137 | 2026 | Med Eng Phys | Dual-view cross-semantic graph neural network for predicting intraoperative complications in patients with acute myocardial infarction undergoing percutaneous coronary intervention.
+  41939092 | 2026 | Ann Med Surg (Lond) | The role of artificial intelligence in early detection and risk prediction of ischemic heart disease.
+  41336933 | 2025 | Annu Int Conf IEEE Eng Med Biol Soc | Systemic Analysis of Blood Pressure Waveform Features Using a Cardiovascular Simulator: Implications for Non-invasive Vascular Health Monitoring.
+  41601876 | 2025 | Front Nutr | Prognostic value of the BAB index and a machine learning model integrating the BAB index for predicting mortality in acute ST-segment elevation.
+  42235321 | 2026 | Environ Int | Plasticizer-responsive molecular axes in heart failure: a subtype-aware toxicogenomic framework relevant to environmental health.
+  41771987 | 2026 | Sci Rep | Reliable ECG classification using parallel hybrid models with limited resources.
+  36403491 | 2023 | Biosens Bioelectron | Near perfect classification of cardiac biomarker Troponin-I in human serum assisted by SnS(2)-CNT composite, explainable ML, and operating-voltage-selection-algorithm.
+  42367379 | 2026 | Front Bioeng Biotechnol | EvoApneaFormer: an IoT and prognostic evolutionary deep learning-based framework for real-time multi-event sleep apnea disorder detection and remote monitoring.
+  42470520 | 2026 | Ophthalmol Ther | Predictive Modeling of Coronary Artery Disease Using Color Fundus Photography-Based Features of Retinal Vasculature.
+  42032481 | 2026 | BMC Cardiovasc Disord | Dynamic variability of serum sodium, potassium, and calcium and mortality after acute myocardial infarction: insights from traditional and machine learning approaches.
+  41910506 | 2026 | Turk Kardiyol Dern Ars | Assessing the Predictive Value of Kolmogorov-Arnold Networks for the No-Reflow Phenomenon in ST-Segment Elevation Myocardial Infarction: A Comparative Machine Learning Study.
+  41809735 | 2026 | Int J Cardiol Cardiovasc Risk Prev | Toward practical screening of mortality risk: Insights from interpretable machine learning in NHANES.
+  41921461 | 2026 | Comput Biol Med | A lightweight and explainable cardiac signal framework for screening-oriented cardiometabolic risk assessment.
+  41372990 | 2025 | Lipids Health Dis | An uncertainty-driven gated feature selection network (UGFS-Net) for TG level prediction: linking high-altitude exposure to lipid metabolism disorder via elevated TG.
+  42025543 | 2026 | Lancet Digit Health | Detection of young-onset type 2 diabetes using deep learning across primary and secondary care: a nationwide, retrospective cohort study.
+  41696569 | 2026 | Prev Med Rep | Matrix metalloproteinases and risk of cardiovascular mortality and morbidity in the United Kingdom: A prospective cohort study with machine learning analysis.
+  42567084 | 2026 | Comput Biol Chem | Optimizing predictive performance in heart disease diagnosis with stacked wrapper pre-processing techniques.
+  41593716 | 2026 | Eur J Med Res | Ceramide-based machine learning models for the diagnosis of unstable angina: a prospective multicenter study.
+  42488543 | 2026 | Front Cardiovasc Med | Development and validation of an interpretable machine learning model for predicting atrial fibrillation risk in middle-aged and older patients with coronary heart disease.
+  41512598 | 2026 | Artif Intell Med | Integrating probabilistic trees and causal networks for clinical and epidemiological data.
+  41493959 | 2026 | J Phys Chem B | Discovery of PPARγ Partial Agonists for Treatment of Type 2 Diabetes Based on an Integrated Virtual Screening Strategy that Combines Fragment Molecular Orbital Calculations, Machine Learning, Molecular Docking, Interaction Fingerprint Filtering, and Molecular Dynamics Simulations.
+  41783138 | 2026 | Anal Sci Adv | Stacked Ensemble Model With Explainable AI for Early Detection of Heart Disease.
+  41892149 | 2026 | BioTech (Basel) | Artificial Intelligence and Digital Technology in Cardiovascular Imaging: A Narrative Review.
+  42289619 | 2026 | Cardiovasc Toxicol | Interpretable Machine Learning in Heavy Metal-Associated Cardiovascular and Metabolic Disease: A Review of Current Methodologies, Toxicological Insights, and Clinical Implications.
+  41438294 | 2025 | Front Endocrinol (Lausanne) | A contribution-interpretable belief rule base model for obesity risk prediction using physical indicators and dietary habits.
+  42662675 | 2026 | ACS Omega | Development of a Shapley Additive Explanations (SHAP)-Interpretable Model for Cardiovascular Risk Stratification in Type 2 Diabetes Mellitus: Implications of MDA-Modified Protein Adducts and Autoantibodies.
+  42780762 | 2026 | Front Cardiovasc Med | Construction of a predictive model for the efficacy of enhanced external counterpulsation therapy in patients with heart failure with preserved ejection fraction based on automated machine learning and echocardiography.
+  41883473 | 2026 | Int J Gen Med | The Predictive Value of the Pan-Immune-Inflammation Value for Atrial Fibrillation Risk in Patients with Coronary Artery Disease: A Multicenter Machine Learning Study.
+  42591778 | 2026 | Front Med (Lausanne) | Machine learning for prediction of newly diagnosed atrial fibrillation after emergency percutaneous coronary intervention during hospitalization in patients with acute ST-segment elevation myocardial infarction: a multi-center prospective study.
+  42591658 | 2026 | Front Cardiovasc Med | Development and external validation of a machine learning model for predicting 28-day mortality in patients with acute myocardial infarction complicated by malignant arrhythmia: a study using the MIMIC database and a Chinese cohort.
+  42410132 | 2026 | Sci Rep | A systematic evaluation of the reliability of feature selection methods and SHAP-based interpretability in machine learning models for arrhythmia analysis.
+  41828066 | 2026 | Diagnostics (Basel) | A Unified Framework for Survival Prediction: Combining Machine Learning Feature Selection with Traditional Survival Analysis in Heart Failure and METABRIC Breast Cancer.
+  41963446 | 2026 | Sci Rep | Investigation of the multifactorial regulatory mechanisms underlying compositional changes in recurrent urinary stones and development of a machine learning-based personalized predictive model.
+  42238633 | 2026 | Rev Cardiovasc Med | Malnutrition Severity Drives Mortality in Geriatric Heart Failure: A Multicenter Extreme Gradient Boosting Analysis.
+  42222119 | 2026 | Front Cardiovasc Med | Development and validation of the C-reactive protein-triglyceride-glucose index for predicting short- and long-term mortality in critically ill patients with coronary artery disease: a multicenter cohort study.
+  42347067 | 2026 | Pediatr Rep | Artificial Intelligence in Pediatric Cardiology: Present Applications and Future Directions.
+  42337519 | 2026 | BMC Med Inform Decis Mak | Predicting mortality risk in hospitalized ACS patients with hypertensive comorbidity: an interpretable machine learning approach.
+  41972534 | 2026 | Biology (Basel) | Unveiling Key Biomarkers of Cardiovascular Risk in Psoriasis Through Explainable Artificial Intelligence.
+  42177804 | 2026 | Expert Rev Cardiovasc Ther | Advances in machine learning for cardiac event prediction: where can we still improve?
+  41610739 | 2026 | J Electrocardiol | Optimizing atrial fibrillation detection through ECG feature selection using Extra-Trees and statistical association measures.
+  42645652 | 2026 | Cardiovasc Drugs Ther | Integrating Environmental Exposure Profiles with Temporal Transcriptomics: An Explainable Machine Learning Model for Cardiovascular Disease Risk Prediction and Biological Validation.
+  41724930 | 2026 | BMC Cardiovasc Disord | Predicting adverse outcomes in dilated cardiomyopathy using 3D echocardiography: penalised Cox regression versus machine learning.
+  42297654 | 2026 | J Cardiothorac Vasc Anesth | Levosimendan in Patients With Low Cardiac Ejection Fraction Undergoing Coronary Artery Bypass Grafting: Machine Learning Double Robust Causal Effect Analysis.
+  42782010 | 2026 | JACC Adv | Predictors of Bleeding After Percutaneous Left Ventricular Assist Device Support: Findings From the J-PVAD Registry.
+  41753029 | 2026 | J Clin Med | Emergency Department Prediction of In-Hospital Mortality in Suspected Pulmonary Embolism: An Explainable Machine Learning Approach.
+  42716373 | 2026 | Int J Biochem Cell Biol | Annotation of cell types in single-cell sequencing for cardiovascular disease: Concepts, workflows, challenges, and best practices.
+  42670727 | 2026 | Echocardiography | Artificial Intelligence in Echocardiography for Acute Coronary Syndromes: Current Evidence and Integration With Electrocardiography and Biomarkers.
+  42567194 | 2026 | Physiol Meas | Slide-DML: sliding-window-based estimation of heterogeneous treatment effects.
+  41635286 | 2026 | Biomed Res Int | Enhancing Hypertension Risk Diagnosis Using a Hybrid Machine Learning Framework: Leveraging Body Composition Data.
+  42340990 | 2026 | PLoS One | FEDI-CODE: A federated and causally-informed framework for dementia risk prediction using multi-site patient data.
+  41512369 | 2026 | Clinics (Sao Paulo) | Enhancing tertiary cardiology triage with vectorcardiographic features: a machine learning approach using real-world data.
+  42704616 | 2026 | Med Biol Eng Comput | Predicting 30-day readmission after heart failure hospitalization using interpretable machine learning: evidence from a 20-year population-based rural registry.
+  41481916 | 2026 | JMIR Form Res | Multimodal Transformer-Based Electrocardiogram Analysis for Cardiovascular Comorbidity Detection: Model Development and Validation Study.
+  42237288 | 2026 | BMC Med Inform Decis Mak | A systematic review of machine learning algorithms for mortality risk, readmission and phenotype prediction in patients with heart failure: exploring key data sources, input variables and outcomes.
+  42621229 | 2026 | Digit Health | Dietary micronutrients, whole food patterns, and restless legs syndrome in coronary heart disease: A dual dietary profiling machine learning analysis using NHANES data.
+  42648391 | 2026 | Prog Cardiovasc Dis | Artificial intelligence for risk prediction in atherosclerotic cardiovascular disease: A narrative review of advances, validation challenges, and clinical translation (2020-2026).
+  42289586 | 2026 | Sci Rep | Explainable artificial intelligence models in predicting major cardiovascular events: insights from the PolyIran and PolyPars prospective studies.
+  42181632 | 2026 | Front Cardiovasc Med | Exploratory machine learning analysis to characterize angioscopic features associated with atherosclerosis-related aortic dissection: an exploratory single-center angioscopic study.
+  41748772 | 2026 | Sci Rep | A joint CNN-Bi-LSTM-transformer architecture with SHAP explanations for multi-label arrhythmia detection from 12-lead ECGs.
+  42031077 | 2026 | J Pharmacol Toxicol Methods | The emerging use of artificial intelligence in safety pharmacology and toxicology.
+  42482773 | 2026 | Front Artif Intell | AE-HGNN: attention-enhanced hypergraph neural networks for interpretable stress prediction through higher-order dependency modeling.
+  41435806 | 2026 | Artif Intell Med | Clinical decision support system for detecting right ventricular dysfunction in acute pulmonary embolism: Explainable a new Binary Rule Search (BRS) ensembles and robustness evaluation.
+  42589412 | 2026 | Int J Mol Sci | Artificial Intelligence and Genomic Data Analysis: New Frontiers in Precision Medicine.
+  42387638 | 2026 | Biomed Eng Online | Non-invasive classification of stable HFpEF using a deep learning model trained on acoustic features of sustained vowels.
+  41956567 | 2026 | Am J Physiol Heart Circ Physiol | DIA-PINN: A physics-informed machine learning method to estimate global intrinsic diastolic chamber properties of the left ventricle from pressure-volume data.
+  42471621 | 2026 | BMC Med Inform Decis Mak | A scoping review on artificial intelligence-based tools for cardiovascular disease risk prediction.
+  42739244 | 2026 | Diagnostics (Basel) | Confounder-Matched Deep Learning on Cardiac CT for the Diagnosis of Tetralogy of Fallot: A Proof of Concept.
+  41657032 | 2026 | Anal Chem | Information-Guided Fusion of Multimodal Vibrational Spectroscopy for Disease Diagnosis Based on Symbiotic Attention Decoupled Contrastive Learning.
+  42698090 | 2026 | BMC Emerg Med | Impact of a high-profile sudden cardiac death on emergency department utilization: a multi-campus interrupted time series and exploratory phenotyping study.
+  42780425 | 2026 | Front Med (Lausanne) | Machine learning prediction models for mechanical ventilation requirement in patients with embolic stroke: a retrospective cohort study based on MIMIC-IV.
+  42471567 | 2026 | BMC Cardiovasc Disord | Stage-specific predictors of exercise adherence after percutaneous coronary intervention: a prospective multicenter study.
+  42753380 | 2026 | J Electrocardiol | Bridging accuracy and explainability in AI-ECG: A multi-stage hyperparameter tuning framework for reinforcement learning-based random forests.
+  41725925 | 2026 | Front Cardiovasc Med | Red blood cell distribution width to albumin ratio predicts mortality in heart failure patients with pneumonia.
+  41582138 | 2026 | Sci Rep | Enhancing classification accuracy in medical datasets using a hybrid distance and cluster refinement-based K-means clustering method.
+  41657732 | 2026 | Front Med Technol | IoMT-Fog-Cloud-based AI frameworks for chronic disease diagnosis: updated comparative analysis with recent AI-IoMT models (2020-2025).
+  42064846 | 2026 | Front Cardiovasc Med | Bridging environmental endocrine-disrupting chemicals and AMI: identification of MERTK as a potential diagnostic candidate for AMI via integrated bioinformatics and clinical validation.
+  42215825 | 2026 | Int Microbiol | Gut microbial alterations and functional shifts in patients with hypertriglyceridemia: insights from a northwestern Chinese metagenomic study.
+  42222117 | 2026 | Front Cardiovasc Med | A novel glycolipid composite index predicting cardiovascular disease in Chinese adults with abnormal glucose metabolism: a nationwide cohort study.
+  42644059 | 2026 | ARYA Atheroscler | From association to causation: Integrating stable, subgroup-aware SHAP explanations with causal inference for trustworthy AI in coronary bifurcation PCI.
+  42761171 | 2026 | Front Artif Intell | Predicting first falls among older adults with chronic conditions and polypharmacy using routinely collected health records.
+  42817506 | 2026 | Sensors (Basel) | I-GraphECG: Observability-Based Lead Selection and Interpretable Disease Prediction from the 12-Lead ECG Using a Gray-Box Graph Electrophysiology Surrogate.
+  42780239 | 2026 | Res Sq | Hyperelastic Cardiovascular NN-FE: A Framework for Integrating Nonlinear Finite Element Solvers with Neural Networks for the Hyperelastic Modeling of Cardiac Valve Tissue.
+  42439725 | 2026 | Nanomaterials (Basel) | AI-Assisted Surface-Enhanced Raman Spectroscopy for Cardiovascular Diagnostics: From Plasmonic Materials to Clinical Translation.
+  40148009 | 2025 | Lancet Digit Health | Snapshot artificial intelligence-determination of ejection fraction from a single frame still image: a multi-institutional, retrospective model development and validation study.
+  41823858 | 2026 | Biology (Basel) | A Physics-Aware Diffusion Framework for Robust ECG Synthesis Using Mesoscopic Lattice Boltzmann Constraints.
+  42281584 | 2026 | Health Sci Rep | Application of Artificial Intelligence in the Diagnosis, Prediction, and Management of Metabolic Syndrome: A Systematic Review.
+  42824444 | 2026 | Front Glob Womens Health | Factors associated with prior pregnancy loss among multigravid women: a retrospective machine learning analysis from an African population cohort.
+  41336367 | 2025 | Annu Int Conf IEEE Eng Med Biol Soc | A Personalized and Evidence-Based Clinical Decision Support System Using Ensemble Learning.
+  42200970 | 2026 | Clocks Sleep | AI-Driven Hybrid Detection and Classification Framework for Secure Sleep Health IoT Networks.
+
+====================================================================================================
+Q2 Shapley explanations under resampling, any clinical field: 286 records (top 286 by relevance listed)
+query: (SHAP[tiab] OR Shapley[tiab] OR "feature attribution"[tiab]) AND (bootstrap*[tiab] OR resampl*[tiab] OR "random seed"[tiab] OR retrain*[tiab]) AND (stability[tiab] OR instability[tiab] OR reproducib*[tiab] OR variab*[tiab])
+
+  33797958 | 2021 | JCO Clin Cancer Inform | Computing the Hazard Ratios Associated With Explanatory Variables Using Machine Learning Models of Survival Data.
+  33539308 | 2021 | J Med Internet Res | Using Automated Machine Learning to Predict the Mortality of Patients With COVID-19: Prediction Model Development Study.
+  18764936 | 2008 | BMC Bioinformatics | Combining Shapley value and statistics to the analysis of gene expression data in children exposed to air pollution.
+  41141353 | 2025 | Front Endocrinol (Lausanne) | Establishment and evaluation of a model for clinical feature selection and prediction in gout patients with cardiovascular diseases: a retrospective cohort study.
+  35552440 | 2022 | Sci Rep | Early prediction of acute necrotizing pancreatitis by artificial intelligence: a prospective cohort-analysis of 2387 cases.
+  34271025 | 2021 | Int J Cardiol | Prediction of 1-year mortality after heart transplantation using machine learning approaches: A single-center study from China.
+  33937796 | 2019 | Radiol Artif Intell | Radiomics Model to Predict Early Progression of Nonmetastatic Nasopharyngeal Carcinoma after Intensity Modulation Radiation Therapy: A Multicenter Study.
+  36545020 | 2022 | Front Cardiovasc Med | Prediction model of obstructive sleep apnea-related hypertension: Machine learning-based development and interpretation study.
+  40859240 | 2025 | Health Qual Life Outcomes | Explainable machine learning identifies key quality-of-life-related predictors of arthritis status: evidence from the China health and retirement longitudinal study.
+  41095692 | 2025 | Diagnostics (Basel) | Integrating Feature Selection, Machine Learning, and SHAP Explainability to Predict Severe Acute Pancreatitis.
+  33328078 | 2020 | Lancet Digit Health | Dynamic and explainable machine learning prediction of mortality in patients in the intensive care unit: a retrospective study of high-frequency data in electronic patient records.
+  41353539 | 2025 | BMC Public Health | Identification of risk factors for latent tuberculosis infection in Xinjiang using machine learning.
+  40844571 | 2025 | Radiol Med | Unlocking the potential of radiomics in identifying fibrosing and inflammatory patterns in interstitial lung disease.
+  41343793 | 2025 | JMIR Med Inform | Automated Speech Analysis for Screening and Monitoring Bipolar Depression: Machine Learning Model Development and Interpretation Study.
+  36211563 | 2022 | Front Cardiovasc Med | Prediction model of acute kidney injury after different types of acute aortic dissection based on machine learning.
+  41094519 | 2025 | BMC Med Inform Decis Mak | Machine learning-based stratification of mild cognitive impairment in Parkinson's disease: a multicenter cross-sectional analysis.
+  34215511 | 2021 | Heart Lung Circ | Machine Learning Outperforms Existing Clinical Scoring Tools in the Prediction of Postoperative Atrial Fibrillation During Intensive Care Unit Admission After Cardiac Surgery.
+  41248815 | 2025 | J Biomed Inform | Multi-objective optimization formulation for Alzheimer's disease trial patient selection.
+  41290898 | 2025 | Sci Rep | Explainable ensemble learning for Epstein-Barr virus risk prediction in ulcerative colitis and Crohn's disease using routine biomarkers.
+  41291243 | 2026 | Eye (Lond) | Interpretable machine learning model based on blood parameters for screening high myopia.
+  40019709 | 2025 | Hepatol Int | Analysis of risk factors for immune checkpoint inhibitor-associated liver injury: a retrospective analysis based on clinical study and real-world data.
+  39708562 | 2025 | Comput Methods Programs Biomed | Machine learning-based predictive models for perioperative major adverse cardiovascular events in patients with stable coronary artery disease undergoing noncardiac surgery.
+  39426256 | 2024 | Comput Biol Chem | An efficient interpretable stacking ensemble model for lung cancer prognosis.
+  42471694 | 2026 | BMC Med Inform Decis Mak | Interpretable, internally validated prognostic modelling of cumulative clinical pregnancy in women with diminished ovarian reserve.
+  41184424 | 2025 | Sci Rep | Machine learning prediction of overall survival in patients with cT1b renal cell carcinoma after surgical resection using the SEER database.
+  41004471 | 2025 | PLoS One | Diabetic retinopathy as the primary predictor of mild cognitive impairment in type 2 diabetes: Insights from machine learning models.
+  35046885 | 2021 | Front Neurol | Enhancing Robustness of Machine Learning Integration With Routine Laboratory Blood Tests to Predict Inpatient Mortality After Intracerebral Hemorrhage.
+  41153765 | 2025 | Biomedicines | Multidimensional Visualization and AI-Driven Prediction Using Clinical and Biochemical Biomarkers in Premature Cardiovascular Aging.
+  38216028 | 2024 | Clin Chim Acta | Machine learning in the prediction of in-hospital mortality in patients with first acute myocardial infarction.
+  41089820 | 2025 | Osteoarthr Cartil Open | Development and validation of a generalisable survival model to predict osteoarthritis progression.
+  42107713 | 2026 | J Thromb Haemost | Development of novel plasma proteomic biomarkers for cancer-associated thrombosis in an advanced cancer cohort.
+  41121298 | 2025 | Biomed Eng Online | An interpretable machine learning model integrating computed tomography radiomics and clinical features for predicting the urosepsis after percutaneous nephrolithotomy.
+  42343388 | 2026 | J Transl Med | Development and evaluation of an explainable machine learning selection pipeline for predicting neoadjuvant chemoradiotherapy response in locally advanced rectal cancer.
+  41238670 | 2025 | Sci Rep | Machine learning-based prediction of crack mouth opening displacement in ultra-high-performance concrete.
+  38455408 | 2024 | Am J Cancer Res | Development and validation of machine learning models for diagnosis and prognosis of cancer by urinary proteomics, based on the FLEMENGHO cohort.
+  35145205 | 2022 | Sci Rep | Machine learning-based diagnosis and risk factor analysis of cardiocerebrovascular disease based on KNHANES.
+  42351732 | 2026 | Biomedicines | Frailty-Driven Prediction of Inpatient Obstructive Sleep Apnea and Related Sleep Disorder Diagnoses Using Explainable AI.
+  42225845 | 2026 | Sci Rep | Prediction of syncope recurrence after percutaneous closure of patent foramen ovale based on machine learning.
+  37858225 | 2023 | BMC Med Inform Decis Mak | Application and interpretation of machine learning models in predicting the risk of severe obstructive sleep apnea in adults.
+  42435112 | 2026 | J Thromb Thrombolysis | Evaluating the impact of frailty in older adults on functional outcomes post-mechanical thrombectomy: a multicentre study incorporating traditional and machine learning methods.
+  42117054 | 2026 | Int J Chron Obstruct Pulmon Dis | Development and External Validation of a Machine Learning Model for 90-Day Readmission in Hospitalized Older Patients with AECOPD: A Two-Center Study.
+  35767804 | 2022 | Clin Orthop Relat Res | Machine-learning Models Predict 30-Day Mortality, Cardiovascular Complications, and Respiratory Complications After Aseptic Revision Total Joint Arthroplasty.
+  41899382 | 2026 | J Clin Med | First-Trimester Gestational Diabetes Mellitus Risk Prediction with Machine Learning Techniques: Results from the BORN2020 Cohort Study.
+  41852523 | 2026 | Front Med (Lausanne) | Comparative machine learning to predict acute kidney injury in traumatic brain injury: a MIMIC-IV cohort with SHAP interpretation.
+  41072899 | 2025 | J Dent | Multicentre validation and clinical interpretation of an explainable gradient-boosting model for dental-implant survival/failure prediction.
+  39614215 | 2024 | BMC Cancer | Prediction model for ocular metastasis of breast cancer: machine learning model development and interpretation study.
+  34859369 | 2022 | Med Biol Eng Comput | Identifying risk factors of intracerebral hemorrhage stability using explainable attention model.
+  41041645 | 2025 | Front Pharmacol | Risk factor identification for delayed excretion in pediatric high-dose methotrexate therapy: a machine learning analysis of real-world data.
+  41606638 | 2026 | Scand J Trauma Resusc Emerg Med | Development and internal validation of an interpretable machine learning model to predict coagulopathy following extracorporeal membrane oxygenation: a retrospective multicenter study.
+  42392592 | 2026 | J Med Internet Res | Development and Validation of an Explainable Machine Learning Model to Assess the Prevalence Probability of Gastrointestinal Heat Retention Syndrome in Children: Cross-Sectional Study.
+  42670720 | 2026 | BJU Int | Kidney stones composition prediction using artificial intelligence (KiSCAI) study.
+  40773657 | 2025 | JMIR Med Inform | Machine Learning-Based Analysis of Lifestyle Risk Factors for Atherosclerotic Cardiovascular Disease: Retrospective Case-Control Study.
+  42366211 | 2026 | Sci Rep | Explainable AI-based optimization framework for sustainable fly ash concrete design.
+  41928056 | 2026 | BMC Infect Dis | Machine learning triumphs in differentiating fungal and bacterial infections.
+  37882604 | 2022 | Gigascience | Machine learning-based feature selection to search stable microbial biomarkers: application to inflammatory bowel disease.
+  42414712 | 2026 | J Imaging Inform Med | Domain-Specific Transfer Learning for Gastric Cancer Tissue Classification.
+  41506034 | 2026 | Sci Total Environ | Two decades of flood-pulse-driven chlorophyll-a dynamics in an Amazon floodplain lake.
+  41387925 | 2025 | Sci Rep | Interpretable wrapper-based machine learning framework for predicting patellofemoral pain syndrome using minimal clinical tests.
+  42736934 | 2026 | Healthcare (Basel) | Integrated Psychological-Behavioral Predictive Model Using Explainable Machine Learning.
+  42469625 | 2026 | J Headache Pain | Source-level α periodic power in visual and default mode networks predicts topiramate treatment response in migraine.
+  42740058 | 2026 | Sensors (Basel) | XAI-Driven Intrusion Detection for Internet of Things Networks.
+  37171784 | 2023 | J Endocrinol Invest | Application of machine learning algorithms to predict osteoporosis in postmenopausal women with type 2 diabetes mellitus.
+  40525650 | 2025 | J Cachexia Sarcopenia Muscle | Development and Validation of Quantile Regression Forests for Prediction of Reference Quantiles in Handgrip and Chair-Stand Test.
+  39102087 | 2024 | Neuroradiology | Radiomics features for the discrimination of tuberculomas from high grade gliomas and metastasis: a multimodal study.
+  39516757 | 2024 | BMC Pediatr | An explainable deep learning model to predict partial anomalous pulmonary venous connection for patients with atrial septal defect.
+  40531902 | 2025 | PLoS One | Machine learning-based drought prediction using Palmer Drought Severity Index and TerraClimate data in Ethiopia.
+  42802088 | 2026 | Ren Fail | Machine learning-based nomogram for acute kidney injury after liver transplantation.
+  38814939 | 2024 | PLOS Digit Health | Identifying bias in models that detect vocal fold paralysis from audio recordings using explainable machine learning and clinician ratings.
+  41651202 | 2026 | Bone | Metabolic and osteogenic susceptibility in DISH: A prognostic index from propensity score modelling.
+  40724667 | 2025 | Healthcare (Basel) | AI-Prediction of Neisseria gonorrhoeae Resistance at the Point of Care from Genomic and Epidemiologic Data.
+  41994476 | 2026 | JGH Open | Interpretable Machine Learning for LPR Risk Estimation: A Single-Center Retrospective Case-Control Study.
+  41201992 | 2025 | PLoS One | RETRACTED: Interpretable machine learning framework for predicting Urban air quality.
+  38660677 | 2024 | Front Genet | Development and validation of an interpretable radiomic signature for preoperative estimation of tumor mutational burden in lung adenocarcinoma.
+  42249366 | 2026 | BMC Med Inform Decis Mak | Development, internal testing, and external validation of an interpretable machine-learning model for predicting imaging-confirmed in-hospital postoperative deep vein thrombosis in older patients with patellar fractures.
+  42612696 | 2026 | Thorac Cardiovasc Surg | Interpretable Machine Learning for 30-Day Mortality in PIVSR: A Cohort Study.
+  41575322 | 2026 | J Int Med Res | Explainable machine learning for early diagnosis of esophageal cancer: A feature-enriched Light Gradient Boosting Machine framework with Shapley Additive Explanations and Local Interpretable Model-Agnostic Explanations interpretations.
+  40183016 | 2025 | Front Neurol | A machine learning model based on emergency clinical data predicting 3-day in-hospital mortality for stroke and trauma patients.
+  42000379 | 2026 | J Am Med Dir Assoc | Ensemble Machine Learning Models for Predicting Death in Post-Acute Skilled Nursing Facilities.
+  40247305 | 2025 | BMC Med Inform Decis Mak | A machine learning-based framework for predicting postpartum chronic pain: a retrospective study.
+  40071860 | 2025 | J Sports Sci | Enhanced personalized prediction of baseball-related upper extremity injuries through novel features and explainable artificial intelligence.
+  41166313 | 2025 | PLoS One | Predicting hypertension and identifying most important factors among married women in Bangladesh using machine learning approach.
+  40174867 | 2025 | Int J Cardiol | Systemic coagulation-inflammation index in the prediction of ISR in patients undergoing drug-eluting stents implant: A retrospective study based on multiple machine learning methods.
+  41079068 | 2025 | Front Oncol | Artificial neural network-augmented dosiomic integration for predicting distant recurrence in NSCLC patients treated with SBRT.
+  42628350 | 2026 | Poult Sci | Machine learning classification of dilated cardiomyopathy severity in commercial broiler chickens.
+  42174361 | 2026 | Hepatol Int | Machine learning outperforms serum creatinine for early risk stratification of hepatorenal syndrome: a prospective single-center validation.
+  33501466 | 2024 | medRxiv | Identifying bias in models that detect vocal fold paralysis from audio recordings using explainable machine learning and clinician ratings.
+  41972534 | 2026 | Biology (Basel) | Unveiling Key Biomarkers of Cardiovascular Risk in Psoriasis Through Explainable Artificial Intelligence.
+  40778806 | 2025 | JMIR Med Inform | A Machine Learning Algorithm With an Oversampling Technique in Limited Data Scenarios for the Prediction of Present and Future Restorative Treatment Need: Development and Validation Study.
+  42739328 | 2026 | Plants (Basel) | Street-Scale Nonlinear Associations Between 2D and 3D Plant Morphology and Land Surface Temperature.
+  40092685 | 2025 | J Cancer | Development and validation of an explainable machine learning model to predict Delphian lymph node metastasis in papillary thyroid cancer: a large cohort study.
+  41717390 | 2026 | Front Comput Neurosci | Explainable AI uncovers novel EEG microstate candidate neurophysiological markers for autism spectrum disorder.
+  41610779 | 2026 | J Clin Neurosci | Seizure risk prediction using machine learning following glioma resection surgery in seizure-naïve patients.
+  42691063 | 2026 | PLoS Negl Trop Dis | Predictive association between control measures and chikungunya fever incidence based on random forest and SHAP analysis.
+  41603986 | 2026 | J Comput Aided Mol Des | Computational prioritization of multi-target inhibitors: explainable QSAR and docking-based discovery of dual AChE/BACE1 chemotypes.
+  42192329 | 2026 | BMC Pregnancy Childbirth | Predicting low birth weight in Bangladesh using interpretable machine learning models.
+  42438047 | 2026 | Toxicol Mech Methods | Combined molecular fingerprint and descriptor features enable classical machine learning to match deep learning performance across the Tox21 toxicity panel.
+  42248208 | 2026 | Phys Med Biol | Revisiting multi-nodal radiomics with advanced feature learning for lymphoma classification: a multi-center study.
+  41266851 | 2025 | Evid Based Dent | Interpretable machine learning modeling of treatment outcomes for silver and fluoride therapy in early childhood caries.
+  42380674 | 2026 | J Comput Aided Mol Des | Integrating evolutionary and compositional features with ML and DL for robust and interpretable druggable protein prediction.
+  42108165 | 2026 | Acad Radiol | Hyperpolarized (129)Xe MRI Features Associated with Interstitial Lung Disease Identified Using an Interpretable Diagnostic Algorithm.
+  42322541 | 2026 | Clin Rheumatol | Multidimensional immunoinflammatory profiles associated with rheumatoid arthritis-associated interstitial lung disease: a cross-sectional exploratory study.
+  41531266 | 2026 | J Gastroenterol Hepatol | Nomogram Predicting Survival in Gastroesophageal Variceal Bleeding Treated With Sclerotherapy and Cyanoacrylate.
+  42729328 | 2026 | Obes Pillars | Population meeting surveillance-based thresholds for metabolic and bariatric surgery evaluation under the 1991 NIH and 2022 ASMBS/IFSO criteria across 37 settings: STEPS analysis and projections to 2030.
+  38269284 | 2023 | Front Pharmacol | A personalized prediction model for urinary tract infections in type 2 diabetes mellitus using machine learning.
+  42393535 | 2026 | BMC Anesthesiol | Developing and validating an interpretable machine learning model for predicting postoperative nausea and vomiting in pulmonary resection patients: a retrospective observational study.
+  37576311 | 2023 | Heliyon | A dynamic machine learning model for prediction of NAFLD in a health checkup population: A longitudinal study.
+  41247678 | 2025 | J Coll Physicians Surg Pak | Comparative Accuracy of Different Machine Learning Models in Predicting Early Neurological Deterioration after Intravenous rt‑PA Thrombolysis in Patients with Acute Ischaemic Stroke.
+  42729746 | 2026 | Front Public Health | AI-related measures and self-reported lesson-aim attainment: an explainable machine-learning analysis of TALIS 2024.
+  41781523 | 2026 | Sci Rep | Interpretable ESG-sentiment hybrid deep learning for asset return forecasting with quantified interactions and latency-aware deployment.
+  37932692 | 2023 | BMC Public Health | An explainable artificial intelligence framework for risk prediction of COPD in smokers.
+  42643212 | 2026 | Front Neurol | Predicting 3-month prognosis of cerebral venous thrombosis: a machine learning approach incorporating inflammatory markers.
+  42068719 | 2026 | Comput Methods Programs Biomed | Unveiling the causal pathway of Parkinson's disease dysphonia: A voice causal generative model (VCGM) approach.
+  42548197 | 2026 | JMIR Mhealth Uhealth | Smartphone-Based Physical Performance and Multidimensional Determinants of Self-Reported Knee Pain in Community-Dwelling Older Adults: Cross-Sectional Machine Learning and Network Analysis Study.
+  42812082 | 2026 | Br J Hosp Med (Lond) | A SHAP-Based Interpretable Model for MDRO-Infection Risk in Chronically Multimorbid Middle-Aged and Elderly ICU Adults.
+  42630847 | 2026 | Patterns (N Y) | RobustiPy: An efficient next-generation multiversal library with model selection, averaging, resampling, and explainable AI.
+  42632141 | 2026 | J Environ Manage | NeutroChem Fusion: an uncertainty-aware source diagnosis framework for mining impacted waters in West Africa.
+  42244667 | 2026 | bioRxiv | Protein Predictors of Worsening Cerebral Edema in Traumatic Brain Injury in Critically Ill Patients.
+  41900007 | 2026 | Entropy (Basel) | Risk-Sensitive Machine Learning for Financial Decision Modeling Under Imbalanced Data: Evidence from Bank Telemarketing.
+  41899234 | 2026 | J Clin Med | Early Risk Stratification for 30-Day Mortality After In-Hospital Cardiac Arrest: SHAP Interpretable CatBoost Model with m-NUTRIC and Micronutrient Biomarkers.
+  41748666 | 2026 | Sci Rep | Development and validation of machine learning models for diagnosing hepatocellular carcinoma risk and survival in patients with diabetic cirrhosis.
+  42267321 | 2026 | Front Neurosci | Machine learning for Alzheimer's disease progression under extreme class imbalance.
+  42045441 | 2026 | Sci Rep | MetaXVP: an interpretable machine learning framework for deep insight into variant pathogenicity and VUS classification.
+  42811749 | 2026 | J Nurs Manag | Predicting Professional Identity Among Chinese Nurses Using the Job Demands-Resources Model: A Comparative Machine-Learning Study.
+  42477579 | 2026 | BMC Infect Dis | Machine learning-based prediction of sepsis-induced myocardial injury: external validation and SHAP interpretation.
+  41684605 | 2026 | Front Oncol | Heterogeneity in benefit finding among breast cancer patients: a latent profile analysis and influencing factors.
+  42350585 | 2026 | Sci Rep | Bayesian-optimized machine learning models for classifying metabolic syndrome control among NCD patients in Bangladesh hospitals.
+  42656322 | 2026 | Front Pharmacol | Automated machine learning model to predict anti-tuberculosis drug-induced liver injury in patients with tuberculous meningitis.
+  36821544 | 2023 | PLoS One | Increasing transparency in machine learning through bootstrap simulation and shapely additive explanations.
+  42421117 | 2026 | J Health Popul Nutr | Heterogeneous wealth-related differences in modern contraceptive use in Bangladesh: a machine learning-based g-computation analysis of the DHS 2022 cross-sectional survey.
+  40939351 | 2025 | Sci Total Environ | A composite theory-guided framework for robust feature attribution in PM₂.₅ ionic composition modeling.
+  42536504 | 2026 | JMIR Aging | Predicting Care Needs in Community-Dwelling Older Adults Using Explainable Machine Learning and a Multidimensional Approach Integrating Health, Social, and Environmental Factors: Cross-Sectional Study.
+  42057264 | 2026 | J Anim Sci | Learning to predict pellet quality: a machine learning and feature engineering approach.
+  42443645 | 2026 | J Imaging Inform Med | A Multimodal, Multitask Prediction Framework for Diagnosis and Prognosis of Clear Cell Renal Cell Carcinoma.
+  41968714 | 2026 | J Periodontal Implant Sci | A machine learning model for periodontitis based on integrative gene expression analysis: validation in an independent patient cohort.
+  42022824 | 2026 | Front Public Health | Development of a risk prediction model for dialysis access steal syndrome: exploring the interaction and modifying role of BMI.
+  40580866 | 2025 | J Environ Manage | Enhancing energy consumption prediction and interpretability in wastewater treatment plants: A novel temporal difference-weighted resampling framework with cross validation for imbalanced regression.
+  42233406 | 2026 | Ann Hum Biol | Body composition phenotyping of obesity in children aged 6-18 years: multi-strategy clustering and interpretable machine learning.
+  42712511 | 2026 | Front Pediatr | Developing a prediction model of neonatal pneumonia in patients with gestational diabetes mellitus in primary medical institutions.
+  42791438 | 2026 | Mol Neurobiol | Determining Acute-Phase Biomarkers for Mild Traumatic Brain Injury Through Exploratory Data Analysis: A Preliminary Report.
+  42536473 | 2026 | IEEE Trans Biomed Eng | Structural Path Lengths Predict Post-Stroke Upper Limb Functional Outcome: Activation Likelihood vs. Whole Brain Parcellations.
+  40237244 | 2025 | CNS Neurosci Ther | Prediction and SHAP Analysis Integrating Morphological and Hemodynamic Parameters for Unruptured Intracranial Aneurysm Occlusion After Flow Diverter Treatment.
+  42729930 | 2026 | IBRO Neurosci Rep | Interpretable machine learning for depression symptom classification in NHANES: Performance in a curated high-confidence corpus and the full survey population.
+  42395880 | 2026 | Front Cardiovasc Med | Machine learning prediction of postoperative pulmonary embolism: a multicenter external validation study highlighting inflammatory response and intraoperative hemodynamics.
+  41756275 | 2026 | Front Immunol | An interpretable deep learning framework based on TabNet-Cox for risk stratification and prognostic assessment in hepatocellular carcinoma immunotherapy.
+  42673578 | 2026 | JMIR Med Inform | Predicting Call Abandonment in a Health Care Call Center Using Nonpersonal Operational Data: Machine Learning Study.
+  42656717 | 2026 | Front Comput Neurosci | Explicit encoding of temporal dynamics for interpretable melody similarity modeling: insight into machine learning models.
+  42026521 | 2026 | BMC Infect Dis | Machine learning prediction of in-hospital mortality risk among hospitalized patients with secondary bloodstream infection: a retrospective cohort study.
+  42544269 | 2026 | Clin Interv Aging | Development and Internal Validation of Machine Learning-Based Risk Prediction Models for Depression in Older Adults Undergoing Maintenance Hemodialysis.
+  42418163 | 2026 | J Speech Lang Hear Res | Construction of a Prediction Model for Naming Recovery in Subacute Poststroke Aphasia Based on Multivariate Analysis: Evaluation of Accuracy and Reliability.
+  41682762 | 2026 | J Clin Med | Interpretable Acoustic Features from Wakefulness Tracheal Breathing for OSA Severity Assessment.
+  42733687 | 2026 | Int J Gen Med | Deconstructing Risk: A Machine Learning-Guided Logistic Regression Model for Predicting Early Mucosal Edema Following Prophylactic Ileostomy in Elderly Rectal Cancer Patients.
+  42656315 | 2026 | Front Oncol | Predictive value of (18)F-FDG PET/CT PyRadiomics features using a tabular deep learning model for cancer-related cognitive impairment in patients with DLBCL without CNS involvement.
+  41847692 | 2026 | Front Oncol | Role of urinary leukocytes in the risk stratification of prostate cancer using nonlinear stacking learning strategy: a bi-cohort diagnostic study.
+  42369156 | 2026 | Front Med (Lausanne) | Development and internal validation of a perioperative nomogram for predicting post-operative delirium in geriatric patients with intertrochanteric fractures undergoing internal fixation with pre-operative low-dose dexamethasone.
+  42589545 | 2026 | Int J Mol Sci | Ophiobolin A Induces an Apoptotic Transcriptional Signature and Modulates Redox Homeostasis in T98G and U118MG Glioblastoma Cells: A Machine Learning Approach.
+  42338670 | 2026 | Int J Chron Obstruct Pulmon Dis | Development and Validation of an Explainable Machine Learning Model for Identification of Dysphagia in Patients with COPD.
+  42761090 | 2026 | Front Neurol | Construction of an interpretable prediction model for poor functional outcome in conservatively managed basal ganglia hemorrhage based on CT radiomics and multiple machine learning algorithms.
+  41992250 | 2026 | BMC Med Inform Decis Mak | Time-to-event risk prediction of dual sensory loss in middle-aged patients with symptomatic knee osteoarthritis: model development, preliminary external validation, and explainability analysis.
+  42755472 | 2026 | Front Neurol | Interpretable machine learning-based prediction of 90-day mortality after endovascular treatment in acute large vessel occlusion stroke.
+  41786550 | 2026 | Acad Radiol | Preoperative Prediction of Axillary Lymph Node Metastasis in Breast Cancer Using a Three-tier MRI Radiomics Model with Nested Cross-validation.
+  42815208 | 2026 | J Tissue Viability | Development and external validation of a machine-learning model for classifying documented pressure injury status during ICU stays among patients receiving invasive mechanical ventilation: A MIMIC-IV and eICU study.
+  42536998 | 2026 | JMIR Med Inform | Prediction of Postoperative Vomiting Within 24 Hours Using Machine Learning With Large Language Model-Enhanced Interpretability: Development and Validation Study.
+  42638086 | 2026 | BMC Ophthalmol | Incremental contribution of Corvis ST dynamic biomechanical parameters to interpretable machine learning prediction of clinician-selected refractive procedures: a retrospective observational study.
+  41769768 | 2026 | Brain Behav | A Language Performance Model for Predicting Glioma Recurrence and Molecular Biomarkers: A Retrospective Cohort Study.
+  42701484 | 2026 | Quant Imaging Med Surg | Local pressure as a dominant hemodynamic driver of wall enhancement in anterior communicating artery aneurysms: a facet-level computational fluid dynamics and vessel wall imaging analysis.
+  42557489 | 2026 | Curr Med Sci | Machine Learning-Based Prediction of Mononuclear Cell Collection Efficiency for CAR-T Manufacturing.
+  41736215 | 2026 | J Alzheimers Dis | Enhanced prediction of mild cognitive impairment in type 2 diabetes mellitus using a structural MRI model incorporating radiomic features from hippocampal subfields.
+  42654335 | 2026 | Medicina (Kaunas) | Explainable Machine Learning for Predicting Complicated Appendicitis and Expected Hospital Length of Stay in Children: An Exploratory Single-Center Study.
+  42691596 | 2026 | Semin Oncol | Integrating patient-reported outcomes into explainable machine learning models for long-term survival prediction in TKI-treated metastatic renal cell carcinoma.
+  42318415 | 2026 | Front Med (Lausanne) | Research on predicting risk factors for re-bleeding in the acute phase of intracerebral hemorrhage using machine learning algorithms.
+  42813643 | 2026 | Curr Pharm Des | Machine Learning-Directed Explainable Artificial Intelligence and Bayesian Predictions of Warfarin Therapeutic Dose for Orthopedic Indications.
+  40868534 | 2025 | Children (Basel) | Prediction of Children's Subjective Well-Being from Physical Activity and Sports Participation Using Machine Learning Techniques: Evidence from a Multinational Study.
+  42359135 | 2026 | Front Public Health | Exploring predictors of low nutritional literacy in maintenance hemodialysis patients: a machine learning and network analysis approach.
+  42320840 | 2026 | J Glob Antimicrob Resist | Interpretable machine learning for early risk stratification of carbapenem resistance among ICU patients with sterile-site Pseudomonas aeruginosa isolates: Development and internal validation using MIMIC-IV.
+  42384017 | 2026 | Water Environ Res | Explainable and Optimized Gradient Boosting Algorithms for Near-Real-Time Prediction of Cyanobacterial Alert Levels in Freshwater Systems.
+  42730313 | 2026 | PeerJ | Spatial prediction and drivers of surface soil organic carbon density in subtropical montane forests.
+  42585906 | 2026 | J Environ Manage | Machine-learning-assisted process interpretation of composting time across composting systems involving multiple organic wastes: Key explanatory contributions of temperature evolution during the cooling-maturation phase.
+  41289156 | 2026 | Traffic Inj Prev | SHAP-based interpretation of holistic traffic risk causation patterns using high-resolution trajectory data and risk field theory.
+  41441191 | 2025 | Methods Protoc | A Study Protocol on Risk Prediction Modelling of Mortality and In-Hospital Major Bleeding Following Percutaneous Coronary Intervention in an Australian Population: Machine Learning Approach.
+  42715406 | 2026 | J Med Internet Res | Natural Language Processing Identification of Nonprescribed Fentanyl Use in Electronic Health Records: Algorithm Development and Validation Study.
+  42180905 | 2026 | Transl Cancer Res | Explainable machine-learning prediction of overall and cancer-specific survival in adult triple-negative breast cancer using SEER: a comparative study of nomograms and random survival forests.
+  42789583 | 2026 | PLoS One | Integrative computational analysis of public fecal lipidomics and transcriptomics datasets suggests a candidate association between the COX-2 pathway and CE(20:4) in colorectal adenoma-carcinoma progression.
+  41649229 | 2026 | Knee Surg Sports Traumatol Arthrosc | Machine learning model identifies tibial anatomical variables as potential risk factors for anterior cruciate ligament injury.
+  42102041 | 2026 | PLoS One | Machine learning-based model for predicting recanalization in isolated distal deep vein thrombosis and analysis of predictors.
+  42782875 | 2026 | Curr Oncol | Explainable Deep Learning Model for Predicting Overall Survival in Patients Receiving Palliative Radiotherapy for Bone Metastases.
+  42755594 | 2026 | Front Oncol | Prognostic significance of pretreatment peripheral blood inflammatory biomarkers in elderly patients with locally advanced cervical cancer undergoing definitive chemoradiotherapy.
+  41618154 | 2026 | BMC Prim Care | Development and validation of a machine learning based suitability assessment model for primary healthcare facilities in metropolitan China.
+  41756783 | 2026 | Front Cell Infect Microbiol | Interpretable machine learning analysis for relationships between Helicobacter pylori infection and peripheral atherosclerosis: a retrospective cohort study.
+  42723900 | 2026 | Front Pediatr | Development and validation of a predictive model for myocardial injury in children with pneumonia based on interpretable machine learning.
+  42459378 | 2026 | Front Plant Sci | A multi-source remote sensing and machine learning framework for maize mapping and yield estimation in fragmented Loess gully regions.
+  41896279 | 2026 | Sci Rep | Few-shot android malware classification with quantum-enhanced prototypical learning and drift detection.
+  42652568 | 2026 | J Clin Med | Duplicate-Aware Internal Validation of Machine-Learning Models for Classifying a Tanita BIA-Derived High-Adiposity Phenotype Using Simple Anthropometric Predictors.
+  41477040 | 2025 | Saf Health Work | Predicting the Risk of Burnout Syndrome Using Korean Occupational Stress Scale (KOSS): A Machine Learning Approach.
+  41535753 | 2026 | BMC Cardiovasc Disord | Comparative study of 11 machine learning algorithms for predicting recurrence risk after atrial fibrillation catheter ablation based on a real-world cohort: a retrospective study.
+  42395629 | 2026 | Front Nutr | Applying machine learning to associate clinical factors with malnutrition risk in peritoneal dialysis patients: an internally validated interpretable model.
+  41737816 | 2026 | Front Digit Health | Physiologic phenotypes in blunt thoracic aortic injury: implications for risk stratification and surgical decision-making using machine learning.
+  42269741 | 2026 | Clin Chim Acta | Prognostic value of PIVKA-II and routine perioperative laboratory indices for recurrence prediction after curative resection of hepatocellular carcinoma.
+  42602603 | 2026 | Front Nutr | Association of hepatic steatosis with MRI-defined renal steatosis in type 2 diabetes: a cross-sectional imaging and clinical modeling study.
+  41349934 | 2026 | Acta Trop | Climate extremes and the dynamic reshaping of snail habitat: implications for the spatiotemporal heterogeneity of schistosomal vulnerability in Brazil.
+  42597227 | 2026 | Am J Cancer Res | Integration of serological markers with O-RADS ultrasound risk stratification achieves high diagnostic accuracy for early ovarian cancer: development and validation of an interpretable model.
+  42739273 | 2026 | Diagnostics (Basel) | Age, Sex, and Waist-to-Height Ratio Approach the Discrimination of Fifty-Four Model Inputs for Prevalent Hypertension: An Explainable Machine Learning Analysis of the Chilean National Health Survey.
+  41686572 | 2026 | Medicine (Baltimore) | Interpretable four-factor day-1 nomogram for predicting sepsis-associated encephalopathy in septic ICU patients with AKI: Development and internal validation in MIMIC-IV.
+  39432882 | 2024 | JCO Precis Oncol | Artificial Intelligence Hybrid Survival Assessment System for Robot-Assisted Proctectomy: A Retrospective Cohort Study.
+  41656804 | 2025 | Zhong Nan Da Xue Xue Bao Yi Xue Ban | [Interpretable machine learning-based predictive model for assessing abdominal surgery risk and biologic therapy efficacy in CDAI 0 to 1 level Crohn disease patients].
+  42636558 | 2026 | J Ethnopharmacol | Ethnoveterinary herbal practices are associated with reduced within-farm antibiotic use and improved farm performance in commercial poultry in Bangladesh: A multi-district cross-sectional study.
+  42375422 | 2026 | Open Vet J | Relative importance analysis of correlated predictors in aquatic veterinary science: Application to an abalone dataset.
+  42790191 | 2026 | J Environ Manage | Spatiotemporal visualization and exposure-priority assessment of global soil microplastic abundance based on machine learning.
+  42317313 | 2026 | Front Immunol | Integrative plasma proteomics and myeloid- interferon profiling reveal an AI-validated vascular- endothelial stress signature distinguishing SLE flare from remission in an Indian cohort a discovery - phase study.
+  42793773 | 2026 | Diagnostics (Basel) | Hematological Versus Clinical Predictors of Tumor Grade in Endometrial Cancer: A Comparative Machine Learning Study with SHAP-Based Explainability.
+  42726791 | 2026 | PLoS One | Climate-stratified assessment of PM2.5 using machine learning: Geographic controls dominate meteorological factors.
+  42237086 | 2026 | Ann Surg | Predicting Best Performers After Minimally Invasive Left Pancreatectomy: Insights From a National Cohort.
+  41723323 | 2026 | J Assist Reprod Genet | AI-based imputation of anti-Müllerian hormone enables robust prediction of oocyte retrieval during controlled ovarian stimulation.
+  42129446 | 2026 | Sci Rep | Epistemic frontiers and the distinction between causality, information, and predictability in pattern recognition.
+  42793624 | 2026 | Healthcare (Basel) | Explainable AI for Digital Health: Predicting Depression Risk in Older Adults Living Alone Using Machine Learning.
+  42324504 | 2026 | BMC Ophthalmol | Contribution of resting pulse rate to fall risk prediction in patients with glaucoma: a nationwide retrospective study based on an XGBoost model.
+  41289809 | 2026 | Comput Methods Programs Biomed | A stable feature selection method based on majority voting and SHAP for high-dimensional metabolomics data.
+  40722536 | 2025 | Diagnostics (Basel) | Machine Learning-Based Prediction of Postoperative Deep Vein Thrombosis Following Tibial Fracture Surgery.
+  39678810 | 2024 | World J Gastrointest Oncol | Prognostic prediction models for postoperative patients with stage I to III colorectal cancer based on machine learning.
+  41828685 | 2026 | Int J Mol Sci | A Latent Autoantibody Axis Associated with Vascular Vulnerability in Ischemic Stroke: Integrated Statistical and Machine-Learning Analysis.
+  41464262 | 2025 | Healthcare (Basel) | Using Machine Learning Methods to Predict Cognitive Age from Psychophysiological Tests.
+  42792630 | 2026 | Biomedicines | Beyond Sarcopenia: An Exploratory Machine Learning Analysis of Fatigue, Sleep Quality and Acute-Phase Severity as Correlates of Post-COVID Functional Status in a Colombian Cohort.
+  41349607 | 2026 | Can J Cardiol | Predicting Midterm Risk of Coronary Plaque Progression in Subclinical Nonobstructive Coronary Atherosclerosis Using Explainable Machine Learning.
+  42729176 | 2026 | Front Neurol | Combined clinical and DWI radiomics model for predicting 90-day functional outcomes after intravenous thrombolysis in acute ischemic stroke patients.
+  42194550 | 2026 | J Clin Med | Machine Learning Models for Objective Assessment of Vascular Anastomoses Using Computational Fluid Dynamics for Surgical Skill Training-A Retrospective Study.
+  42514178 | 2026 | Life (Basel) | Explainable Multi-Modal Deep Learning for Recording-Level Classification of Respiratory Audio Signals Under Internal and Domain-Shift Evaluation.
+  41419964 | 2025 | Sci Rep | Predicting and classifying type 2 diabetes using a transparent ensemble model combining random forest, k-nearest neighbor, and neural networks.
+  41449567 | 2026 | Am J Clin Oncol | AI-Enabled Early Detection of Chemo-Induced Cardiotoxicity Patterns Using ECG Time Series Data: A Simulated Oncology Framework.
+  41791269 | 2026 | Comput Biol Chem | Pipeline-optimized machine learning for chronic fatigue syndrome diagnosis: A lightweight, interpretable model using blood biochemical and metabolomic data.
+  42167015 | 2026 | Water Res | Multimodal artificial intelligence (AI) for estimating the sinking velocity of microplastic-microalgae aggregates using explainable AI and visualization.
+  40569455 | 2025 | Bioprocess Biosyst Eng | Methodology for contamination detection and reduction in fermentation processes using machine learning.
+  38947887 | 2024 | Front Oncol | Construction of a predictive model for postoperative hospitalization time in colorectal cancer patients based on interpretable machine learning algorithm: a prospective preliminary study.
+  42644059 | 2026 | ARYA Atheroscler | From association to causation: Integrating stable, subgroup-aware SHAP explanations with causal inference for trustworthy AI in coronary bifurcation PCI.
+  41826866 | 2026 | BMC Cardiovasc Disord | Integrating traditional statistics and explainable machine learning for risk stratification of atrial fibrillation recurrence after pulsed field ablation: a hypothesis-generating single-center study.
+  42116686 | 2026 | J Neurotrauma | Machine Learning Prediction for 6-Month Outcomes in Traumatic Cerebral Venous Sinus Thrombosis.
+  42465929 | 2026 | medRxiv | NEXIM: A Nash Equilibrium-Based Framework for Stable Explainable AI in Medical Applications.
+  42363089 | 2026 | BMC Ophthalmol | Combining structural and microvascular parameters via machine learning for enhanced diagnosis of normal-tension glaucoma among highly myopic eyes: a prospective cross-sectional diagnostic accuracy study.
+  42768165 | 2026 | Geroscience | Multimodal prediction of MCI-to-dementia conversion over a two-year window.
+  42469783 | 2026 | BMC Med Inform Decis Mak | Context-agnostic machine learning for Parkinson's disease motor symptom detection using wearable sensors.
+  39958766 | 2025 | Front Psychol | Goal and shot prediction in ball possessions in FIFA Women's World Cup 2023: a machine learning approach.
+  42510183 | 2026 | Behav Sci (Basel) | Explaining the Links Between School Administrator Leadership, Job Satisfaction, and Participatory School Climate: A Machine Learning-Enhanced Multilevel Analysis of TALIS 2024 School Administrator Data.
+  42246216 | 2026 | Traffic Inj Prev | Behavioral risk profiles in urban pedestrian-vehicle crashes: Insights from latent class and SHAP analysis.
+  42203834 | 2026 | Sci Rep | Diagnosing morphology-vitality relationships through multifractal urban form metrics and explainable machine learning.
+  42310374 | 2026 | Sci Rep | A robust machine learning framework for detecting temporal drift in financial fraud prevention.
+  40715581 | 2025 | Sci Rep | Explainable AI-driven assessment of hydro climatic interactions shaping river discharge dynamics in a monsoonal basin.
+  40686740 | 2025 | Adv Radiat Oncol | Impact of Normal Lung Volume Choices on Radiation Pneumonitis Risk Prediction in Locally Non-small Cell Lung Cancer Radiation Therapy.
+  42759785 | 2026 | Neuroimage | MIND-based cortical similarity networks reveal distinct cortical alterations in motor subtypes of Parkinson's disease.
+  42773316 | 2026 | Neurosurg Rev | Predicting late-onset hydrocephalus in pediatric medulloblastoma: from static anatomy to dynamic biological assessment.
+  42204348 | 2026 | J Expo Sci Environ Epidemiol | Incorporating geospatial environmental exposure indicators in individual hypertension risk prediction: a multi-stage machine learning pipeline.
+  39705838 | 2025 | ESMO Open | Development of two machine learning models to predict conversion from primary HER2-0 breast cancer to HER2-low metastases: a proof-of-concept study.
+  41937807 | 2026 | JAMIA Open | Auditing shortcut learning and misclassification in artificial intelligence-based breast cancer genomic subtyping.
+  41734156 | 2026 | PLoS One | Efficient talent identification in women's football: A ranking-based approach for goal scoring analysis.
+  41966445 | 2026 | Anal Biochem | An interpretable model combining brain imaging and clinical indicators for predicting overt hepatic encephalopathy.
+  42361545 | 2026 | J Environ Manage | Interpretable machine learning and rolling-origin validation identify two distinct control and predictability regimes in full-scale aerated lagoon performance.
+  42355552 | 2026 | Life (Basel) | Impact of Radiomics Parameters and Clinical Integration on Prognostication in Head and Neck Squamous Cell Carcinoma: A Multicenter Study.
+  42387638 | 2026 | Biomed Eng Online | Non-invasive classification of stable HFpEF using a deep learning model trained on acoustic features of sustained vowels.
+  42180124 | 2026 | Front Oncol | Development and validation of a machine learning-based predictive model for early outcomes following combined suction-assisted lipectomy and lymphovenous anastomosis in breast cancer-related lymphedema: a retrospective cohort study.
+  42628172 | 2026 | Cancer Treat Res Commun | Comparative evaluation of feature-selection strategies for machine learning-based histological grading of breast cancer using tumor and fibroglandular-tissue DCE-MRI features.
+  42603354 | 2026 | Comput Biol Chem | Machine learning-assisted optimization of green L-DOPA extraction from Faba bean (Vicia faba L.) leaf tissues using CatBoost and bootstrap-based uncertainty quantification.
+  41764544 | 2026 | Cancer Cell Int | Fast and reliable machine learning-based detection of postoperative intracranial infections in brain tumor patients: a diagnostic study using routine CSF parameters.
+  42743846 | 2026 | J Environ Manage | Robust prediction of particle attachment efficiency for nanoparticle and microplastic environmental mobility assessment.
+  42218194 | 2026 | Sci Rep | Machine learning-based screening model for Tic disorders comorbid with attention-deficit/hyperactivity disorder in children and SHAP value interpretation: a retrospective observational study.
+  42561467 | 2026 | Aquat Toxicol | Predicting the toxicity of multicomponent complex mixtures using a multi-feature fusion-based machine learning model.
+  41991559 | 2026 | Sci Rep | A leakage-controlled machine learning framework for postprandial triglyceride phenotyping using synthetic clinical data.
+  42359343 | 2026 | Front Neurosci | Predicting early neurological deterioration in acute branch atheromatous disease without reperfusion therapy: a machine learning model.
+  42499794 | 2026 | Front Cardiovasc Med | Development and validation of a clinical prediction model for postcontrast acute kidney injury in patients with postoperative acute kidney injury of acute Stanford type A aortic dissection.
+  42495662 | 2026 | Ann Gastroenterol Surg | Can Machine Learning Reduce Unnecessary Surgeries? A Retrospective Analysis Using Threshold Optimization to Prevent Negative Appendectomies in Adults.
+  42755664 | 2026 | Front Oncol | Construction and validation of a nomogram model for predicting 60-day mortality in patients with acute myeloid leukaemia.
+  42566879 | 2026 | Reprod Biomed Online | Machine learning-based analysis of factors associated with clinical pregnancy in vitrified-warmed single euploid embryo transfer cycles.
+  42513410 | 2026 | J Clin Med | An Interpretable Center-Specific Machine Learning Model for Risk Stratification Following Mitral Valve Surgery: A Pilot Study.
+  42237105 | 2026 | BMC Infect Dis | Development and validation of a LASSO-derived nomogram for predicting unfavorable treatment outcomes in drug-resistant pulmonary tuberculosis.
+  42325671 | 2026 | Front Cardiovasc Med | CFD-derived radiomics from hemodynamic maps for quantitative assessment of left atrial flow in atrial fibrillation: a proof-of-concept study.
+  42750860 | 2026 | J Pathol Inform | An interpretable deep learning framework for multiclass bone marrow cytomorphology classification using EfficientNet and post hoc visualization techniques.
+  42499688 | 2026 | N Am Spine Soc J | A single-source preoperative prediction model for recurrent lumbar disc herniation after primary discectomy: Development and internal validation in the SPORT registry.
+  42650907 | 2026 | Diagnostics (Basel) | Multi-Parametric Ultrasound Radiomic Kinetics with Machine Learning Ensemble for Early Prediction of Pathologic Response to Neoadjuvant Chemotherapy in Breast Cancer.
+  42571477 | 2026 | J Exerc Sci Fit | Clustering of non-invasive biomarkers to distinguish phenotype-related response differences in women with PCOS after the 16-week Nordic interval training intervention: A prospective cohort study.
+  42220375 | 2026 | Front Psychol | Psychological factors demonstrate the largest incremental predictive value in a multi-domain machine learning model for secondary injury risk after ACL reconstruction.
+  42487963 | 2026 | Front Med (Lausanne) | Risk prediction of pediatric intensive care unit admission in children with respiratory syncytial virus infection using interpretable machine learning.
+  42724114 | 2026 | Front Pharmacol | Therapeutic drug monitoring of zonisamide in children with epilepsy: development and validation of a precise binary prediction model.
+  42661729 | 2026 | Front Med (Lausanne) | Multi-paradigm Vision Transformer ensemble with regional attention and MLP meta-fusion for explainable dermoscopic skin lesion classification.
+  42202707 | 2026 | Eur J Surg Oncol | Interpretable and non-linear machine learning models for quantitative ICG perfusion assessment in colorectal cancer anastomosis: A feasibility study.
+  42586055 | 2026 | J Cardiovasc Pharmacol | Machine Learning Models Integrating CYP2C19 Genotypes for Long-Term Risk Prediction and Personalized Antiplatelet Therapy Selection in Myocardial Infarction.
+  41821012 | 2026 | BMC Musculoskelet Disord | CT-based radiomics for modeling surgical decision-making in young and middle-aged patients with ARCO stage III osteonecrosis of the femoral head: an age-stratified retrospective study.
+  42805070 | 2026 | J Hazard Mater | Machine-learning-based spatiotemporal reconstruction and risk assessment of 16 priority PAHs in mainland China's surface waters, 2000-2024.
+  42095222 | 2026 | Front Nutr | Integrating epidemiologic modeling and explainable machine learning to evaluate body roundness index for WHO-defined high cardiovascular risk: evidence from the ChinaHEART-Luohe screening cohort.
+  42452518 | 2026 | J Clin Med | Time-Updated Prognostic Modeling in ICU Patients with Documented Coma or Unresponsiveness Using Routine Arterial Blood Gas Trajectories: An Exploratory Explainable Machine-Learning Study.
+  42767595 | 2026 | Chest | Personalized obesity hypoventilation syndrome risk assessment among bariatric surgery candidates through explainable machine learning: A multicenter cross-sectional study.
+
+====================================================================================================
+Q3 multiplicity / Rashomon and explanations: 14 records (top 14 by relevance listed)
+query: ("model multiplicity"[tiab] OR "predictive multiplicity"[tiab] OR Rashomon[tiab] OR underspecification[tiab]) AND (explanation*[tiab] OR explainab*[tiab] OR SHAP[tiab] OR "feature importance"[tiab])
+
+  33679342 | 2021 | Front Hum Neurosci | Phonological Underspecification: An Explanation for How a Rake Can Become Awake.
+  25823920 | 2016 | Cogn Sci | A Multiple-Channel Model of Task-Dependent Ambiguity Resolution in Sentence Comprehension.
+  32333935 | 2020 | Neuropsychologia | (A)Symmetry in vowel features in verbs and pseudoverbs: ERP evidence.
+  36818741 | 2023 | Data Min Knowl Discov | The grammar of interactive explanatory model analysis.
+  17062152 | 2006 | Behav Brain Funct | Not every pseudoword disrupts word recognition: an ERP study.
+  33897394 | 2021 | Front Hum Neurosci | Neural Representation of the English Vowel Feature [High]: Evidence From /ε/ vs. /ɪ/.
+  36051196 | 2022 | Front Psychol | The features and factors in the acquisition of English existential constructions at the syntax-pragmatics interface by Chinese learners.
+  37808086 | 2024 | ArXiv | The Rashomon Importance Distribution: Getting RID of Unstable, Single Model-based Variable Importance.
+  42270800 | 2026 | Sci Rep | Enhancing healthcare explainability through multiobjective counterfactual explanations.
+  36843049 | 2023 | Cereb Cortex | Fine temporal brain network structure modularizes and localizes differently in men and women: insights from a novel explainability framework.
+  37954181 | 2023 | Front Psychol | Coexpression and synexpression patterns across languages: comparative concepts and possible explanations.
+  42129446 | 2026 | Sci Rep | Epistemic frontiers and the distinction between causality, information, and predictability in pattern recognition.
+  41876787 | 2026 | Sci Rep | Stability and robustness of minimal majority vote interpretable ensembles.
+  42235349 | 2026 | Artif Intell Med | Uncertainty quantification framework for AI-based survival models: Application to lung cancer prognosis in older adults for informed decision-making.
+
+====================================================================================================
+Q4 explanation agreement metrics for clinical risk models: 42 records (top 42 by relevance listed)
+query: (explanation*[tiab] OR SHAP[tiab]) AND (faithfulness[tiab] OR plausibility[tiab] OR "disagreement"[tiab]) AND (clinical[tiab] OR patient*[tiab]) AND ("machine learning"[tiab])
+
+  35811026 | 2022 | J Biomed Inform | Trustworthy assertion classification through prompting.
+  32758538 | 2020 | J Biomed Inform | Explainable classifier for improving the accountability in decision-making for colorectal cancer diagnosis from histopathological images.
+  35885463 | 2022 | Diagnostics (Basel) | Designing an Interpretability-Based Model to Explain the Artificial Intelligence Algorithms in Healthcare.
+  41113125 | 2025 | JHEP Rep | A pathomics-integrated multimodal model to evaluate chemoimmunotherapy efficacy in unresectable intrahepatic cholangiocarcinoma.
+  36516555 | 2023 | Med Image Anal | Guidelines and evaluation of clinical explainable AI in medical image analysis.
+  40870922 | 2025 | Diagnostics (Basel) | An Explainable Approach to Parkinson's Diagnosis Using the Contrastive Explanation Method-CEM.
+  39873664 | 2025 | J Am Med Inform Assoc | Evaluating robustly standardized explainable anomaly detection of implausible variables in cancer data.
+  42082595 | 2026 | Sci Rep | An interpretable progressive residual network for automated multiclass diabetes diagnosis.
+  37004526 | 2023 | Clin Res Cardiol | A machine-learning based bio-psycho-social model for the prediction of non-obstructive and obstructive coronary artery disease.
+  41531742 | 2026 | JAMIA Open | Inferring high-fat dietary patterns from electronic health record data using machine learning.
+  41310583 | 2025 | BMC Cancer | Early prediction of liver metastasis in pancreatic cancer using routine clinical data: an externally validated machine learning model.
+  41142828 | 2025 | Front Immunol | Predicting preoperative lymph node status in patients with cervical cancer: development of interpretable machine learning model and support for the biological plausibility.
+  41613925 | 2025 | Front Nutr | Interpretable machine learning models for predicting cognitive impairment using NHANES neuropsychological tests: nutritional and sociodemographic associations.
+  36082270 | 2022 | Front Med (Lausanne) | Development and validation of an interpretable 3 day intensive care unit readmission prediction model using explainable boosting machines.
+  41737816 | 2026 | Front Digit Health | Physiologic phenotypes in blunt thoracic aortic injury: implications for risk stratification and surgical decision-making using machine learning.
+  40653372 | 2026 | Neurol Res | Machine learning-based preoperative prediction of IDH mutation status in adult gliomas using clinical features.
+  38269932 | 2024 | Stud Health Technol Inform | Elucidating Discrepancy in Explanations of Predictive Models Developed Using EMR.
+  41693049 | 2026 | Inform Health Soc Care | Toward an explainable AI-Based clinical decision support system for predicting adverse outcomes in Rhabdomyolysis.
+  42601646 | 2026 | BioData Min | EMMA-STRAT: a multi-omics based machine learning framework for stratification of endometrial carcinoma molecular subtypes and MSI status.
+  41164153 | 2025 | Digit Health | Biomarker-based and interpretable machine learning framework for predicting pathological stage in gastric cancer: A retrospective analysis.
+  42657985 | 2026 | J Cancer Res Ther | Accurate differentiation of metastatic and ultrasound-atypical reactive hyperplastic lymph nodes using a fusion model integrating ultrasound radiomics and habitatomics: A multicenter study.
+  42602468 | 2026 | Front Digit Health | Interpretable multimodal machine learning for diagnosis of drug-resistant tuberculosis.
+  40857813 | 2025 | Comput Biol Med | Evaluating explanation performance for clinical decision support systems for non-imaging data: A systematic literature review.
+  41765996 | 2026 | Sci Rep | Explainable machine learning prediction of tracheostomy after craniotomy for supratentorial intracerebral hemorrhage.
+  42525763 | 2026 | Sci Adv | Integrating structurally defined DNA-carbon nanotube sensors with machine learning for cancer detection.
+  42294268 | 2026 | Front Oncol | A clinically practical machine learning nomogram for preoperative CLNM prediction in PTMC: tumor-capsule distance and D2-40 evidence.
+  41449395 | 2025 | BMC Psychiatry | A systematic review of EEG-based biomarkers for depression, anxiety, and bipolar disorder: trends in explainable artificial intelligence (XAI).
+  42594748 | 2026 | Artif Intell Med | Explainability of decoder-only clinical large language models: A scoping review.
+  41300279 | 2025 | Biology (Basel) | Explainable Artificial Intelligence for Ovarian Cancer: Biomarker Contributions in Ensemble Models.
+  41044138 | 2025 | Sci Rep | Application of machine learning models for predicting depression among older adults with non-communicable diseases in India.
+  42638867 | 2026 | Front Med (Lausanne) | An explainable machine learning framework integrating clinical and lipidomic signatures for early severity stratification of hypertriglyceridemic pancreatitis.
+  37667258 | 2023 | BMC Anesthesiol | Prediction of American Society of Anesthesiologists Physical Status Classification from preoperative clinical text narratives using natural language processing.
+  41947076 | 2026 | BMC Ophthalmol | Machine learning-based individualized prediction: risk assessment of retinopathy in preterm infants at high altitude.
+  41750713 | 2026 | Diagnostics (Basel) | Development and Temporal Validation of Explainable Machine Learning Models for Predicting Vitamin B12 Deficiency Using Routine Laboratory Analytes.
+  42261286 | 2026 | Digit Health | Heart rate circadian phase and hyperarousal as wearable digital phenotyping of insomnia: An interpretable machine learning study.
+  41479613 | 2025 | Front Neurol | An innovative predictive model for assessing tinnitus sound therapy outcomes: integrating audiological and psychometric variables.
+  42527519 | 2026 | Npj Health Syst | Trustworthy AI models to predict prolonged hospital length-of-stay in orthopedic surgery.
+  42645652 | 2026 | Cardiovasc Drugs Ther | Integrating Environmental Exposure Profiles with Temporal Transcriptomics: An Explainable Machine Learning Model for Cardiovascular Disease Risk Prediction and Biological Validation.
+  41974239 | 2026 | Methods | Towards transparent and interpretable screening: multi-biofluid FTIR spectroscopy with LLM-Augmented explainability for pancreatic cancer detection.
+  41994555 | 2026 | Front Artif Intell | Explainable AI in healthcare: a systematic review of XAI use cases in imaging, diagnostics, and rehabilitation.
+  42548856 | 2026 | Front Oncol | Foundation model-enhanced multimodal radiomics for predicting response to chemo-immunotherapy in advanced lung squamous cell carcinoma.
+  41567436 | 2025 | Front Psychol | Understanding psychiatric-legal disagreements in not criminally responsible on account of mental disorder cases: a gradient boosting model perspective.
+
+====================================================================================================
+Q5 SMOTE and explanations: 129 records (top 129 by relevance listed)
+query: (SMOTE[tiab] OR oversampling[tiab]) AND (SHAP[tiab] OR explanation*[tiab] OR "feature importance"[tiab]) AND (calibration[tiab] OR stability[tiab] OR distort*[tiab])
+
+  40154202 | 2025 | Comput Biol Med | Machine learning prediction models for multidrug-resistant organism infections in ICU ventilator-associated pneumonia patients: Analysis using the MIMIC-IV database.
+  41141353 | 2025 | Front Endocrinol (Lausanne) | Establishment and evaluation of a model for clinical feature selection and prediction in gout patients with cardiovascular diseases: a retrospective cohort study.
+  39184040 | 2024 | Front Oncol | Construction of a risk prediction model for lung infection after chemotherapy in lung cancer patients based on the machine learning algorithm.
+  41094519 | 2025 | BMC Med Inform Decis Mak | Machine learning-based stratification of mild cognitive impairment in Parkinson's disease: a multicenter cross-sectional analysis.
+  41393021 | 2025 | Front Public Health | Postoperative recurrence prediction model for perianal abscess using machine learning algorithms.
+  41343780 | 2025 | JMIR Med Inform | Machine Learning-Based Prediction of In-Hospital Falls in Adult Inpatients: Retrospective Observational Multicenter Study.
+  41316320 | 2025 | BMC Med | Machine learning-based prediction of short-term outcomes in aneurysmal subarachnoid hemorrhage: a multicenter study integrating clinical and inflammatory indicators.
+  40789384 | 2026 | Clin Chim Acta | Machine learning-based optimization of the prostate health index for prostate cancer detection.
+  40450022 | 2025 | Sci Rep | Method and application of stability prediction model for rock slope.
+  39522013 | 2024 | BMC Pregnancy Childbirth | Building a machine learning-based risk prediction model for second-trimester miscarriage.
+  40960691 | 2026 | Eur J Nucl Med Mol Imaging | Habitat-aware radiomics and adaptive 2.5D deep learning predict treatment response and long-term survival in ESCC patients undergoing neoadjuvant chemoimmunotherapy.
+  40676536 | 2025 | Lipids Health Dis | Explainable machine learning-driven models for predicting Parkinson's disease and its prognosis: obesity patterns associations and models development using NHANES 1999-2018 data.
+  41367896 | 2025 | Int J Gen Med | Predicting Preoperative Deep Vein Thrombosis in Elderly Hip Fracture Patients Using an Interpretable Machine Learning Model.
+  42008965 | 2026 | Int J Med Inform | Preoperative frailty for predicting in-hospital mortality in patients after cardiac surgery: an interpretable Machine learning model based on a retrospective multicenter cohort study.
+  40644630 | 2025 | J Med Internet Res | Prediction of Percutaneous Coronary Intervention Success in Patients With Moderate to Severe Coronary Artery Calcification Using Machine Learning Based on Coronary Angiography: Prospective Cohort Study.
+  34770076 | 2021 | Int J Environ Res Public Health | Crash Injury Severity Prediction Using an Ordinal Classification Machine Learning Approach.
+  41803650 | 2026 | Ren Fail | MedFusion-gP-AKI: development and multicenter validation of a machine learning fusion model for early prediction of KDIGO stage 3 acute kidney injury in critically ill traumatic cervicothoracic spinal cord injury patients.
+  40668815 | 2025 | PLoS One | Development of a risk prediction model for sepsis-related delirium based on multiple machine learning approaches and an online calculator.
+  34149290 | 2021 | Risk Manag Healthc Policy | Improving Risk Identification of Adverse Outcomes in Chronic Heart Failure Using SMOTE+ENN and Machine Learning.
+  41248485 | 2025 | JMIR Med Inform | Prediction of Postoperative Venous Thromboembolism in Patients With Traumatic Brain Injury: Model Development and Validation Study.
+  42218178 | 2026 | Sci Rep | Machine learning and SHAP interpretation for predicting coronary heart disease-diabetes comorbidity with dietary antioxidants.
+  38711558 | 2024 | Front Neurol | Synthetic minority over-sampling technique-enhanced machine learning models for predicting recurrence of postoperative chronic subdural hematoma.
+  40655165 | 2025 | Diabetes Metab Syndr Obes | Application and Analysis of Random Forest and Support Vector Classification in Risk Prediction of Childhood Obesity and Hyperuricemia.
+  40204220 | 2025 | Spine J | Prediction of lumbar disc degeneration based on interpretable machine learning models: retrospective cohort study.
+  42192329 | 2026 | BMC Pregnancy Childbirth | Predicting low birth weight in Bangladesh using interpretable machine learning models.
+  40563047 | 2026 | Neurocrit Care | Development and Validation of Machine Learning Models for Predicting 7-Day Mortality in Critically Ill Patients with Traumatic Spinal Cord Injury: A Multicenter Retrospective Study.
+  39639893 | 2024 | Front Public Health | Assessment of non-fatal injuries among university students in Hainan: a machine learning approach to exploring key factors.
+  42058226 | 2026 | Food Sci Nutr | Machine Learning Unveils Dietary Antioxidants as Influential Factors for Diabetes-Cancer Comorbidity: Insights From National Health and Nutrition Examination Survey.
+  38003930 | 2023 | J Pers Med | Machine Learning Model as a Useful Tool for Prediction of Thyroid Nodules Histology, Aggressiveness and Treatment-Related Complications.
+  40249240 | 2025 | J Glaucoma | SMOTE-Enhanced Explainable Artificial Intelligence Model for Predicting Visual Field Progression in Myopic Normal Tension Glaucoma.
+  42119832 | 2026 | Int J Antimicrob Agents | Integrated prediction of ceftriaxone resistance in major Salmonella serotypes using MALDI-TOF MS data with balanced datasets and machine learning.
+  41008374 | 2025 | Brain Sci | Potential Predictors of Mortality in Adults with Severe Traumatic Brain Injury.
+  42724729 | 2026 | Front Med (Lausanne) | Interpretable and explainable predictive machine learning models for gastric retention before gastroscopy.
+  41479745 | 2026 | Food Sci Nutr | Using SHAP and LIME to Explain Machine Learning Models Predicting Comorbid Depression and Stroke From Daily Dietary Nutrient Intake in a US Population-Based Study.
+  40035798 | 2025 | Med Biol Eng Comput | New AI explained and validated deep learning approaches to accurately predict diabetes.
+  37588665 | 2023 | Front Radiol | A robust radiomic-based machine learning approach to detect cardiac amyloidosis using cardiac computed tomography.
+  42673578 | 2026 | JMIR Med Inform | Predicting Call Abandonment in a Health Care Call Center Using Nonpersonal Operational Data: Machine Learning Study.
+  41393290 | 2025 | Front Endocrinol (Lausanne) | Development and validation of a risk prediction model for painful diabetic peripheral neuropathy in type 2 diabetes mellitus: a multicenter retrospective study.
+  38856840 | 2024 | Endocrine | Predicting the onset of overweight in Chinese high school students: a machine-learning approach in a one-year prospective cohort study.
+  41972534 | 2026 | Biology (Basel) | Unveiling Key Biomarkers of Cardiovascular Risk in Psoriasis Through Explainable Artificial Intelligence.
+  42776352 | 2026 | J Cardiovasc Transl Res | Cross-cohort Generalization for Heart Disease Prediction with Explainable AI.
+  40866986 | 2025 | BMC Med Inform Decis Mak | A heart failure classification model from radial artery pulse wave using LSTM neural networks.
+  40977515 | 2025 | Anal Chem | Deep Raman Quantitative Profiling and Augmented Features for Biologically Interpretable GI Cancer Detection.
+  40048835 | 2025 | J Clin Neurosci | Development of Hybrid radiomic Machine learning models for preoperative prediction of meningioma grade on multiparametric MRI.
+  39011419 | 2024 | J Inflamm Res | Risk Factors and Prediction of 28-Day-All Cause Mortality Among Critically Ill Patients with Acute Pancreatitis Using Machine Learning Techniques: A Retrospective Analysis of Multi-Institutions.
+  42567199 | 2026 | J Med Internet Res | Development and Validation of an Interpretable Machine Learning Model for Staging Helicobacter pylori-Initiated Intestinal-Type Gastric Cancer in the Correa Cascade: Cross-Sectional Study.
+  42392592 | 2026 | J Med Internet Res | Development and Validation of an Explainable Machine Learning Model to Assess the Prevalence Probability of Gastrointestinal Heat Retention Syndrome in Children: Cross-Sectional Study.
+  39789130 | 2025 | Sci Rep | Using XBGoost, an interpretable machine learning model, for diagnosing prostate cancer in patients with PSA < 20 ng/ml based on the PSAMR indicator.
+  42576080 | 2026 | Surg Endosc | Construction and validation of a liquid neural network-based prediction model and bedside tool for spontaneous passage of common bile duct stones.
+  41053844 | 2025 | Malar J | Leveraging machine learning to predict mosquito bed net utilization among women of reproductive age in sub-Saharan Africa.
+  41266851 | 2025 | Evid Based Dent | Interpretable machine learning modeling of treatment outcomes for silver and fluoride therapy in early childhood caries.
+  41351059 | 2025 | BioData Min | A fairness-aware machine learning framework for maternal health in Ghana: integrating explainability, bias mitigation, and causal inference for ethical AI deployment.
+  42218476 | 2026 | BMC Med Inform Decis Mak | Machine learning prediction of PICC-associated thrombotic complications in critically ill patients.
+  39863763 | 2025 | Sci Rep | Machine Learning-Based predictive model for adolescent metabolic syndrome: Utilizing data from NHANES 2007-2016.
+  40469611 | 2025 | Front Public Health | Sarcopenia prediction model based on machine learning and SHAP values for community-based older adults with cardiovascular disease in China.
+  42026673 | 2026 | Radiat Oncol | SHAP-based interpretable machine learning with longitudinal delta-radiomics across seven weeks of treatment for xerostomia prediction in head-and-neck cancer.
+  42583436 | 2026 | J Thorac Dis | Interpretable machine learning model integrating delta-radiomics enhances postoperative recurrence prediction in early-stage lung adenocarcinoma.
+  42793624 | 2026 | Healthcare (Basel) | Explainable AI for Digital Health: Predicting Depression Risk in Older Adults Living Alone Using Machine Learning.
+  42645917 | 2026 | J Pers Med | An Optimized and Explainable Machine Learning Framework for Diabetes Prediction Using Marine Predators Algorithm and SHAP.
+  42462220 | 2026 | JMIR Med Inform | Machine Learning-Augmented Traditional Analysis of Lactate vs Lactate-to-Albumin Ratio for Predicting Mortality Risk in Patients With Sepsis: Large-Scale Retrospective Study.
+  41787364 | 2026 | BMC Psychiatry | Development and validation of an interpretable multi-task prediction model based on heart rate variability for discriminating depression, anxiety and psychiatric comorbidities: a machine learning-driven retrospective study.
+  42489832 | 2026 | Mol Divers | Integrated machine learning and structural bioinformatics guided identification of novel molecular scaffolds as renin inhibitors.
+  40610523 | 2025 | Sci Rep | Machine learning algorithms for prediction of cerebrospinal fluid leakage after posterior surgery for thoracic ossification of the ligamentum flavum.
+  42409883 | 2026 | Sci Rep | Explainable AI for employee turnover prediction: a SHAP-based intelligent analytics approach.
+  42354567 | 2026 | Healthcare (Basel) | Exploratory Machine Learning-Based Classification of Type 2 Diabetes Using Routine Clinical Parameters: A Single-Center Comparative Study.
+  40450249 | 2025 | BMC Neurol | Machine learning algorithms to predict stroke in China based on causal inference of time series analysis.
+  42548679 | 2026 | Front Med (Lausanne) | An interpretable machine-learning model for early prediction of acute kidney injury in polytrauma patients.
+  42742458 | 2026 | Traffic Inj Prev | Insurance claim level estimation and influencing factor analysis for electric vehicles: A case study in Changsha city.
+  42588309 | 2026 | Healthcare (Basel) | Explainable Machine Learning Reveals Pattern-Specific Drivers of Depression in Middle-Aged and Older Adults with Multimorbidity: A Nationwide Cross-Sectional Study from CHARLS.
+  41397607 | 2026 | J Dairy Sci | Machine learning-based prediction of clinical mastitis in dairy cows: A comparative analysis of 9 algorithms using production and management data.
+  42769812 | 2026 | Front Oncol | Peripheral blood T-lymphocyte subsets provide prediction of early postoperative recurrence in elderly patients with lung cancer: model development and external validation.
+  42396305 | 2026 | medRxiv | A Multidomain Model for Dementia Classification using Harmonized LASI and LASI-DAD Data.
+  41852709 | 2026 | Open Med (Wars) | Development of a machine learning algorithm model to predict intraoperative hypotension in elderly patients undergoing thoracic and abdominal surgeries.
+  42444946 | 2026 | J Thorac Dis | Development and validation of prediction model for intrapulmonary metastasis in lung adenocarcinoma based on machine learning.
+  42260815 | 2026 | Medicine (Baltimore) | Development and validation of a machine learning model for colorectal cancer status classification using NHANES data: A cross-sectional study.
+  42048420 | 2026 | PLoS One | Safety-oriented and explainable machine learning for KSI crash risk prediction: Evidence from the United Kingdom.
+  42666356 | 2026 | Front Public Health | Interpretable machine learning enables early identification of financial risk and resource optimization in colorectal cancer surgery.
+  41182597 | 2025 | Environ Sci Pollut Res Int | Implementing machine learning methods for in-depth analysis and classification of surface water quality in Central Java.
+  42109740 | 2026 | Front Endocrinol (Lausanne) | Development and evaluation of clinical pregnancy prediction models for intrauterine insemination using three machine learning algorithms.
+  42481814 | 2026 | Clin Rheumatol | Predicting the risk of bone erosion in rheumatoid arthritis using a SHAP-based interpretable machine learning model.
+  41095726 | 2025 | Diagnostics (Basel) | Dual Machine Learning Framework for Predicting Long-Term Glycemic Change and Prediabetes Risk in Young Taiwanese Men.
+  42692877 | 2026 | Acad Radiol | Predicting Incomplete Occlusion Following Endovascular Treatment of Intracranial Aneurysms: Development and Validation of a Multidimensional Machine Learning Model.
+  42394110 | 2026 | Stud Health Technol Inform | Predicting Postpartum Depression Using Imbalance-Aware Machine Learning.
+  42793751 | 2026 | Diagnostics (Basel) | Tree-Based Machine Learning for Diagnostic Classification of Dengue Fever Using Routine Hematological Parameters: A Secondary Analysis of a Publicly Available Dataset.
+  41509870 | 2026 | Digit Health | Transformer-based deep learning for early detection of intensive care unit-acquired bloodstream infection through multivariate time-series analysis.
+  42645652 | 2026 | Cardiovasc Drugs Ther | Integrating Environmental Exposure Profiles with Temporal Transcriptomics: An Explainable Machine Learning Model for Cardiovascular Disease Risk Prediction and Biological Validation.
+  42414380 | 2026 | Sci Rep | Intelligent credit risk assessment for rural small and micro enterprises based on hybrid deep learning architecture.
+  41334345 | 2025 | Front Nutr | Machine learning predicts lipid emulsion stability in parenteral nutrition using multi-laboratory literature data.
+  41131537 | 2025 | BMC Med Inform Decis Mak | Prediction of postoperative haemorrhage after cerebral tumour surgery using machine learning algorithms.
+  42211310 | 2026 | Front Neurol | Machine learning-based prediction of ischemic cardio-cerebrovascular events after endovascular or microsurgical treatment of unruptured intracranial aneurysms and risk stratification by the early post-treatment triglyceride-glucose index.
+  42502685 | 2026 | Digit Health | Development and validation of an interpretable machine learning model for predicting hypertension risk in patients with psoriasis.
+  42818624 | 2026 | Front Nutr | Comparative evaluation of five nutrition-inflammation indices for predicting 28-day ICU mortality in critically ill patients with bone infections: a dual-cohort study with external validation and interpretable machine learning.
+  42461813 | 2026 | PLOS Digit Health | Machine learning prediction of physician-assigned treatment categories from pre-procedural electronic medical record data in cardiac patients: A multiclass classification study.
+  42273182 | 2026 | Front Physiol | Development of a prediction model for postoperative urinary tract infection in ureteral stone patients based on automated machine learning models.
+  41465741 | 2025 | Life (Basel) | Machine Learning-Based Classification of ICU-Acquired Neuromuscular Weakness: A Comparative Study in Survivors of Critical Illness.
+  42548525 | 2026 | Front Endocrinol (Lausanne) | Development of an interpretable machine learning model and web application for peri-colonoscopy hypoglycemia risk in hospitalized patients undergoing colonoscopy.
+  42302228 | 2026 | PLoS One | Data subdivision approach enhances machine learning-based mortality prediction in pediatric ICU patients.
+  41152526 | 2025 | Sci Rep | Comparative study of unbalanced mining disaster risk level prediction based on artificial intelligence algorithms.
+  41032359 | 2025 | JMIR Form Res | Machine Learning-Enhanced Surveillance for Surgical Site Infections in Patients Undergoing Colon Surgery: Model Development and Evaluation Study.
+  41671504 | 2026 | J Clin Gastroenterol | Prediction of Early Clinical Deterioration in Acute Pancreatitis: A Machine Learning-based Approach.
+  40339409 | 2025 | Comput Methods Programs Biomed | An explainable artificial intelligence framework for weaning outcomes prediction using features from electrical impedance tomography.
+  41602602 | 2025 | Front Big Data | Explainable attrition risk scoring for managerial retention decisions in human resource analytics.
+  42404597 | 2026 | Digit Health | The association between social risk profile and self-reported severe headache or migraine with all-cause mortality risk: A machine learning-based prediction model and interpretability analysis.
+  40240165 | 2025 | Biosci Trends | Investigating perioperative pressure injuries and factors influencing them with imbalanced samples using a Synthetic Minority Over-sampling Technique.
+  42701493 | 2026 | Quant Imaging Med Surg | A radiomics-based machine learning model for the preoperative differentiation of lung adenocarcinoma subtypes.
+  42310374 | 2026 | Sci Rep | A robust machine learning framework for detecting temporal drift in financial fraud prevention.
+  41422107 | 2025 | Sci Rep | A novel adaptive hybrid intrusion detection system with lightweight optimization for enhanced security in internet of medical things.
+  41058630 | 2025 | Front Med (Lausanne) | Interpretable machine learning model to predict 90-day radiographically confirmed pneumonia after chemotherapy initiation in non-Hodgkin lymphoma: development and internal validation of a single-center cohort.
+  41089248 | 2025 | Front Cardiovasc Med | Machine learning-based prediction of 1-year mortality using nutritional and inflammatory factors for type A acute aortic dissection with malperfusion.
+  41580311 | 2026 | Ultrasound Med Biol | Predicting the Efficacy of Breast Cancer Neoadjuvant Chemotherapy Using Ultrasonography and Machine Learning.
+  41528718 | 2026 | Phys Eng Sci Med | Real-time ECG-based detection of cardiovascular diseases using balanced and interpretable machine learning approaches.
+  42643212 | 2026 | Front Neurol | Predicting 3-month prognosis of cerebral venous thrombosis: a machine learning approach incorporating inflammatory markers.
+  42358550 | 2026 | Front Oncol | Radiomic features from intratumoral and peritumoral regions on portal venous phase CT for multicenter prediction of TP53 mutation in pancreatic cancer.
+  41973872 | 2026 | JMIR Med Inform | Enhancing Model Generalizability in Medical Artificial Intelligence: Systematic Comparison of Categorical Encoding and Sampling Techniques for Imbalanced Data.
+  41928592 | 2026 | J Orthop Res | Machine Learning Better Predicts Mortality in Patients Undergoing Revision Total Hip Arthroplasty for Periprosthetic Joint Infection.
+  42682537 | 2026 | Front Endocrinol (Lausanne) | Prediction of carotid vulnerable plaques in patients with type 2 diabetes using interpretable machine learning models.
+  41525224 | 2026 | Clin Appl Thromb Hemost | CatBoost Machine Learning Model for Thrombosis Risk Prediction in Critically Ill Cancer Patients: A MIMIC-IV Database Study.
+  41853318 | 2026 | Front Oncol | Development and clinical application of a postoperative complication prognosis prediction model for gastric cancer patients based on automated machine learning with body fat rate.
+  42590064 | 2026 | J Clin Med | Explainable Retrospective Sepsis Classification Based on Elixhauser Comorbidity Groups Using Machine and Deep Learning on MIMIC-IV.
+  42696113 | 2026 | Abdom Radiol (NY) | Machine Learning Models for Predicting Response to Percutaneous Transhepatic Biliary Drainage in Malignant Obstructive Jaundice: A Retrospective Cohort Study.
+  41984331 | 2026 | Hernia | Early prediction of bowel necrosis in incarcerated groin hernia using parsimonious machine learning models: a retrospective cohort study.
+  42079745 | 2026 | Front Cell Infect Microbiol | Early risk stratification for carbapenem resistance among Pseudomonas aeruginosa infected patients using a clinico-laboratory machine-learning model based on routine complete blood count parameters.
+  42634999 | 2026 | J Intellect Disabil Res | Pathogenic Genetic Variants, Comorbid Autism and Adaptive Developmental Quotient as Independent Predictors of Intellectual Disability in Children With Global Developmental Delay: An Interpretable Machine Learning Model With Calibrated Risk Estimation.
+  42648602 | 2026 | J Stroke Cerebrovasc Dis | An interpretable machine learning framework with clinical nomogram for predicting in-hospital mortality in acute ischemic stroke using high-granularity bedside data.
+  42011380 | 2026 | Asia Pac J Oncol Nurs | Development and validation of a prediction model for moderate-to-severe radiation dermatitis in patients with nasopharyngeal carcinoma: A machine learning study.
+  42755566 | 2026 | Front Med (Lausanne) | Development and validation of an automatic machine learning-based myocardial contusion prediction model in rib fracture patients: a retrospective multicenter cohort study.
+  42023462 | 2026 | Actas Esp Psiquiatr | Impact of the Interaction Between Screen Time and Activity Interests on Adolescent Depression Risk: Construction of a Predictive Model Based on Machine Learning.
+  41498893 | 2026 | Discov Oncol | Machine learning prediction of thyroid cancer recurrence for early screening and clinical decision pathways: a retrospective cohort study.
+  42812336 | 2026 | Front Physiol | Explainable random forest-SHAP framework for Montreal phenotype-stratified prediction of one-year complications in Crohn's disease.
