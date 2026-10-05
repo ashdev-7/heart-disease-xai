@@ -1,0 +1,48 @@
+==============================================================================
+AXIS P - PLAUSIBILITY AGAINST PUBLISHED REFERENCES   dataset: framingham
+==============================================================================
+Ceiling: Ref-A vs Ref-B cosine on shared groups ['Age', 'Blood pressure', 'Smoking', 'Glycaemia'] = 0.991
+(both derive from D'Agostino 2008, so this is an upper bound on the ceiling, not an independent one)
+Bootstrap variants used for the spread: 100
+
+Global importance shares vs references (cosine; 1 = same shares)
+model   explainer  cos_Ref-A  boot_lo_Ref-A  boot_hi_Ref-A  null_mean_Ref-A  pct_null_below_Ref-A  cos_Ref-B  boot_lo_Ref-B  boot_hi_Ref-B  tau_Ref-C_PAR  unreferenced_share
+   lr linear_shap      0.964          0.907          0.985            0.717                 0.984      0.979          0.939          0.992         -0.333               0.019
+   rf   tree_shap      0.908          0.833          0.934            0.729                 0.940      0.975          0.934          0.989         -0.333               0.052
+  xgb   tree_shap      0.920          0.832          0.948            0.682                 0.984      0.962          0.917          0.988          0.000               0.024
+  mlp          ig      0.952          0.903          0.979            0.718                 0.984      0.981          0.957          0.992          0.000               0.050
+  mlp          eg      0.949          0.885          0.976            0.714                 0.984      0.979          0.946          0.993          0.000               0.043
+   lr kernel_shap      0.964            NaN            NaN            0.717                 0.984      0.979            NaN            NaN         -0.333               0.019
+   rf kernel_shap      0.909            NaN            NaN            0.730                 0.935      0.980            NaN            NaN         -0.333               0.057
+  xgb kernel_shap      0.920            NaN            NaN            0.682                 0.984      0.962            NaN            NaN          0.000               0.024
+  mlp kernel_shap      0.951            NaN            NaN            0.718                 0.984      0.980            NaN            NaN          0.000               0.040
+
+boot_lo / boot_hi: 2.5th and 97.5th percentile of the cosine across bootstrap-trained models.
+null_mean: mean cosine when the model's group importances are randomly reassigned to groups;
+pct_null_below: share of those random assignments that score lower than the model.
+unreferenced_share: share of attribution on education, heart rate, prior stroke.
+
+Ref-A ranking : Age > Sex > Smoking > Blood pressure > Adiposity > Glycaemia
+Ref-B ranking : Age > Blood pressure > Smoking > Lipids > Glycaemia
+Model rankings of the seven referenced groups:
+  lr  linear_shap  Age > Blood pressure > Smoking > Sex > Glycaemia > Lipids > Adiposity
+  rf  tree_shap    Age > Blood pressure > Smoking > Sex > Glycaemia > Adiposity > Lipids
+  xgb tree_shap    Age > Blood pressure > Smoking > Sex > Lipids > Glycaemia > Adiposity
+  mlp ig           Age > Blood pressure > Smoking > Sex > Lipids > Glycaemia > Adiposity
+  mlp eg           Age > Blood pressure > Smoking > Sex > Lipids > Glycaemia > Adiposity
+  lr  kernel_shap  Age > Blood pressure > Smoking > Sex > Glycaemia > Lipids > Adiposity
+  rf  kernel_shap  Age > Blood pressure > Smoking > Glycaemia > Sex > Lipids > Adiposity
+  xgb kernel_shap  Age > Blood pressure > Smoking > Sex > Lipids > Glycaemia > Adiposity
+  mlp kernel_shap  Age > Blood pressure > Smoking > Sex > Lipids > Glycaemia > Adiposity
+
+Per-patient agreement with Ref-A (cosine of grouped |attribution|, 487 patients with a reference)
+model   explainer  per_patient_cos_Ref-A  pp_lo  pp_hi
+   lr linear_shap                  0.924  0.919  0.929
+   rf   tree_shap                  0.825  0.814  0.835
+  xgb   tree_shap                  0.867  0.859  0.875
+  mlp          ig                  0.881  0.873  0.889
+  mlp          eg                  0.909  0.904  0.914
+   lr kernel_shap                  0.924  0.919  0.929
+   rf kernel_shap                  0.841  0.831  0.849
+  xgb kernel_shap                  0.867  0.859  0.875
+  mlp kernel_shap                  0.911  0.906  0.916

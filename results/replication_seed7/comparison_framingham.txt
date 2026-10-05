@@ -1,0 +1,53 @@
+==============================================================================
+REPLICATION UNDER A DIFFERENT MASTER SEED - FRAMINGHAM   (run 2026-10-05, Kaggle CPU)
+==============================================================================
+Main run: master seed 42. Replication: master seed 7. The seed changes the train/test
+split, the 500 explained patients, the background rows, the tuning folds and every model
+seed. Hyperparameters were re-tuned. Code, data and library versions are identical.
+Re-tuned settings: LR C=0.1 (same); RF leaf 10 (was 5), depth 12; XGB depth 2, 100 trees
+(same); MLP 14 epochs (was 62).
+
+Quantity                                         main (seed 42)        replication (seed 7)
+------------------------------------------------------------------------------------------
+Test AUC, four models                            0.665 - 0.702         0.718 - 0.751
+Calibration slope                                0.69 - 0.83           1.08 - 1.30
+Faithfulness ratio (top-3 vs random-3)           2.2 - 3.3 (both sets) 2.33 - 2.82
+Plausibility, cosine with Ref-A (native)         0.900 - 0.955         0.908 - 0.964
+  null mean                                      0.654 - 0.737         0.682 - 0.729
+Top-3 agreement across bootstrap retrains
+  LR / RF / XGB / MLP-IG / MLP-EG                .704 .517 .580 .528 .585   .685 .515 .559 .641 .656
+Top-3 agreement across seeds
+  RF / XGB / MLP-IG / MLP-EG                     .815 .869 .848 .903        .819 .899 .769 .820
+Noise robustness, published variation (top-3)
+  LR / RF / XGB / MLP-IG / MLP-EG                .846 .673 .829 .818 .832   .853 .715 .814 .816 .822
+Model swap, same explainer (top-3, 6 pairs)      0.51 - 0.75 (Fram.)   0.52 - 0.75
+Explainer swap, same model (top-3)               0.73 - 1.00           0.76 - 1.00
+ICC model class                                  0.668                 0.678
+ICC bootstrap, by model                          0.57 - 0.79           0.55 - 0.78
+ICC measurement noise                            0.74 - 0.87           0.76 - 0.88
+ICC background draw                              0.95 - 0.97           0.91 - 0.94
+ICC seed                                         0.95 - 0.98           0.88 - 0.97
+SMOTE: mean predicted risk / prevalence          1.6 - 3.6 (both sets) 2.3 - 2.9
+
+WHAT REPLICATES
+ - Faithfulness, plausibility, and their margins over the null.
+ - Bootstrap agreement is below seed agreement for every model, in both runs.
+ - LR is the most stable under bootstrap; RF the least, in both runs.
+ - Model swap changes explanations more than explainer swap.
+ - Model class and training sample are the two largest sources; seed, background and
+   explainer are the smallest.
+ - SMOTE over-prediction and its effect on tree-model explanations.
+
+WHAT DOES NOT REPLICATE NUMERICALLY
+ - Test AUC and calibration slope differ between splits by more than their bootstrap CIs
+   suggest (848 test patients, 129 events). Consistent with the earlier split audit.
+ - The MLP: tuning picked 14 epochs instead of 62. The shorter-trained network is MORE
+   stable under bootstrap (0.64-0.66 vs 0.53-0.59) and LESS stable across seeds
+   (0.77-0.82 vs 0.85-0.90). The bootstrap-vs-seed gap for the MLP shrinks from about
+   0.32 to about 0.14 but keeps its sign. Together with audit 4 (H3b) this says the MLP
+   numbers depend on the training recipe.
+ - Background-draw ICC is 0.91-0.94 rather than 0.95-0.97: still small, but not negligible.
+
+Stage note: the Kaggle runner placed KernelSHAP last, so the plausibility and variance
+report stages failed there for lack of kernel.npz. Both were re-run locally on the
+downloaded replication outputs (no model refits involved) with XAI_SEED=7.

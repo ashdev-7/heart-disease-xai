@@ -1,0 +1,14 @@
+==============================================================================
+LINKING ANALYSIS (A2)   dataset: framingham   500 patients
+==============================================================================
+Spearman correlation across patients. boot = per-patient top-3 agreement across bootstrap
+retrains; noise = top-3 agreement clean vs re-measured; risk_sd = SD of predicted risk across
+bootstraps; dist = |predicted risk - 0.200|; faith = top-3 / random-3 prediction-gap ratio.
+With 500 patients a correlation has a standard error of about 0.045.
+
+model   explainer  boot_vs_noise  boot_vs_risk_sd  boot_vs_dist  boot_vs_risk  noise_vs_dist  noise_vs_risk  boot_vs_faith  boot_vs_plaus  boot_low_risk_third  boot_high_risk_third
+   lr linear_shap          0.356           -0.202         0.125        -0.115          0.215         -0.009          0.112         -0.027                0.703                 0.671
+   rf   tree_shap          0.611            0.101         0.302         0.055          0.281         -0.030          0.233          0.189                0.529                 0.544
+  xgb   tree_shap          0.483           -0.013         0.315        -0.044          0.160          0.002          0.069          0.133                0.581                 0.565
+  mlp          ig          0.543           -0.083         0.071        -0.045          0.168          0.020          0.108          0.216                0.641                 0.630
+  mlp          eg          0.521           -0.158         0.153        -0.085          0.127          0.064          0.138          0.228                0.669                 0.640
