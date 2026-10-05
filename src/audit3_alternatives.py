@@ -35,12 +35,14 @@ STAGE = sys.argv[1]
 import os
 
 T0, BUDGET = time.time(), float(os.environ.get("XAI_BUDGET", 500))
-AUD = OUT / "framingham" / "audit"
-AUD.mkdir(exist_ok=True)
-N_RES, N_PAT = 30, 200
+# Dataset and number of resamples can be overridden (BRFSS runs use fewer resamples).
+DS = os.environ.get("XAI_AUDIT_DS", "framingham")
+BIG = DS == "brfss"
+AUD = OUT / DS / "audit"
+AUD.mkdir(parents=True, exist_ok=True)
+N_RES, N_PAT = int(os.environ.get("XAI_NRES", 30)), 200
 PAIRS = [(m, e) for m in ("lr", "rf", "xgb", "mlp") for e in NATIVE[m]]
-HPS = json.loads((OUT / "framingham" / "hyperparameters.json").read_text())
-CH = expected_jaccard(15, 3)
+HPS = json.loads((OUT / DS / "hyperparameters.json").read_text())
 
 
 def out_of_time():
@@ -81,7 +83,9 @@ def split(seed):
     return Xtr, ytr.to_numpy(), Xte, yte.to_numpy(), Xex, bg
 
 
-d = load("framingham")
+d = load(DS)
+CH = expected_jaccard(len(d["features"]), 3)
+RF_LEAVES = (50, 100, 200) if BIG else (5, 10, 25)
 YTR = d["ytr"].to_numpy()
 XEX = d["Xex"].iloc[:N_PAT]
 
@@ -104,7 +108,7 @@ if STAGE == "splits":
 if STAGE == "retune":
     grids = {
         "lr": [dict(C=c) for c in (0.001, 0.01, 0.1, 1, 10, 100)],
-        "rf": [dict(n_estimators=300, min_samples_leaf=l, max_depth=dp) for l in (5, 10, 25) for dp in (6, 12)],
+        "rf": [dict(n_estimators=300, min_samples_leaf=l, max_depth=dp) for l in RF_LEAVES for dp in (6, 12)],
         "xgb": [dict(n_estimators=k, max_depth=dp, learning_rate=0.05) for dp in (2, 3, 4) for k in (100, 300, 600)],
     }
     for b in range(N_RES):
@@ -142,7 +146,7 @@ if STAGE == "retune_grouped":
     which = tuple(sys.argv[2].split(",")) if len(sys.argv) > 2 else ("lr", "rf", "xgb")
     grids = {
         "lr": [dict(C=c) for c in (0.001, 0.01, 0.1, 1, 10, 100)],
-        "rf": [dict(n_estimators=300, min_samples_leaf=l, max_depth=dp) for l in (5, 10, 25) for dp in (6, 12)],
+        "rf": [dict(n_estimators=300, min_samples_leaf=l, max_depth=dp) for l in RF_LEAVES for dp in (6, 12)],
         "xgb": [dict(n_estimators=k, max_depth=dp, learning_rate=0.05) for dp in (2, 3, 4) for k in (100, 300, 600)],
     }
     for b in range(N_RES):

@@ -1,0 +1,108 @@
+==============================================================================
+AUDIT 6 - HYPERPARAMETER CHOICE AS A SOURCE OF VARIATION   dataset: framingham   2026-10-06 01:49
+==============================================================================
+master seed 42; 200 explained patients; chance level of top-3 agreement 0.129
+Near-equivalent set: mean 5-fold CV log loss within one standard error of the best; at most 6 configurations (the best ones) are refitted.
+
+--- lr: 8 candidate configurations; best CV loss 0.38023 (SE 0.00682); 6 within one SE   [0 min]
+    * loss 0.38023  {"C": 0.1}
+    * loss 0.38047  {"C": 1}
+    * loss 0.38050  {"C": 10}
+    * loss 0.38050  {"C": 100}
+    * loss 0.38050  {"C": 1000.0}
+    * loss 0.38056  {"C": 0.01}
+      loss 0.39523  {"C": 0.001}
+      loss 0.41892  {"C": 0.0001}
+    fitted {"C": 0.1}: test AUC 0.7021   [0 min]
+    fitted {"C": 1}: test AUC 0.7022   [0 min]
+    fitted {"C": 10}: test AUC 0.7022   [0 min]
+    fitted {"C": 100}: test AUC 0.7022   [0 min]
+    fitted {"C": 1000.0}: test AUC 0.7022   [0 min]
+    fitted {"C": 0.01}: test AUC 0.7016   [0 min]
+  near-equivalent set used: 6 configurations; test AUC 0.7016 to 0.7022
+  lr linear_shap: pairwise top-3 agreement between near-equivalent configurations 0.959 (least similar pair 0.880, most similar 1.000); ICC with configuration as the source 0.981
+
+--- rf: 12 candidate configurations; best CV loss 0.38327 (SE 0.00651); 12 within one SE   [1 min]
+    * loss 0.38327  {"leaf": 5, "depth": 12}
+    * loss 0.38469  {"leaf": 2, "depth": 6}
+    * loss 0.38473  {"leaf": 5, "depth": 6}
+    * loss 0.38475  {"leaf": 5, "depth": null}
+    * loss 0.38480  {"leaf": 10, "depth": null}
+    * loss 0.38511  {"leaf": 2, "depth": 12}
+    * loss 0.38522  {"leaf": 10, "depth": 6}
+    * loss 0.38523  {"leaf": 10, "depth": 12}
+    * loss 0.38600  {"leaf": 25, "depth": null}
+    * loss 0.38606  {"leaf": 25, "depth": 6}
+    * loss 0.38607  {"leaf": 25, "depth": 12}
+    * loss 0.38811  {"leaf": 2, "depth": null}
+    fitted {"depth": 12, "leaf": 5}: test AUC 0.6650   [1 min]
+    fitted {"depth": 6, "leaf": 2}: test AUC 0.6827   [1 min]
+    fitted {"depth": 6, "leaf": 5}: test AUC 0.6803   [1 min]
+    fitted {"depth": null, "leaf": 5}: test AUC 0.6590   [1 min]
+    fitted {"depth": null, "leaf": 10}: test AUC 0.6705   [2 min]
+    fitted {"depth": 12, "leaf": 2}: test AUC 0.6570   [2 min]
+  near-equivalent set used: 6 configurations; test AUC 0.6570 to 0.6827
+  rf tree_shap: pairwise top-3 agreement between near-equivalent configurations 0.732 (least similar pair 0.606, most similar 0.885); ICC with configuration as the source 0.884
+
+--- xgb: 20 candidate configurations; best CV loss 0.38373 (SE 0.00576); 13 within one SE   [2 min]
+    * loss 0.38373  {"depth": 1, "trees": 200}
+    * loss 0.38375  {"depth": 2, "trees": 200}
+    * loss 0.38395  {"depth": 2, "trees": 100}
+    * loss 0.38399  {"depth": 1, "trees": 300}
+    * loss 0.38451  {"depth": 1, "trees": 600}
+    * loss 0.38524  {"depth": 3, "trees": 100}
+    * loss 0.38529  {"depth": 2, "trees": 300}
+    * loss 0.38673  {"depth": 4, "trees": 50}
+    * loss 0.38676  {"depth": 1, "trees": 100}
+    * loss 0.38689  {"depth": 4, "trees": 100}
+    * loss 0.38700  {"depth": 3, "trees": 50}
+    * loss 0.38800  {"depth": 2, "trees": 50}
+    * loss 0.38854  {"depth": 3, "trees": 200}
+      loss 0.39248  {"depth": 2, "trees": 600}
+      loss 0.39251  {"depth": 4, "trees": 200}
+      loss 0.39389  {"depth": 3, "trees": 300}
+      loss 0.39418  {"depth": 1, "trees": 50}
+      loss 0.40228  {"depth": 4, "trees": 300}
+      loss 0.41064  {"depth": 3, "trees": 600}
+      loss 0.42961  {"depth": 4, "trees": 600}
+    fitted {"depth": 1, "trees": 200}: test AUC 0.6904   [2 min]
+    fitted {"depth": 2, "trees": 200}: test AUC 0.6818   [2 min]
+    fitted {"depth": 2, "trees": 100}: test AUC 0.6838   [2 min]
+    fitted {"depth": 1, "trees": 300}: test AUC 0.6896   [2 min]
+    fitted {"depth": 1, "trees": 600}: test AUC 0.6843   [2 min]
+    fitted {"depth": 3, "trees": 100}: test AUC 0.6766   [2 min]
+  near-equivalent set used: 6 configurations; test AUC 0.6766 to 0.6904
+  xgb tree_shap: pairwise top-3 agreement between near-equivalent configurations 0.850 (least similar pair 0.757, most similar 0.975); ICC with configuration as the source 0.890
+
+--- mlp: 8 candidate configurations; best CV loss 0.38024 (SE 0.00702); 8 within one SE   [3 min]
+    * loss 0.38024  {"lr": 0.0005, "wd": 0.005, "dropout": 0.2, "epochs": 62}
+    * loss 0.38059  {"lr": 0.001, "wd": 0.005, "dropout": 0.2, "epochs": 26}
+    * loss 0.38129  {"lr": 0.001, "wd": 0.005, "dropout": 0.1, "epochs": 12}
+    * loss 0.38285  {"lr": 0.0005, "wd": 0.005, "dropout": 0.1, "epochs": 18}
+    * loss 0.38407  {"lr": 0.0005, "wd": 0.0001, "dropout": 0.2, "epochs": 52}
+    * loss 0.38413  {"lr": 0.001, "wd": 0.0001, "dropout": 0.2, "epochs": 26}
+    * loss 0.38432  {"lr": 0.001, "wd": 0.0001, "dropout": 0.1, "epochs": 14}
+    * loss 0.38640  {"lr": 0.0005, "wd": 0.0001, "dropout": 0.1, "epochs": 52}
+    fitted {"dropout": 0.2, "epochs": 62, "lr": 0.0005, "wd": 0.005}: test AUC 0.6957   [3 min]
+    fitted {"dropout": 0.2, "epochs": 26, "lr": 0.001, "wd": 0.005}: test AUC 0.6933   [4 min]
+    fitted {"dropout": 0.1, "epochs": 12, "lr": 0.001, "wd": 0.005}: test AUC 0.6924   [4 min]
+    fitted {"dropout": 0.1, "epochs": 18, "lr": 0.0005, "wd": 0.005}: test AUC 0.6909   [4 min]
+    fitted {"dropout": 0.2, "epochs": 52, "lr": 0.0005, "wd": 0.0001}: test AUC 0.6891   [4 min]
+    fitted {"dropout": 0.2, "epochs": 26, "lr": 0.001, "wd": 0.0001}: test AUC 0.6853   [4 min]
+    fitted {"dropout": 0.1, "epochs": 14, "lr": 0.001, "wd": 0.0001}: test AUC 0.6878   [4 min]
+    fitted {"dropout": 0.1, "epochs": 52, "lr": 0.0005, "wd": 0.0001}: test AUC 0.6815   [4 min]
+  near-equivalent set used: 6 configurations; test AUC 0.6853 to 0.6957
+  mlp ig: pairwise top-3 agreement between near-equivalent configurations 0.758 (least similar pair 0.658, most similar 0.918); ICC with configuration as the source 0.842
+  mlp eg: pairwise top-3 agreement between near-equivalent configurations 0.835 (least similar pair 0.773, most similar 0.925); ICC with configuration as the source 0.921
+  2x2x2 factorial (all eight configurations, whether or not within one SE):
+    ig: all eight, pairwise top-3 agreement 0.740; ICC 0.823
+      changing only learning rate: mean top-3 agreement 0.851 over 4 pairs (range 0.732 to 0.918)
+      changing only weight decay: mean top-3 agreement 0.677 over 4 pairs (range 0.619 to 0.736)
+      changing only dropout: mean top-3 agreement 0.817 over 4 pairs (range 0.796 to 0.833)
+    eg: all eight, pairwise top-3 agreement 0.823; ICC 0.909
+      changing only learning rate: mean top-3 agreement 0.892 over 4 pairs (range 0.816 to 0.925)
+      changing only weight decay: mean top-3 agreement 0.790 over 4 pairs (range 0.706 to 0.819)
+      changing only dropout: mean top-3 agreement 0.870 over 4 pairs (range 0.833 to 0.890)
+    test AUC of the eight: 0.6957, 0.6933, 0.6924, 0.6909, 0.6891, 0.6853, 0.6878, 0.6815
+
+Audit 6 complete for framingham in 4 min
