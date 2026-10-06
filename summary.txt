@@ -1,0 +1,911 @@
+================================================================================
+SUMMARY
+Stability of feature-attribution explanations for heart-disease risk models:
+an audit across models, explainers, training samples and measurement noise
+================================================================================
+Written 2026-10-06. Author of the study: Yash Tyagi.
+This file explains the whole project from the first idea to the final numbers, in
+plain language, for a reader who has not seen any of it before. Every number comes
+from a file under results/ (named where it is used). Where something was not done,
+or went wrong, it says so.
+
+CONTENTS
+   1. The pitch
+   2. Words you need (plain-language glossary)
+   3. Where the problem came from
+   4. The question, stated exactly
+   5. The material: two datasets, and why these two
+   6. The method, decision by decision, each with its reason
+   7. What was done, in order (the full sequence of steps)
+   8. The results, one by one, and what each means
+   9. How we checked ourselves (ten audits)
+  10. Things that went wrong, and findings that go against us
+  11. What the paper claims, and what it does not
+  12. Limits that more computing cannot remove
+  13. What the work is worth
+  14. Where everything is, and how to re-run it
+  15. What is still left for the author
+
+================================================================================
+1. THE PITCH
+================================================================================
+
+The situation
+  A hospital or a paper trains a model that predicts who has, or will get, heart
+  disease. Alongside each prediction it shows an "explanation": the three or four
+  things about this patient that pushed the risk up or down the most (age, blood
+  pressure, smoking...). The explanation is what makes people trust the model. It
+  is usually produced by a method called SHAP, and papers usually justify it by
+  saying "the important features make clinical sense".
+
+The question nobody was measuring
+  If we trained that same model again - on a slightly different sample of patients
+  from the same population, or with a different random seed, or as a different
+  kind of model with the same accuracy - would THIS patient get the SAME
+  explanation? If not, the explanation is describing an accident of how the model
+  was built, not the patient.
+
+What we did
+  We took two public heart-disease datasets, four standard kinds of model and five
+  standard explanation methods. We trained each model hundreds of times (with
+  different seeds, and on re-drawn training samples), and each time explained the
+  SAME 500 patients, who were never used for training. Then we measured, patient by
+  patient, how much the explanation moved, and which change moved it most.
+
+What we found
+  1. The explanations are honest about the model ("faithful"): changing the three
+     features an explanation ranks highest moves the prediction 2.2 to 3.3 times
+     more than changing three random features.
+  2. The explanations look medically sensible ("plausible"): they put weight on
+     age, blood pressure and smoking, matching a published risk equation.
+  3. BUT on the small dataset the explanation for one patient is not reproducible.
+     Train the model again on a re-drawn sample of the same size and a patient's
+     top three features overlap only 0.52 to 0.70 (1 = identical, chance = 0.13).
+     Changing only the random seed gives 0.82 to 0.90 - so the usual "we checked
+     across seeds" test misses most of the problem.
+  4. The cause is the amount of data. Cut the large dataset down to the small
+     one's size and the same instability appears, while accuracy barely changes
+     (AUC 0.83 to 0.85). Accuracy does not warn you.
+  5. Which MODEL you choose changes a patient's explanation more than which
+     EXPLANATION METHOD you choose.
+  6. Settings that are equally good by cross-validation give different
+     explanations too. For the neural network the setting responsible is weight
+     decay.
+  7. A popular trick for imbalanced data (SMOTE) makes the model over-predict risk
+     by 1.6 to 3.6 times and changes the explanations.
+  8. Three software traps were found that silently distort this kind of study.
+
+Why it is believable
+  - The plan was written and frozen (a tagged version in git) before any of the
+    reliability numbers were computed.
+  - Every explanation method was checked against the exact mathematical answer.
+  - The whole analysis was repeated under five other "master seeds" (new split of
+    the data, new patients, new everything) and the conclusions held every time.
+  - Every setting that was our own choice was changed to see if it mattered.
+  - The large dataset was rebuilt from the government's raw file and matched the
+    public copy exactly, cell for cell.
+  - Findings that go against us are reported, not hidden (Section 10).
+
+One sentence
+  For these heart-disease models, an individual patient's explanation is faithful
+  and plausible but, on small data, not reproducible - and the checks people
+  normally report (accuracy, a seed test, "it makes clinical sense") do not reveal
+  that.
+
+================================================================================
+2. WORDS YOU NEED
+================================================================================
+
+Model            A formula learned from data that turns a patient's measurements
+                 into a predicted risk.
+Feature /        One measurement about a patient (age, systolic blood pressure,
+predictor        smoker yes/no ...).
+Training set     The patients the model learns from.
+Test set         Patients held back, used only to check the model.
+AUC              A score for how well a model separates sick from healthy people.
+                 0.5 = coin toss, 1.0 = perfect. Around 0.70 is typical for
+                 Framingham-type data; 0.85 for the survey data.
+Calibration      Whether predicted risks match reality (if the model says 20%, do
+                 about 20 in 100 such patients get the disease?).
+Explanation /    For one patient, a number per feature saying how much that
+attribution      feature pushed this patient's prediction up or down.
+SHAP             The most used way to compute attributions. It shares the
+                 prediction out among the features fairly, using a rule from game
+                 theory (Shapley values).
+TreeSHAP,        Exact, fast versions of SHAP for tree models and for linear
+linear SHAP      models.
+KernelSHAP       A slower, approximate SHAP that works for any model.
+Integrated /     Attribution methods for neural networks that use the model's
+Expected         gradients. Expected Gradients is close to SHAP; Integrated
+Gradients        Gradients with one reference point computes something different.
+Top-3            The three features with the largest attribution for a patient.
+Jaccard overlap  How much two top-3 lists share: (items in both) / (items in
+                 either). 1 = same three, 0.5 = two shared, 0.2 = one shared,
+                 0 = none shared.
+Chance level     The overlap two RANDOM top-3 lists would have: 0.129 with 15
+                 features, 0.090 with 21. Scores must be read against it.
+Seed             The number that starts the random-number generator. Changing it
+                 changes random choices inside training, nothing else.
+Bootstrap        Re-drawing the training set: pick the same number of patients at
+                 random WITH replacement. It imitates "what if we had collected a
+                 slightly different sample from the same population".
+Faithful         The explanation reflects what the model actually computes.
+Plausible        The explanation agrees with what experts already believe.
+Reproducible /   The explanation stays the same when something that should not
+stable           matter (seed, sample, noise) is changed.
+Multiplicity     Many different models fit the data equally well but disagree on
+                 individuals.
+Events per       Number of sick patients in the training set divided by the number
+predictor        of features. The standard yardstick for "is there enough data".
+ICC              Intraclass correlation. Here: of all the variation in
+                 explanations, the share that is due to patients being different
+                 from one another. Near 1 = the disturbance hardly matters.
+SMOTE            A way to "balance" data by inventing synthetic sick patients.
+Hyperparameter   A setting chosen before training (tree depth, learning rate ...).
+Cross-validation Splitting the training set into parts to choose hyperparameters
+                 without touching the test set.
+Master seed      Our own term: one number that controls the train/test split, which
+                 500 patients are explained, the background rows, the tuning folds
+                 and every model seed. Changing it re-does the entire study.
+Post hoc         Added after the plan was frozen. Such results are weaker evidence
+                 and are labelled as such everywhere.
+
+================================================================================
+3. WHERE THE PROBLEM CAME FROM
+================================================================================
+
+3.1 The starting point: an earlier draft
+  The project began with a draft paper by the author, "Evaluating the Reliability
+  and Clinical Consistency of Explainability Methods in Deep Learning-Based Heart
+  Disease Prediction". It trained three models with SMOTE, explained them with SHAP
+  and Integrated Gradients, and ran three tests: stability under 1/2/5% noise on 30
+  patients, agreement across 10 seeds, and agreement (Kendall's tau) with a ranking
+  of risk factors built by hand from the ACC/AHA 2019 guideline. It ended in
+  verdicts such as "TRUSTWORTHY" or "DO NOT USE". The author felt it was incomplete
+  and asked for an honest assessment.
+
+3.2 What a review of the draft found (eleven problems)
+   1. The "clinical truth" was built from guideline recommendation classes. Those
+      classes say how strong the evidence is for TREATING a factor, not how much the
+      factor predicts disease. So the yardstick measured the wrong thing.
+   2. Kendall's tau on 15 features with 8 ties, no confidence interval, no chance
+      level. One verdict depended on 0.395 against a cut-off of 0.40.
+   3. "Approximate SHAP beats exact SHAP" compared a random forest explained one way
+      with a neural network explained another way: two things changed at once.
+   4. A claimed "dissociation" compared a whole-population ranking with per-patient
+      rankings: different levels, not comparable.
+   5. Counterfactual explanations were announced but never produced.
+   6. "Pre-registered" without a registration; one threshold changed after seeing
+      results.
+   7. The seed test ran on one dataset but was said to replicate on both.
+   8. The stability metric averaged rank shifts over all features, so unimportant
+      features at the bottom dominated it.
+   9. Agreement with logistic regression was treated as agreement with the truth.
+  10. Weak models, no XGBoost, one split, SMOTE never questioned.
+  11. No test at all of whether explanations reflect the model (faithfulness).
+
+3.3 What the literature said
+  A survey of about 230 works (Literature_Survey.txt) showed three separate bodies
+  of research that had not been joined for heart-disease tabular models:
+   - Explanation research: explanations from different methods disagree, and can
+     change between runs.
+   - Clinical prediction research: models built on small samples give unstable
+     predictions for individuals even when overall accuracy looks fine, and the
+     recommended way to expose this is to bootstrap the whole model-building
+     process.
+   - One cardiology study showed SHAP output depends on the model and on
+     correlated features.
+  Each ingredient existed. What was missing was a single study that measured, on
+  the same patients and under one plan, HOW MUCH each influence matters, and tied
+  explanation stability to the amount of data.
+
+3.4 How that became the problem statement
+  The draft asked "which explanation method is trustworthy?" and answered with
+  pass/fail labels. The review showed that question cannot be answered the way the
+  draft tried: there is no agreed clinical truth to grade against, and a label
+  hides the size of the effect. The useful question is one that can be measured
+  without knowing the truth: does the explanation stay the same when things that
+  should not matter are changed? That needs no clinician and no gold standard,
+  only careful repetition. That is the question of this study.
+
+================================================================================
+4. THE QUESTION, STATED EXACTLY
+================================================================================
+
+  For a heart-disease risk model, how much of one patient's feature-attribution
+  explanation is determined by the patient, and how much changes with
+     (a) the kind of model,
+     (b) the explanation method,
+     (c) the training sample,
+     (d) the random seed,
+     (e) ordinary measurement noise in the patient's own values,
+     (f) the explainer's background sample,
+  and (added later) (g) the choice among equally good hyperparameter settings?
+
+  Two properties are kept strictly apart throughout, because mixing them was the
+  draft's central confusion:
+     Faithfulness = does the explanation reflect what the model computes?
+     Plausibility = does it agree with what experts expect?
+  An explanation can be plausible without being faithful, and neither says
+  anything about whether it is reproducible.
+
+  What the study is NOT: it proposes no new model and no new explanation method,
+  involves no clinicians, and validates no clinical tool. It is a methods audit on
+  public data.
+
+================================================================================
+5. THE MATERIAL
+================================================================================
+
+5.1 Framingham teaching file
+  4,240 people, 15 features, outcome = coronary heart disease within 10 years
+  (644 cases, 15.2%). Seven features have missing values; glucose is missing for
+  388 people (9.2%). No HDL cholesterol. No formal codebook.
+
+5.2 BRFSS 2015 heart-disease extract
+  253,680 survey respondents, 21 features, outcome = self-reported existing
+  coronary heart disease or heart attack (23,893 cases, 9.42%). No missing values.
+  A telephone survey at one point in time.
+
+5.3 Why these two, and why only two
+  - They are the two datasets of the original draft, and the two most used in the
+    applied papers this audit is about. An audit of common practice should use the
+    data that practice uses.
+  - They differ in exactly the way that matters for the main finding: Framingham
+    is SMALL (about 34 events per predictor in the training set), BRFSS is LARGE
+    (about 910). One small and one large dataset lets the same pipeline show what
+    data volume does.
+  - They also differ in kind (a cohort predicting future disease vs a survey of
+    existing disease), so a result that holds on both is less likely to be a quirk
+    of one file.
+  - Both are public, so anyone can re-run everything.
+  - Only two because of time, agreed with the author. This is a stated limit.
+
+5.4 Checking the data before trusting it (Phase 1)
+  Reason: if the data are wrong, everything built on them is wrong, and an
+  explanation study has no later step that would reveal it.
+  What was checked: file fingerprint (SHA-256), size, case counts, the coding and
+  range of every column, impossible values, missing values, duplicate rows; then a
+  plain logistic regression to see that known risk factors (age, blood pressure,
+  smoking, diabetes) come out with the expected direction.
+  A stop rule was written down in advance: stop if a major risk factor has the
+  wrong sign with certainty, or the AUC is outside a stated range.
+  Result: passed. Framingham AUC 0.702, BRFSS 0.847.
+  Unexpected: BRFSS has 23,899 exact duplicate rows. Among them disease prevalence
+  is 0.9%, against 10.8% in the rest, which fits healthy people giving identical
+  answers to a short questionnaire, not copying errors. They were kept.
+  Later (post hoc): the BRFSS file was rebuilt from the CDC's raw 2015 file
+  (441,456 records) by re-implementing the cleaning steps its author documented.
+  The rebuilt file matched the public one exactly: 253,680 rows, 23,893 cases,
+  23,899 duplicates, zero differing cells (results/brfss/cdc_check_report.txt).
+
+================================================================================
+6. THE METHOD, DECISION BY DECISION, WITH REASONS
+================================================================================
+Each decision below also has an entry in Decision_Register.txt (D-01 to D-46) with
+the alternatives considered and the literature behind it.
+
+6.1 Freeze the plan before computing any reliability number
+  What : protocol, decision register and code committed and tagged in git
+         (protocol-v1.0) before any model was retrained or any score computed.
+  Why  : a study like this has hundreds of small choices. If they are made after
+         seeing results, it is impossible - even for the author - to know whether
+         a finding is real or was steered. Freezing first removes that doubt.
+         Everything added later is labelled "post hoc" wherever it appears.
+
+6.2 One fixed train/test split and one fixed set of 500 explained patients
+  What : 80% train, 20% test, stratified by outcome. From the test set, 500
+         patients drawn once and used for every model.
+  Why  : the whole study compares the explanation of THE SAME patient across
+         hundreds of models. That is only possible if those patients are fixed and
+         were never in any training set. Repeated splitting (cross-validation)
+         would be better for estimating accuracy but would put the explained
+         patients into training sets. Accuracy is not what is being measured.
+  Cost : results are conditional on one split. Answered later by re-running the
+         whole study under other master seeds (Section 8.14).
+  Why 500: a compute budget. Checked: splitting them into two halves of 250
+         changes the main numbers by at most 0.03.
+
+6.3 No rebalancing of the classes in the main analysis
+  What : models are trained on the data as they are (15% / 9% cases).
+  Why  : the quantity of interest is a predicted RISK. Inventing extra sick
+         patients (SMOTE) teaches the model that disease is far more common than it
+         is, so its risks come out too high. An explanation of such a model
+         explains a distorted model. SMOTE is studied separately as its own
+         experiment (6.16) so its effect can be shown instead of assumed.
+
+6.4 Missing values: fill with the training median (or the most common value)
+  Why  : (i) the same rule can be applied to a new patient at prediction time,
+         which is what a deployed model must do; (ii) all four models then receive
+         identical inputs, so differences between models cannot come from
+         different handling of missing data. The filling rule is learned only from
+         the training rows, again inside every retrain, so no information leaks
+         from test patients.
+  Checked: using a regression-based filling instead, and using only patients with
+         nothing missing, changes nothing material.
+
+6.5 Four kinds of model
+  Logistic regression (LR), random forest (RF), XGBoost (XGB), a small neural
+  network (MLP, two hidden layers of 64 and 32 units).
+  Why these: the study asks whether the KIND of model changes the explanation, so
+         it needs kinds that work differently. LR is the standard method in
+         clinical risk prediction and the natural reference. RF and XGB are the
+         tree-ensemble methods that applied heart-disease papers actually use, and
+         they build predictions from yes/no splits, not a smooth formula. The MLP
+         is needed because the gradient-based explanation methods only work on a
+         smooth, differentiable model. Together they cover linear, tree and neural
+         behaviour.
+  Not included: newer deep tabular models and "interpretable by design" models.
+         Stated as a limit.
+
+6.6 Hyperparameters tuned once per dataset, by 5-fold cross-validated log loss
+  Why log loss: it penalises wrong probabilities, and probabilities are what a
+         risk model outputs. Tuning on AUC would ignore calibration.
+  Why once (not inside every retrain): the retrains are meant to isolate ONE
+         change at a time (only the seed, or only the sample). If the settings
+         also changed in each retrain, two things would move together.
+  Risk : maybe tuning once hides instability. Tested: re-tuning inside every
+         bootstrap, done correctly, changes agreement by at most 0.05 (Framingham)
+         and 0.015 (BRFSS).
+  Honest basis of the search ranges and fixed settings: they are common defaults
+         or were limited by compute, not derived from theory. So each was changed
+         to see whether it matters (Sections 8.11 and 8.15).
+
+6.7 Three kinds of retraining
+  Base      : the full training set, seed 42.
+  Seed      : same data, seeds 0 to 9 (RF, XGB, MLP; LR has no randomness).
+  Bootstrap : training rows re-drawn with replacement, model seed kept fixed;
+              100 times for Framingham, 50 for BRFSS.
+  Why both seed and bootstrap: they answer different questions. A seed change
+         asks "is the training procedure itself jittery?". A bootstrap asks "would
+         we get the same thing from another sample of the same population?" -
+         which is the question that matters for trusting an explanation, because
+         the particular patients who ended up in a training set are an accident.
+         Papers usually report only the seed test. Showing the two side by side
+         is the core comparison of the study.
+  Why the bootstrap re-does preprocessing too: the instability of a model
+         includes the instability of everything fitted from the data.
+  Why 100 / 50: compute. Checked: half as many gives the same numbers to within
+         0.02.
+
+6.8 The explanation methods, and why each model gets a "native" one
+  LR  : exact linear SHAP (a formula; no approximation).
+  RF  : TreeSHAP.
+  XGB : TreeSHAP.
+  MLP : Integrated Gradients and Expected Gradients.
+  All four base models: also KernelSHAP.
+  Why native methods: each is the exact or standard method for that model, so
+         differences are not caused by a poor approximation.
+  Why KernelSHAP as well: to separate "which model" from "which explainer", one of
+         the two must be held fixed while the other changes. KernelSHAP works on
+         every model and on one common scale (log-odds), so with it the explainer
+         is fixed and only the model changes. Comparing KernelSHAP with the native
+         method on the same model changes only the explainer.
+  Why two methods for the MLP: Integrated Gradients with a single reference point
+         is widely used but is not a Shapley value; Expected Gradients averages
+         over many reference points and is close to one. Having both shows how
+         much that distinction matters.
+
+6.9 "Interventional" attributions with 100 real background rows
+  What : to compute a feature's contribution, the method replaces other features
+         with values taken from 100 real training patients.
+  Why interventional: it answers "what did the MODEL use?". The alternative
+         (conditional) answers "what do the DATA imply?" and can give credit to a
+         feature the model never looks at, just because it is correlated with one
+         it does. An audit of models needs the first.
+  Why real rows, not an average patient: an "average patient" (0.4 of a smoker)
+         does not exist; real rows keep the reference realistic.
+  Why 100: it is the tree explainer's built-in limit, and cost grows with it.
+         Checked with 50 and 200 rows and with fresh draws (Section 8.9) - and that
+         check turned up a finding of its own.
+
+6.10 Check every explainer against the exact answer
+  What : for the Framingham models, the true Shapley values were computed by brute
+         force - all 32,768 combinations of 15 features - and every explainer was
+         compared with them. Also: do the attributions add up to the prediction?
+         And: if the model is trained on scrambled labels, do the explanations
+         change? (They should.)
+  Why  : if the explainer is wrong, an "unstable explanation" might just be a
+         buggy explainer. This step is what later caught the KernelSHAP default
+         problem (Section 10).
+
+6.11 The agreement measure: overlap of the top three features, with a chance level
+  What : for one patient, take the top-3 features under explanation A and under
+         explanation B; compute the Jaccard overlap. Report the average over
+         patients, next to what two random rankings would score.
+  Why top-3: a clinician or a patient reads the top few reasons, not a ranking of
+         15. The draft's metric averaged over all features and was dominated by
+         reshuffling among features nobody looks at.
+  Why also other measures: top-1, top-5, rank correlation, rank-biased overlap and
+         cosine similarity are all reported, so the result does not hang on one
+         choice. It was the same under all of them.
+  Why a chance level: without it a number like 0.5 cannot be judged.
+  Why not only similarity of the raw numbers: two explanations can have very
+         similar numbers and still order the top features differently. This was
+         confirmed: similarity of raw attributions was 0.83-0.88 where the top-3
+         agreed only 0.52-0.59.
+
+6.12 Four axes, measured separately
+  Faithfulness, robustness to measurement noise, reproducibility across
+  retraining, plausibility.
+  Why separately: the draft folded these into one verdict. They are different
+         properties and an explanation can have some without others - which turned
+         out to be the main finding.
+
+6.13 Faithfulness test
+  What : replace the patient's top-3 features with values from a random background
+         row and record how far the prediction moves; do the same for three random
+         features and for the bottom three.
+  Why  : if the explanation is right about what matters, changing those features
+         must move the prediction far more than changing arbitrary ones. Replacing
+         with background values matches how the attributions themselves were
+         defined, so the test is fair to them.
+
+6.14 Plausibility reference: a published risk equation, not a guideline
+  What : the D'Agostino 2008 general cardiovascular risk equation (inputs: age,
+         sex, body-mass index, systolic blood pressure, treatment, smoking,
+         diabetes). It was applied UNCHANGED to the Framingham file, then its own
+         exact Shapley values on those same patients were computed. That gives an
+         importance profile for a published, validated model, measured in exactly
+         the same way as the models' explanations.
+  Why  : the draft compared "how important a model thinks a feature is" with "how
+         strongly a guideline recommends treating it" - two different quantities.
+         A risk equation is a statement about prediction, the same kind of thing
+         as the model. Applying the same Shapley machinery to it makes the
+         comparison like for like.
+  Safety check written in advance: if the equation did not discriminate on this
+         file (AUC below 0.60) it would not be used. It scored 0.718.
+  Why group features first: blood pressure appears as four columns (systolic,
+         diastolic, hypertension flag, medication). A model can spread importance
+         among them arbitrarily. Grouping them into "blood pressure" compares
+         what matters medically.
+  Why a "random assignment" comparison: with only six or seven groups, any two
+         importance profiles look somewhat alike. So the score is always shown
+         next to what a random shuffle scores (0.65-0.74).
+  Second, independent reference: INTERHEART (a 52-country case-control study).
+         Used as secondary only, because it shares just four groups with the data
+         and measures lipids differently.
+  For BRFSS no risk equation fits (it is a survey of existing disease), so the
+         study reports where the attribution goes: established risk factors,
+         likely consequences of disease, prior stroke, access/social items.
+
+6.15 Measurement-noise test sized from published data
+  What : each patient's values are re-drawn as if measured again, and the patient
+         is re-explained.
+         Framingham: blood pressure varies 8.6% between visits, cholesterol 5.95%,
+         glucose 5.6%, heart rate 3 beats per minute - each from a published
+         source.
+         BRFSS: three self-report items are changed at rates set so that a
+         simulated second interview reproduces published re-interview agreement.
+  Why  : the draft used arbitrary 1%, 2%, 5% noise on everything. That says
+         nothing about reality. The relevant question is: if this patient's blood
+         pressure were simply taken again next week, would the explanation change?
+         Only real measurement variation answers that.
+  Items with no usable published figure (age, body-mass index, cigarettes, yes/no
+         items) were left unchanged instead of guessing.
+
+6.16 Further analyses
+  Sources of variation (ICC): for each source in turn, how much of the variation
+         in explanations comes from patients being different vs from that source.
+         Why: it puts all sources on one scale so they can be ranked.
+  SMOTE arm: retrain on SMOTE-balanced data, compare calibration and explanations.
+         Why: SMOTE is routine in the audited papers, including the draft.
+  Sample-size experiment: shrink BRFSS to Framingham's size and repeat.
+         Why: Framingham and BRFSS differ in many ways. To show that SIZE is the
+         cause, size must be changed while everything else stays the same.
+  Per-patient associations: which patients have unstable explanations?
+         Why: to look for a mechanism, not only an average.
+  Hyperparameter analysis: among settings that cross-validation cannot tell apart,
+         do explanations agree? Why: "which setting was picked" is one more
+         accident of model building.
+  Replication under other master seeds: redo everything with a new split.
+         Why: the strongest available answer to "you got lucky with one split".
+
+================================================================================
+7. WHAT WAS DONE, IN ORDER
+================================================================================
+
+   1. Reviewed the draft paper and its notebook. Eleven problems (Section 3.2).
+   2. Literature survey, about 230 works, each marked as opened, seen as a search
+      snippet, or recalled (Literature_Survey.txt).
+   3. Redesigned the study around the stability question; agreed scope cuts with
+      the author (no clinicians, no third dataset, limited time).
+   4. Phase 1: data validation. Passed.
+   5. Phase 2: applied the published risk equation to the data; built the
+      plausibility references. Passed (AUC 0.718). Read the INTERHEART paper in
+      full and corrected two wrong mappings and one wrong number of our own.
+   6. Wrote the Decision Register; froze the protocol (git tag protocol-v1.0).
+   7. Phase 3: tuned and trained. Framingham on a laptop. BRFSS would not fit in
+      the laptop's memory (jobs were stopped three times), so it was moved to
+      Kaggle CPU machines with the same library versions.
+   8. Phase 4: explained the same 500 patients for every model variant (434 fitted
+      models for Framingham and 234 for BRFSS, counting base, seed and bootstrap
+      variants).
+   9. Computed the four axes, the explainer/model swaps, the noise floor and the
+      background redraw.
+  10. SMOTE arm, sample-size experiment, sources of variation, per-patient
+      associations.
+  11. First audit of our own work (audits 1 to 3): correctness, sensitivity,
+      alternatives. This is where the KernelSHAP default problem and the
+      re-tuning leak were found and fixed, and KernelSHAP re-run on both datasets.
+  12. Wrote the paper. Checked every reference against an online record.
+  13. Second-degree checks (audits 4 to 10), prompted by the author asking what
+      our own choices were based on:
+        - every setting chosen by us was varied, on both datasets;
+        - analysis settings were re-examined from stored explanations;
+        - hyperparameter choice was studied as a source of variation;
+        - the whole study was repeated under master seeds 7, 11, 23, 101
+          (Framingham) and 7 (BRFSS);
+        - seed 42 was re-run on Kaggle to compare machines;
+        - the sample-size experiment was extended to 26 subsamples;
+        - the Framingham-only checks were repeated on BRFSS;
+        - BRFSS was rebuilt from the CDC raw file;
+        - two sources were read in full; a PubMed search was run and recorded.
+  14. Paper updated with all of it, proofread, exported (PDF, 40 pages; Word).
+  15. Every item ever listed as open in the project documents was closed or
+      explained in a table appended to the four project documents.
+
+================================================================================
+8. THE RESULTS, ONE BY ONE
+================================================================================
+"Agreement" below always means the Jaccard overlap of a patient's top three
+features, averaged over patients. Chance is 0.129 (Framingham) or 0.090 (BRFSS).
+
+8.1 The models are ordinary, as they should be
+                  Framingham AUC        BRFSS AUC
+     LR           0.702                 0.847
+     MLP          0.696                 0.849
+     XGB          0.684                 0.851
+     RF           0.665                 0.848
+  On Framingham the simple model is best, which is what is expected with about 34
+  events per predictor. On BRFSS all four are within 0.004 of each other.
+  A published seven-input risk equation, with no training at all, scores 0.701 on
+  the same test patients - as good as three of the four trained models (the random
+  forest is slightly worse).
+  Meaning: these are neither weak strawmen nor unusually strong models. They are
+  what an applied paper would produce.
+
+8.2 The explainers are numerically correct
+  Against brute-force Shapley values: linear SHAP and XGB TreeSHAP exact; RF
+  TreeSHAP within 0.28%; KernelSHAP within 0.5%; Expected Gradients within 4.2%;
+  Integrated Gradients 15.6% off (it computes a different quantity, as expected).
+  Models trained on scrambled labels gave explanations that agreed with the real
+  ones at only 0.17-0.28.
+  Meaning: what follows is not caused by broken explainers.
+
+8.3 Faithful
+  Replacing the top-3 features moved the prediction 2.2 to 3.0 times more than
+  replacing three random features on Framingham and 3.0 to 3.3 times on BRFSS, in
+  97-100% of patients. Replacing the bottom three moved it hardly at all.
+  Meaning: the explanations do point at what the model uses.
+
+8.4 Plausible
+  Similarity with the risk-equation reference (1 = identical profile):
+     LR 0.955, MLP 0.94, RF 0.909, XGB 0.900; a random shuffle scores 0.65-0.74.
+  Every model ranks the same three groups first: age, blood pressure, smoking.
+  Under three other ways of grouping the features the margin over a random shuffle
+  stayed 0.17-0.28.
+  On BRFSS 65-71% of attribution falls on established risk factors, 19-25% on
+  things that are likely consequences of disease (general health, days of poor
+  health, difficulty walking).
+  Agreement with the independent INTERHEART reference was poor; the data lack the
+  lipid measure INTERHEART ranks first.
+  Meaning: the explanations look medically reasonable. This is the property papers
+  usually stop at.
+
+8.5 Not reproducible on small data  (the central result)
+                              Framingham                BRFSS
+                              seed     bootstrap        seed     bootstrap
+     LR  linear SHAP          -        0.704            -        0.951
+     XGB TreeSHAP             0.869    0.580            0.938    0.839
+     MLP Expected Gradients   0.903    0.585            0.905    0.886
+     MLP Integrated Gradients 0.848    0.528            0.903    0.884
+     RF  TreeSHAP             0.815    0.517            0.947    0.857
+  On Framingham 4% (LR) to 47% (RF) of patients have bootstrap agreement below 0.5,
+  meaning two retrained models typically share at most two of the patient's top
+  three reasons.
+  How to read 0.52: on average two models trained on two samples of the same size
+  from the same population agree on only about two of a patient's top three
+  features, and for many patients fewer.
+  Bootstrap agreement was lower than seed agreement in all 40 combinations of
+  model, dataset and agreement measure.
+  Three qualifications, all reported:
+   - The DIRECTION is stable: a leading feature keeps its sign (raises or lowers
+     risk) in 96-100% of retrains. What moves is the order.
+   - Grouping correlated features before ranking does not remove the instability.
+   - The whole-population ranking is affected too: its top three agree only
+     0.63-0.75 across bootstraps.
+
+8.6 A seed test hides it
+  Across seeds the population ranking correlates 0.96-0.99 - exactly what the
+  earlier draft reported and took as proof of consistency. The number was right.
+  It measured the mildest possible disturbance.
+
+8.7 The cause is the amount of data
+  BRFSS cut down to smaller training sets, 30 bootstraps each, 26 independently
+  drawn subsamples in total (10, 10, 5 and the full set):
+     training rows            3,392    7,580    30,000   202,944
+     events per predictor     15       34       135      910
+     LR                       0.67     0.76     0.88     0.96
+     MLP Expected Gradients   0.63     0.69     0.82     0.89
+     MLP Integrated Gradients 0.58     0.65     0.81     0.88
+     RF                       0.62     0.69     0.75     0.86
+     XGB                      0.59     0.65     0.74     0.85
+     test AUC (range)         0.83-0.84                  0.85
+  Between the two smallest sizes the gain is 0.06-0.09 per model and every 95%
+  interval excludes zero, although single subsamples overlap. At Framingham's
+  ratio (34) BRFSS gives 0.65-0.76; Framingham itself gives 0.52-0.70.
+  It was also checked that bootstrapping one sample does not exaggerate: drawing
+  30 genuinely separate samples gave the same level.
+  Meaning: the same pipeline on the same kind of data becomes stable simply by
+  having more data, while AUC moves by about 0.02. Accuracy is not a warning light.
+
+8.8 The model matters more than the explainer
+  Same model, different explainer : 0.73 to 1.00
+  Same explainer, different model : 0.51 to 0.93
+  Per patient, agreement under an explainer swap is higher by 0.27 (Framingham) and
+  0.24 (BRFSS). On BRFSS this is so although the four models differ by at most
+  0.004 in AUC.
+  Meaning: an explanation describes one fitted model, not the patient's disease.
+  Two equally accurate models give the same patient different reasons.
+
+8.9 Measurement noise, and the background sample
+  Re-measuring a patient at published noise levels: agreement 0.67-0.85 on
+  Framingham (RF lowest), 0.92-0.95 on BRFSS.
+  Unexpected: simply re-drawing the 100 background rows, with nothing else changed,
+  gave 0.80-0.93 (Framingham) and 0.80-0.85 (BRFSS). On BRFSS that is a larger
+  disturbance than re-drawing the whole training set for four of the five
+  model-explainer combinations. The background sample is
+  usually treated as a technical detail.
+
+8.10 Ranking the sources (share of variation due to real patient differences)
+                                   Framingham   BRFSS
+     model class                   0.67         0.84
+     training sample (bootstrap)   0.68         0.98
+     measurement noise             0.85         0.91
+     background sample             0.96         0.96
+     explainer                     0.96         1.00
+     seed                          0.96         0.99
+  Lower = bigger disturbance. On small data, model class and training sample are
+  the two big ones. On large data, the training sample stops mattering and model
+  class remains.
+
+8.11 Our own settings, changed one after another
+  Forest size (1,000 trees instead of 300), network width (128-64 instead of
+  64-32), XGBoost learning rate: explanations move about as much as a seed change.
+  Two things moved them more: different neural-network training settings, and a
+  tree setting found by a wider search.
+  Analysis settings (number of patients, number of bootstraps, top-1 to top-5,
+  the overlap measure's parameter, number of noise draws, number of resamples):
+  none changes a conclusion.
+
+8.12 Which patients are unstable
+  The best predictor is how close a patient's 3rd and 4th attributions are. The
+  typical gap is only 1.5-3% of the patient's total attribution. Correlation with
+  stability: 0.29-0.70 (Framingham), 0.76-0.84 (BRFSS).
+  Meaning (the mechanism): when the third and fourth reasons are nearly tied, any
+  small change in the model swaps them. Small training sets produce larger changes
+  in the model. Being near the decision threshold was NOT a good predictor,
+  contrary to what we expected.
+
+8.13 SMOTE
+  Mean predicted risk became 1.6 to 3.6 times the true rate; AUC did not improve;
+  explanations changed more than between seeds. On Framingham, SMOTE put
+  "education" into the top five features of the tree models, where it was absent
+  without SMOTE.
+  Meaning: the draft's odd finding about the random forest came from SMOTE, not
+  from the explainer.
+
+8.14 Replication under other master seeds
+  Framingham under seeds 7, 11, 23, 101; BRFSS under seed 7. Each re-does the
+  split, the patients, the background, the tuning and every seed.
+                                       Framingham           BRFSS
+                                       main    4 repl.      main        repl.
+     bootstrap agreement               .52-.70 .51-.72      .84-.95     .81-.97
+     seed agreement                    .82-.90 .77-.92      .90-.95     .92-.94
+     faithfulness ratio                2.2-3.0 2.3-3.0      3.0-3.2     3.1-3.2
+     plausibility                      .90-.96 .88-.97      -           -
+     explainer swap minus model swap   0.27    0.20-0.30
+  Held in every run: bootstrap below seed for every model; logistic regression the
+  most stable model; model swap worse than explainer swap.
+  Did not hold: "random forest is the least stable model" (it varies by run, so
+  the claim was removed); Framingham AUC (0.70 in the main split, 0.73-0.75 in the
+  others - the main split happened to be the least favourable); the neural
+  network's exact figures (its early-stopping run chose 14, 30, 45, 64 epochs
+  against 62).
+
+8.15 Equally good hyperparameter settings
+  Settings whose cross-validated loss is within one standard error of the best
+  cannot honestly be told apart. Agreement between them:
+                               Framingham   BRFSS
+     LR                        0.96         1.00
+     RF                        0.73         0.94
+     XGB                       0.85         0.89
+     MLP Integrated Gradients  0.76         0.87
+     MLP Expected Gradients    0.84         0.94
+  On small data this sits between a seed change and a re-drawn sample; on large
+  data it is about the same as a re-drawn sample.
+  For the neural network, three settings were varied in all eight combinations.
+  Changing only weight decay gives 0.68-0.82; changing only the learning rate or
+  only dropout gives 0.82-0.97. Weight decay is the one that matters.
+
+================================================================================
+9. HOW WE CHECKED OURSELVES
+================================================================================
+(full text in results/audit_report.txt and Validation_and_Defence.txt)
+
+  Audit 1  Correctness. Explainers vs brute-force Shapley values; additivity;
+           the metric code against hand-computed cases.
+  Audit 2  Sensitivity. Decision thresholds, patients with nothing imputed,
+           grouping, near-ties.
+  Audit 3  Alternatives (Framingham). Three other splits, re-tuning inside
+           bootstraps, another imputation, the other TreeSHAP variant, subsampling
+           instead of bootstrap, KernelSHAP budget, faithfulness variants,
+           correlated blood-pressure noise.
+  Audit 4  Settings chosen by us, both datasets.
+  Audit 5  Analysis settings from stored explanations, both datasets.
+  Audit 6  Hyperparameter choice as a source, both datasets.
+  Audit 7  Noise draws, resample counts, other plausibility groupings.
+  Audit 8  Audit 3's main alternatives repeated on BRFSS.
+  Audit 9  Sample-size experiment across 26 subsamples.
+  Audit 10 Replications under other master seeds; laptop vs Kaggle.
+  Plus    BRFSS rebuilt from CDC raw data; sources re-read; PubMed search
+           (five queries, 900 records, titles screened;
+           results/literature_search_pubmed.txt).
+
+================================================================================
+10. THINGS THAT WENT WRONG, AND FINDINGS THAT GO AGAINST US
+================================================================================
+
+Software traps found (now reported in the paper as pitfalls for others)
+  1. KernelSHAP default. The widely used shap library, by default, keeps only ten
+     features and sets the rest to exactly zero. We noticed because the error
+     against exact values did not shrink when given four times the computing
+     budget. Everything using KernelSHAP was re-run with the setting off. Top-3
+     results barely moved; lower-ranked features had been wiped out.
+  2. Leak when re-tuning inside a bootstrap. A bootstrap sample contains copies of
+     the same patient. Ordinary cross-validation puts copies on both sides of the
+     split, which rewards over-complex models. It made XGBoost pick its largest
+     setting every time and made its explanations look less stable than they are
+     (0.44 instead of 0.585). Keeping all copies of a patient together fixed it.
+  3. XGBoost with row/column subsampling is not reproducible across machines. Same
+     data, version and seed gave different fitted models on Windows and Linux, and
+     on Windows with 1, 4 or 12 threads. Without subsampling the fits were
+     identical. The two fits behave like two seeds, so no conclusion depends on
+     it, but the exact XGBoost numbers are tied to the machine.
+
+Findings that weaken our own position (all stated in the paper)
+  - The BRFSS neural network of the main analysis was slightly under-tuned: its
+    weight decay lies outside the one-standard-error band, and a smaller value is
+    better (AUC 0.849-0.850 against 0.848-0.849). The main analysis was not
+    re-run, because the frozen plan fixed that recipe; the fact is reported.
+  - The neural network's stability figures depend on its training recipe more than
+    any other model's.
+  - Framingham accuracy and calibration depend on the split.
+  - BRFSS was replicated under only one other master seed (each run takes about 12
+    hours).
+  - On BRFSS the two variants of TreeSHAP agree with each other at only 0.61 for
+    XGBoost, even though each is stable by itself.
+  - Many analyses are post hoc: the sample-size experiment, the background-sample
+    analysis, the near-tie analysis, all sensitivity and settings checks, the
+    hyperparameter analysis and the replications.
+
+Our own mistakes along the way (corrected)
+  - Expected the risk equation to over-predict; it under-predicts (12.4% predicted
+    against 14.8% observed). Cause not established.
+  - Used a wrong figure for glucose variation (4.5%; the source says 5.6%).
+  - Mapped two survey items to INTERHEART factors wrongly; removed after reading
+    the paper.
+  - Integrated Gradients was first run with too few steps (1.3% error); raised.
+  - The tree explainer silently capped the background at 100 rows in one test.
+  - Claimed "the ordering of models is the same on every split"; only "logistic
+    regression is first" is true.
+  - A Kaggle runner ran one stage in the wrong order; the two affected stages were
+    re-run from the saved outputs.
+  - One source (Andresen 2003) could not be read in full; its numbers were
+    confirmed from a review that tabulates them, and we showed the remaining
+    doubt (which statistic it reports) cannot affect our result.
+  - A random-forest explanation error of up to 5% for a few patients was never
+    traced. Declared.
+
+================================================================================
+11. WHAT THE PAPER CLAIMS, AND WHAT IT DOES NOT
+================================================================================
+
+Claims
+  - For four standard models on two public heart-disease datasets, explanations
+    are faithful and plausible, yet the order of a patient's leading features is
+    not reproducible when the training data are re-drawn on a small dataset.
+  - The instability follows the number of events per predictor and is invisible in
+    AUC.
+  - A seed-only stability check is too weak.
+  - Model class changes explanations more than the choice among the attribution
+    methods tested.
+  - SMOTE harms calibration and alters explanations.
+  - Recommendations for authors: report stability under re-drawn training data,
+    per patient, with a chance level; report events per predictor; describe an
+    explanation as a property of the fitted model; check calibration before
+    explaining a rebalanced model; verify explainer settings on a case with a
+    known answer; say how hyperparameters were chosen; group correlated features
+    before comparing with clinical knowledge.
+
+Does NOT claim
+  - That it is the first study of its kind (the search was one database, titles
+    only; two close 2026 neighbours were found and are cited).
+  - That any model here is clinically valid.
+  - That an unstable ordering would change a clinical decision. No clinician was
+    involved, and the stability of the direction of each feature suggests that in
+    some uses it would not.
+  - Anything about explanation methods outside the SHAP / gradient family (LIME,
+    rules, counterfactuals were not tested).
+  - That the numbers transfer to hospital data.
+
+================================================================================
+12. LIMITS THAT MORE COMPUTING CANNOT REMOVE
+================================================================================
+  - Two public benchmark datasets; no hospital or registry cohort.
+  - The Framingham file has no codebook and no HDL cholesterol.
+  - BRFSS records existing, self-reported disease; some features are consequences
+    of disease, not causes.
+  - No clinical judgement of any explanation.
+  - Only attribution methods of one family.
+  - Sources of variation were examined one at a time; interactions between them
+    are not estimated.
+  - The plausibility reference comes from one publication and has six or seven
+    groups.
+  - The two noise models are not comparable in size.
+  - Interventional attributions evaluate the model on feature combinations that
+    may not occur in real patients.
+
+================================================================================
+13. WHAT THE WORK IS WORTH
+================================================================================
+  What is new is not any single ingredient - each has precedent - but the
+  measurement: on the same patients, under one frozen plan, how much each source
+  moves an individual explanation, tied to the amount of data, with the checks
+  that make the measurement trustworthy.
+  Who it is for: people who publish or review heart-disease prediction papers with
+  SHAP plots, and people who build explanation features into clinical software.
+  The practical message is short: a patient-level explanation from a model trained
+  on a few thousand patients should be shown with a statement of how reproducible
+  it is, and "it matches clinical knowledge" is not that statement.
+  Realistic level: a careful methods audit suited to a medical-informatics or
+  applied machine-learning journal. It is not a discovery and makes no claim to
+  be. Its strength is that almost every objection a reviewer can raise has already
+  been run and reported.
+
+================================================================================
+14. WHERE EVERYTHING IS, AND HOW TO RE-RUN IT
+================================================================================
+  Paper            https://claude.ai/code/artifact/c4fc6219-92a9-436f-8bc7-f4b992be7837
+                   Stability_of_explanations_manuscript.pdf / .docx (local copies)
+  This file        summary.txt
+  Protocol         Methodology_and_Data_Flow.txt (frozen as tag protocol-v1.0)
+  Decisions        Decision_Register.txt (each choice, its alternatives, evidence)
+  Defence          Validation_and_Defence.txt
+  Earlier summary  short_summary_of_work.txt (data-flow diagrams, written mid-way)
+  Code             src/  (phase1 ... phase6 = the analysis; audit1 ... audit10 =
+                   the checks; common.py, metrics.py = shared code)
+  Kaggle runners   kaggle/
+  Results          results/
+     data_validation_report.txt, reference_validation_report.txt
+     framingham/, brfss/              main run, one report per analysis
+     audit_report.txt                 all audits, in order
+     brfss/sample_size_summary.txt    26-subsample experiment
+     brfss/cdc_check_report.txt       data provenance
+     replication_seed7/, replications/ the other master seeds
+     literature_search_pubmed.txt     the recorded search
+  Environment      Python 3.13; versions in requirements.txt; CPU only.
+  How to run       README.md lists the commands in order. The two data files are
+                   not redistributed; README gives their sources and fingerprints.
+
+================================================================================
+15. WHAT IS STILL LEFT FOR THE AUTHOR
+================================================================================
+  1. Push the code to GitHub (branch protocol-v1 and tag protocol-v1.0). The paper
+     states that the code is available there.
+  2. Add the institutional affiliation, and any co-authors or supervisor.
+  3. Choose a journal and apply its formatting; complete "et al." author lists.
+  4. Regenerate the Kaggle access token.
+  5. Optional: read Andresen 2003 in full through a library.
+================================================================================
