@@ -1,0 +1,40 @@
+=== framingham: tuning (5-fold CV log loss on base training set, n=3392) ===
+  lr {'C': 0.001}  logloss 0.39879  (0s)
+  lr {'C': 0.01}  logloss 0.38517  (0s)
+  lr {'C': 0.1}  logloss 0.38465  (0s)
+  lr {'C': 1}  logloss 0.38484  (0s)
+  lr {'C': 10}  logloss 0.38486  (0s)
+  lr {'C': 100}  logloss 0.38486  (0s)
+  -> lr chosen {'C': 0.1}
+  rf {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 6}  logloss 0.38912  (6s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 12}  logloss 0.39111  (6s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 6}  logloss 0.38929  (5s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 12}  logloss 0.38962  (5s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 25, 'max_depth': 6}  logloss 0.39019  (5s)
+  rf {'n_estimators': 300, 'min_samples_leaf': 25, 'max_depth': 12}  logloss 0.38975  (6s)
+  -> rf chosen {'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': 6}
+  xgb {'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.38804  (0s)
+  xgb {'n_estimators': 300, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.39482  (1s)
+  xgb {'n_estimators': 600, 'max_depth': 2, 'learning_rate': 0.05}  logloss 0.40504  (1s)
+  xgb {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.39137  (0s)
+  xgb {'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.40542  (1s)
+  xgb {'n_estimators': 600, 'max_depth': 3, 'learning_rate': 0.05}  logloss 0.42460  (2s)
+  xgb {'n_estimators': 100, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.39486  (0s)
+  xgb {'n_estimators': 300, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.41590  (1s)
+  xgb {'n_estimators': 600, 'max_depth': 4, 'learning_rate': 0.05}  logloss 0.44523  (2s)
+  -> xgb chosen {'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05}
+  -> mlp epochs 45 (early stopping, patience 10)
+
+=== framingham: base models ===
+model    auc  auc_lo  auc_hi  brier  cal_slope  cal_in_large  mean_pred  prevalence
+   lr 0.7310  0.6858  0.7756 0.1144     1.0249       -0.0197     0.1544      0.1521
+   rf 0.7185  0.6728  0.7652 0.1173     1.3187        0.0020     0.1519      0.1521
+  xgb 0.7138  0.6655  0.7614 0.1162     1.0545       -0.0046     0.1527      0.1521
+  mlp 0.7254  0.6814  0.7699 0.1158     1.0467       -0.0419     0.1571      0.1521
+
+=== framingham: explainer exactness checks on the base models (max abs error) ===
+  lr  linear_shap additivity      4.01e-07
+  xgb tree_shap additivity (margin)1.43e-06
+  rf  tree_shap additivity (prob)  3.08e-03
+  mlp IG completeness              max 2.08e-03, relative to mean |f(x)-f(b)| 2.90e-03
+  mlp EG completeness              max 3.68e-03, relative to mean |f(x)-E f(b)| 5.05e-03

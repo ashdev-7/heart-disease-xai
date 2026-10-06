@@ -1,0 +1,43 @@
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: faith   2026-10-04 01:18
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- Axis F: faithfulness (prediction gap, k = 3, marginal replacement, 20 draws) ---
+   lr linear_shap     0.830        0.315        0.017                2.637                          0.990
+   lr kernel_shap     0.830        0.315        0.032                2.636                          0.990
+   rf   tree_shap     0.799        0.361        0.077                2.215                          0.972
+   rf kernel_shap     0.803        0.361        0.167                2.227                          0.980
+  xgb   tree_shap     0.779        0.261        0.009                2.980                          0.998
+  xgb kernel_shap     0.777        0.261        0.034                2.975                          0.998
+  mlp          ig     0.890        0.349        0.083                2.554                          0.976
+  mlp          eg     0.896        0.349        0.061                2.570                          0.982
+  mlp kernel_shap     0.899        0.349        0.079                2.578                          0.980
+gap = mean absolute change in log-odds. A faithful explanation has gap_top3 well above
+gap_random3 and gap_bottom3 near zero.
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: noise   2026-10-04 01:19
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- Axis R: robustness to measurement noise (20 draws per patient, native explainers) ---
+high = published within-person variation (BP 8.6%, cholesterol 5.95%, glucose 5.6%,
+heart rate 3 bpm); low = half of that. Age, BMI, cigarettes and yes/no items held fixed.
+  noise level: high   (class threshold: predicted risk 0.200)
+          item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half  top3_same_class  pct_draws_class_flip  risk_abs_change
+lr linear_shap 0.846    0.838    0.854           0.823 0.869     0.951                0.000            0.851                 0.040            0.015
+  rf tree_shap 0.673    0.660    0.686           0.625 0.698     0.866                0.130            0.678                 0.077            0.026
+ xgb tree_shap 0.829    0.819    0.839           0.804 0.880     0.953                0.000            0.840                 0.052            0.015
+        mlp ig 0.818    0.808    0.828           0.791 0.834     0.931                0.002            0.822                 0.050            0.016
+        mlp eg 0.832    0.822    0.841           0.807 0.855     0.931                0.000            0.835                 0.050            0.016
+  noise level: low   (class threshold: predicted risk 0.200)
+          item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half  top3_same_class  pct_draws_class_flip  risk_abs_change
+lr linear_shap 0.919    0.911    0.927           0.907 0.916     0.972                 0.00            0.921                 0.018            0.007
+  rf tree_shap 0.783    0.770    0.795           0.751 0.779     0.920                 0.03            0.785                 0.049            0.015
+ xgb tree_shap 0.902    0.893    0.910           0.887 0.927     0.974                 0.00            0.907                 0.026            0.008
+        mlp ig 0.895    0.886    0.905           0.880 0.898     0.966                 0.00            0.897                 0.026            0.008
+        mlp eg 0.905    0.897    0.914           0.891 0.909     0.965                 0.00            0.907                 0.026            0.008
+top3 = mean top-3 Jaccard between the clean and the re-measured explanation.
+top3_same_class = same, using only draws where the predicted class did not change.

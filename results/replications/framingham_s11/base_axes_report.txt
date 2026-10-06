@@ -1,0 +1,107 @@
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: faith   2026-10-06 07:51
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- Axis F: faithfulness (prediction gap, k = 3, marginal replacement, 20 draws) ---
+model   explainer  gap_top3  gap_random3  gap_bottom3  ratio_top_vs_random  pct_patients_top_beats_random
+   lr linear_shap     0.790        0.312        0.046                2.533                          0.984
+   rf   tree_shap     0.711        0.309        0.068                2.306                          0.966
+  xgb   tree_shap     0.741        0.263        0.006                2.823                          0.990
+  mlp          ig     0.770        0.326        0.075                2.359                          0.962
+  mlp          eg     0.822        0.326        0.045                2.517                          0.972
+gap = mean absolute change in log-odds. A faithful explanation has gap_top3 well above
+gap_random3 and gap_bottom3 near zero.
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: noise   2026-10-06 07:52
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- Axis R: robustness to measurement noise (20 draws per patient, native explainers) ---
+high = published within-person variation (BP 8.6%, cholesterol 5.95%, glucose 5.6%,
+heart rate 3 bpm); low = half of that. Age, BMI, cigarettes and yes/no items held fixed.
+
+  noise level: high   (class threshold: predicted risk 0.200)
+          item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half  top3_same_class  pct_draws_class_flip  risk_abs_change
+lr linear_shap 0.854    0.845    0.864           0.833 0.859     0.945                0.000            0.857                 0.061            0.017
+  rf tree_shap 0.719    0.703    0.734           0.677 0.737     0.893                0.104            0.725                 0.073            0.023
+ xgb tree_shap 0.831    0.822    0.841           0.806 0.881     0.965                0.004            0.841                 0.059            0.017
+        mlp ig 0.823    0.813    0.833           0.796 0.852     0.933                0.000            0.829                 0.054            0.016
+        mlp eg 0.832    0.822    0.841           0.807 0.865     0.940                0.000            0.837                 0.054            0.016
+
+  noise level: low   (class threshold: predicted risk 0.200)
+          item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half  top3_same_class  pct_draws_class_flip  risk_abs_change
+lr linear_shap 0.918    0.909    0.926           0.906 0.911     0.970                0.000            0.918                 0.031            0.009
+  rf tree_shap 0.803    0.790    0.817           0.774 0.809     0.934                0.036            0.808                 0.047            0.013
+ xgb tree_shap 0.911    0.903    0.920           0.898 0.933     0.981                0.000            0.917                 0.029            0.009
+        mlp ig 0.904    0.895    0.913           0.889 0.908     0.967                0.000            0.906                 0.029            0.008
+        mlp eg 0.908    0.900    0.916           0.894 0.915     0.969                0.000            0.910                 0.029            0.008
+top3 = mean top-3 Jaccard between the clean and the re-measured explanation.
+top3_same_class = same, using only draws where the predicted class did not change.
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: floor   2026-10-06 08:26
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- Explainer noise floor: KernelSHAP re-run 5 times, nothing changed (100 patients) ---
+item   top3  top3_lo  top3_hi  top3_corrected   top5  spearman  pct_top3_below_half
+  lr 1.0000   1.0000   1.0000          1.0000 1.0000    1.0000                  0.0
+ xgb 0.9988   0.9962   1.0000          0.9986 0.9983    0.9981                  0.0
+ mlp 0.9988   0.9962   1.0000          0.9986 0.9975    0.9976                  0.0
+  rf 0.9912   0.9825   0.9988          0.9900 0.9842    0.9962                  0.0
+Native explainers (linear SHAP, TreeSHAP, IG, EG) are deterministic: floor = 1 by construction.
+
+--- D-14 background sensitivity: native explainers, 5 fresh background draws per size ---
+                    item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+ lr linear_shap, 50 rows 0.810    0.778    0.841           0.782 0.852     0.932                 0.02
+   rf tree_shap, 50 rows 0.723    0.689    0.757           0.682 0.744     0.918                 0.08
+  xgb tree_shap, 50 rows 0.838    0.809    0.865           0.814 0.859     0.952                 0.01
+         mlp ig, 50 rows 0.838    0.810    0.868           0.815 0.833     0.909                 0.00
+         mlp eg, 50 rows 0.840    0.806    0.872           0.816 0.834     0.929                 0.02
+lr linear_shap, 100 rows 0.882    0.848    0.914           0.865 0.934     0.964                 0.01
+  rf tree_shap, 100 rows 0.859    0.828    0.890           0.839 0.848     0.968                 0.01
+ xgb tree_shap, 100 rows 0.921    0.900    0.942           0.910 0.949     0.978                 0.00
+        mlp ig, 100 rows 0.924    0.896    0.949           0.913 0.906     0.959                 0.00
+        mlp eg, 100 rows 0.919    0.892    0.944           0.907 0.924     0.951                 0.00
+lr linear_shap, 200 rows 0.862    0.828    0.895           0.841 0.921     0.939                 0.01
+ xgb tree_shap, 200 rows 0.900    0.873    0.924           0.885 0.925     0.968                 0.00
+        mlp ig, 200 rows 0.907    0.878    0.935           0.893 0.913     0.948                 0.00
+        mlp eg, 200 rows 0.912    0.884    0.938           0.899 0.909     0.938                 0.00
+Each row: agreement between the explanation with the fixed 100-row background and
+explanations with a different random background of the stated size.
+
+==============================================================================
+BASE-MODEL AXES   dataset: framingham   stage: kernel   2026-10-06 08:43
+==============================================================================
+Chance level of top-3 / top-5 Jaccard for 15 features: 0.129 / 0.214
+
+--- KernelSHAP on the four base models (log-odds, 100 background rows) ---
+  lr       38s   additivity error 2.7e-07
+  xgb      78s   additivity error 4.8e-07
+  mlp      64s   additivity error 9.5e-07
+  rf      750s   additivity error 3.3e-07
+
+D-21 estimator error at the default budget, LR model (exact answer known):
+  max |KernelSHAP - exact| 1.04e-07; relative to mean |attribution| 1.03e-06
+  top-3 Jaccard 1.0000, Spearman 1.0000
+
+Explainer effect with the model fixed: KernelSHAP vs native explainer, per patient
+                     item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+lr: kernel vs linear_shap 1.000    1.000    1.000           1.000 1.000     1.000                0.000
+  rf: kernel vs tree_shap 0.740    0.717    0.764           0.702 0.776     0.933                0.042
+ xgb: kernel vs tree_shap 0.998    0.995    1.000           0.998 0.995     0.999                0.000
+        mlp: kernel vs ig 0.785    0.763    0.808           0.753 0.836     0.869                0.026
+        mlp: kernel vs eg 0.961    0.949    0.972           0.955 0.965     0.980                0.000
+(rf tree_shap explains probability, KernelSHAP explains log-odds: part of that gap is scale.)
+
+Model effect with the explainer fixed: KernelSHAP rankings, model vs model, per patient
+      item  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+  lr vs rf 0.580    0.557    0.605           0.518 0.600     0.729                0.152
+ lr vs xgb 0.769    0.746    0.792           0.735 0.793     0.813                0.014
+ lr vs mlp 0.830    0.809    0.852           0.805 0.805     0.832                0.012
+ rf vs xgb 0.617    0.594    0.641           0.560 0.631     0.830                0.122
+ rf vs mlp 0.602    0.579    0.627           0.543 0.607     0.747                0.146
+xgb vs mlp 0.778    0.755    0.801           0.746 0.751     0.811                0.022

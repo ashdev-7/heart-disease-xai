@@ -1,0 +1,36 @@
+==============================================================================
+SMOTE SENSITIVITY ARM   dataset: framingham
+==============================================================================
+Training rows 3392 -> 5754 after SMOTE (positives 515 -> 2877).
+Same hyperparameters as the no-resampling models; background and explained patients unchanged.
+
+Performance and calibration on the untouched test set:
+model  auc_none  auc_smote  mean_pred_none  mean_pred_smote  prevalence  slope_none  slope_smote  citl_none  citl_smote
+   lr     0.732      0.733           0.156            0.453       0.152       0.961        0.927     -0.030      -1.768
+   rf     0.714      0.684           0.155            0.360       0.152       1.005        0.804     -0.026      -1.273
+  xgb     0.722      0.692           0.154            0.413       0.152       1.046        0.942     -0.012      -1.510
+  mlp     0.731      0.719           0.158            0.429       0.152       1.013        0.773     -0.051      -1.689
+
+mean_pred should equal prevalence; slope should be 1; citl (calibration-in-the-large) should be 0.
+
+Per-patient agreement between the SMOTE-model explanation and the no-resampling explanation:
+model   explainer  top3  top3_lo  top3_hi  top3_corrected  top5  spearman  pct_top3_below_half
+   lr linear_shap 0.861    0.841    0.881           0.840 0.828     0.837                0.004
+   rf   tree_shap 0.511    0.488    0.534           0.439 0.550     0.723                0.234
+  xgb   tree_shap 0.525    0.505    0.546           0.455 0.547     0.744                0.174
+  mlp          ig 0.597    0.575    0.620           0.538 0.625     0.781                0.112
+  mlp          eg 0.679    0.656    0.703           0.632 0.652     0.813                0.052
+
+(chance level of top-3 Jaccard: 0.129)
+
+Global top-5 features:
+  lr  linear_shap  none : age > sysBP > cigsPerDay > male > prevalentHyp
+                   SMOTE: age > cigsPerDay > sysBP > male > prevalentHyp
+  rf  tree_shap    none : age > sysBP > prevalentHyp > cigsPerDay > male
+                   SMOTE: age > prevalentHyp > sysBP > cigsPerDay > education
+  xgb tree_shap    none : age > sysBP > cigsPerDay > male > prevalentHyp
+                   SMOTE: age > cigsPerDay > sysBP > education > prevalentHyp
+  mlp ig           none : age > cigsPerDay > sysBP > male > prevalentHyp
+                   SMOTE: age > cigsPerDay > sysBP > male > education
+  mlp eg           none : age > cigsPerDay > sysBP > male > prevalentHyp
+                   SMOTE: age > cigsPerDay > sysBP > male > education

@@ -1,0 +1,28 @@
+,"42 (laptop, main)",42 (Kaggle),7,11,23,101
+"tuned: RF leaf / XGB depth, trees / MLP epochs","5 / 2, 100 / 62","5 / 2, 100 / 62","10 / 2, 100 / 14","10 / 2, 100 / 30","5 / 2, 100 / 45","10 / 2, 100 / 64"
+"test AUC, LR",0.702,0.702,0.751,0.732,0.731,0.743
+"test AUC, range of four models",0.665 to 0.702,0.665 to 0.702,0.718 to 0.751,0.714 to 0.732,0.714 to 0.731,0.715 to 0.744
+"calibration slope, range",0.69 to 0.83,0.69 to 0.83,1.08 to 1.30,0.96 to 1.05,1.02 to 1.32,1.09 to 1.28
+"faithfulness ratio, range",2.21 to 2.98,2.21 to 2.97,2.33 to 2.82,2.31 to 2.82,2.47 to 2.98,2.43 to 2.90
+"cosine with Ref-A, range",0.900 to 0.955,0.897 to 0.955,0.908 to 0.964,0.897 to 0.962,0.888 to 0.962,0.880 to 0.970
+"null mean cosine, range",0.654 to 0.737,0.648 to 0.737,0.682 to 0.729,0.694 to 0.748,0.643 to 0.710,0.684 to 0.751
+"bootstrap top-3, lr linear_shap",0.704,0.704,0.685,0.687,0.715,0.694
+"bootstrap top-3, rf tree_shap",0.517,0.517,0.515,0.513,0.577,0.561
+"bootstrap top-3, xgb tree_shap",0.580,0.581,0.559,0.573,0.571,0.556
+"bootstrap top-3, mlp ig",0.528,0.529,0.641,0.607,0.585,0.542
+"bootstrap top-3, mlp eg",0.585,0.585,0.656,0.640,0.626,0.599
+"seed top-3, rf tree_shap",0.815,0.815,0.819,0.829,0.893,0.884
+"seed top-3, xgb tree_shap",0.869,0.890,0.899,0.860,0.865,0.885
+"seed top-3, mlp ig",0.848,0.847,0.769,0.819,0.891,0.875
+"seed top-3, mlp eg",0.903,0.902,0.820,0.879,0.920,0.919
+smallest seed minus bootstrap gap,0.289,0.298,0.127,0.212,0.294,0.321
+"noise top-3, range",0.673 to 0.846,0.673 to 0.846,0.715 to 0.853,0.719 to 0.854,0.786 to 0.869,0.793 to 0.835
+"model swap top-3, range",0.512 to 0.788,0.512 to 0.788,0.524 to 0.749,0.580 to 0.830,0.526 to 0.826,0.507 to 0.743
+"explainer swap top-3, range",0.786 to 1.000,0.786 to 1.000,0.755 to 1.000,0.740 to 1.000,0.805 to 1.000,0.806 to 1.000
+explainer swap minus model swap (means),0.272,0.286,0.257,0.201,0.251,0.296
+ICC model class,0.668,0.663,0.678,0.726,0.682,0.617
+"ICC bootstrap, range",0.572 to 0.794,0.576 to 0.794,0.553 to 0.780,0.568 to 0.786,0.570 to 0.798,0.501 to 0.777
+"ICC noise, range",0.739 to 0.869,0.739 to 0.869,0.759 to 0.878,0.791 to 0.856,0.804 to 0.879,0.721 to 0.820
+"ICC background, range",0.953 to 0.968,0.953 to 0.968,0.913 to 0.937,0.945 to 0.962,0.948 to 0.965,0.954 to 0.963
+"ICC seed, range",0.947 to 0.978,0.952 to 0.978,0.877 to 0.966,0.936 to 0.965,0.940 to 0.977,0.936 to 0.976
+"SMOTE over-prediction, range",2.16 to 2.82,2.16 to 2.82,2.30 to 2.89,2.37 to 2.98,2.61 to 2.89,2.71 to 2.92

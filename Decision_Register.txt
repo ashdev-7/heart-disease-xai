@@ -487,3 +487,100 @@ Basis of the settings formerly labelled "our choice": common defaults (RF 300 tr
 learning rate 0.05 and subsampling 0.8, MLP 64-32 with dropout 0.2, top-3, RBO 0.9),
 compute budget (500 patients, background size, 10 seeds, 50/100 bootstraps, 20 noise draws,
 grid sizes), arbitrary (master seed 42). None derived from theory; defended by D-37 to D-39.
+
+==============================================================================
+CLOSURE OF OPEN ITEMS - 2026-10-06
+==============================================================================
+Every item that this file, the Decision Register, the Validation document or the short
+summary listed as open, pending, untested or "Framingham only" is listed here with its
+outcome. Evidence files are under results/.
+
+ #  Item                                               Outcome and evidence
+ 1  Settings fixed by choice, Framingham only          CLOSED. Run on both datasets (audit 4).
+                                                       results/framingham/audit4_report.txt,
+                                                       results/brfss/audit4_report.txt
+ 2  Which MLP setting drives the optimiser effect      CLOSED. 2x2x2 factorial: weight decay,
+                                                       on both datasets. audit6_report.txt
+ 3  Hyperparameters not a source of variation          CLOSED (D-40). Near-equivalent settings
+                                                       (within one SE of the best CV loss) agree
+                                                       at 0.73-0.96 (Framingham), 0.87-1.00
+                                                       (BRFSS); ICC 0.84-0.98 and 0.98-1.00.
+ 4  Main BRFSS MLP weight decay                        NEW FINDING, REPORTED (D-41). 0.005 is
+                                                       outside the one-SE band; 0.0001 is better
+                                                       (CV loss 0.2364 vs 0.2378). Stated in
+                                                       paper 4.15 and Limitations. Main analysis
+                                                       not re-run: the protocol fixed the recipe.
+ 5  One replication only                               CLOSED (D-42). Framingham under master
+                                                       seeds 7, 11, 23, 101; BRFSS under 7.
+                                                       results/replications/, replication_seed7/
+ 6  Laptop vs Kaggle environment                       CLOSED (D-43). Seed 42 re-run on Kaggle:
+                                                       LR, RF, MLP identical; XGBoost with
+                                                       subsampling differs by platform and, on
+                                                       Windows, by thread count (verified with
+                                                       kaggle/xgb_env_check.py). Reported as a
+                                                       third software pitfall.
+ 7  Sample-size experiment: 2-3 subsamples per size    CLOSED (D-44). 10 / 10 / 5 subsamples.
+                                                       Means differ between the two smallest
+                                                       sizes by 0.06-0.09 per row, every 95% CI
+                                                       excludes zero. sample_size_summary.txt
+ 8  Path-dependent TreeSHAP, subsampling, grouped      CLOSED (D-45). Run on BRFSS (20 / 20 / 10
+    re-tuning: Framingham only                         resamples). audit8_report.txt
+ 9  BRFSS not rebuilt from the CDC file                CLOSED (D-46). Rebuilt; 253,680 rows,
+                                                       0 differing cells. cdc_check_report.txt
+10  Noise draws, resample counts                       CLOSED. audit 7 in audit_report.txt
+11  Alternative plausibility grouping                  CLOSED. Three other rules; margin over the
+                                                       null 0.17-0.28 under every rule.
+12  BRFSS day-count banding "our choice"               CLOSED. Not a free choice: kappa and ICC
+                                                       both equal 1 - change rate.
+13  Warren 2010 full text                              CLOSED. Read (PMC2930221); figures match.
+14  Andresen 2003 full text                            NOT OBTAINABLE by automated download.
+                                                       Values confirmed from the full text of
+                                                       Pierannunzi 2013 and the original abstract;
+                                                       the kappa/ICC ambiguity is shown not to
+                                                       affect the calibration. Stated in the paper.
+                                                       A human with library access can still
+                                                       read the paper; nothing depends on it.
+15  arXiv 2401.15800 and 2605.15154 to read            CLOSED. Read as abstracts, cited [60], [61].
+16  Database literature search before novelty wording  CLOSED AS FAR AS POSSIBLE. PubMed, five
+                                                       queries, 900 records, title keyword screen
+                                                       (results/literature_search_pubmed.txt).
+                                                       Two neighbours found and cited [62], [63].
+                                                       Not a systematic review (one database,
+                                                       titles only); the paper says so and
+                                                       claims no priority.
+17  D-06 (bootstrap counts), D-14 (background size)    CLOSED. D-06: 25 vs all bootstraps differ
+    "conditional on empirical checks"                  by <= 0.024 (audit 5). D-14: 50/100/200
+                                                       rows and redraws reported in paper 4.9.
+18  INTERHEART "primary check pending" (Methodology)   CLOSED earlier: the paper was read in full
+                                                       (notes Entry on INTERHEART); stale line.
+19  "Compute estimate untested", "not yet registered"  STALE. All phases ran; KernelSHAP, noise
+    lines in Methodology_and_Data_Flow.txt             and variance settings are registered as
+                                                       D-21 to D-31.
+20  Citation corrections in the old draft              MOOT. The old draft is superseded; the
+                                                       new paper has 64 references, each checked
+                                                       against an online record.
+21  README described the old draft; no requirements    CLOSED. Rewritten; requirements.txt added;
+                                                       old notebook and figures in legacy/.
+22  Paper title                                        CLOSED. "Stability of feature-attribution
+                                                       explanations for heart-disease risk models:
+                                                       an audit across models, explainers,
+                                                       training samples and measurement noise".
+23  Paper not proofread after the last edits           CLOSED. Read end to end on 2026-10-06;
+                                                       automated checks: all 64 references cited,
+                                                       all section cross-references resolve.
+
+OPEN, AND ONLY THE AUTHOR CAN CLOSE THEM
+ A  Push branch protocol-v1 and tag protocol-v1.0 to GitHub. Until then the paper's
+    code-availability statement is not true.
+ B  Institutional affiliation; co-authors or supervisor, if any.
+ C  Journal choice and formatting; complete "et al." author lists to the journal's style.
+ D  Regenerate the Kaggle API token (it was pasted into a chat).
+ E  Optional: read Andresen 2003 in full through a library.
+
+KNOWN LIMITS THAT REMAIN (stated in the paper, not closable by more computing)
+ - Two public datasets; no hospital cohort; no clinician judgement.
+ - Attribution methods of the Shapley / path-integral family only.
+ - Sources of variation examined one at a time; no interactions.
+ - Plausibility reference from one publication; six or seven groups.
+ - BRFSS replicated under one other master seed only (each run takes about 12 hours).
+ - Hyperparameter candidate sets and the one-SE band are our own choices.

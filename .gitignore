@@ -22,3 +22,13 @@ kaggle/kernel/
 kaggle/kernel_audit/
 kaggle/kernel_fix/
 kaggle/kernel_*/
+
+# Private working files and manuscript exports
+notes_for_self.txt
+Literature_Survey.txt
+*.docx
+*.pdf
+results/second_degree/
+results/brfss_local_discarded/
+kaggle/*.txt
+kaggle/poll.sh

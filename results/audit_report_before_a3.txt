@@ -1,0 +1,242 @@
+
+==============================================================================
+AUDIT 1 - CORRECTNESS   stage: metrics   2026-10-05 01:13
+==============================================================================
+
+T1 Metrics and estimators
+  [PASS] top-3 Jaccard hand example = 0.5  
+  [PASS] identical rankings -> Jaccard 1, Spearman 1  
+  [PASS] Spearman equals scipy.stats.spearmanr on 200 random pairs  max diff 2.2e-16
+  [PASS] chance level of top-3 Jaccard, 15 features: formula 0.1288 vs simulation 0.1292  
+  [PASS] chance level of top-5 Jaccard, 15 features: formula 0.2144 vs simulation 0.2148  
+  [PASS] chance level of top-3 Jaccard, 21 features: formula 0.0901 vs simulation 0.0899  
+  [PASS] chance level of top-5 Jaccard, 21 features: formula 0.1464 vs simulation 0.1471  
+  [PASS] chance level of top-3 Jaccard, 8 features: formula 0.2589 vs simulation 0.2583  
+  [PASS] random attribution vectors score at chance through ranks_desc + jaccard_topk  observed 0.1291
+  [PASS] stored bootstrap top-3 Jaccard (XGB, 25 patients, 4,950 pairs) = brute force  max diff 7.8e-06
+  [PASS] stored bootstrap Spearman = brute force with scipy  max diff 2.9e-08
+  [PASS] ICC estimator recovers a known value (true 0.75)  mean of 200 simulations 0.7484, SD 0.0141
+
+Audit 1 stage 'metrics': ALL CHECKS PASSED
+
+==============================================================================
+AUDIT 1 - CORRECTNESS   stage: shapley   2026-10-05 01:14
+==============================================================================
+
+T2 Exact Shapley values by full enumeration (ground truth), Framingham base models
+  lr: 10 patients, exact enumeration 6s, mean total |phi| 1.576
+  [PASS] LR linear SHAP vs exact  max error 2.87e-08 (0.00% of total), mean error 3.66e-09, top-3 agreement 1.000, Spearman 1.000
+  [PASS] LR KernelSHAP vs exact  max error 1.53e-02 (0.97% of total), mean error 1.66e-03, top-3 agreement 1.000, Spearman 0.970
+  xgb: 10 patients, exact enumeration 9s, mean total |phi| 1.226
+  [PASS] XGB TreeSHAP (interventional) vs exact  max error 6.16e-07 (0.00% of total), mean error 5.98e-08, top-3 agreement 1.000, Spearman 1.000
+  [PASS] XGB KernelSHAP vs exact  max error 1.15e-02 (0.94% of total), mean error 1.37e-03, top-3 agreement 1.000, Spearman 0.973
+  mlp: 10 patients, exact enumeration 12s, mean total |phi| 1.708
+  [PASS] MLP KernelSHAP vs exact  max error 3.90e-02 (2.28% of total), mean error 3.97e-03, top-3 agreement 0.950, Spearman 0.969
+  [PASS] MLP Expected Gradients (not a Shapley estimator; closeness reported) vs exact  max error 7.10e-02 (4.15% of total), mean error 8.50e-03, top-3 agreement 1.000, Spearman 0.961
+  [PASS] MLP Integrated Gradients (single baseline; closeness reported) vs exact  max error 2.66e-01 (15.59% of total), mean error 3.41e-02, top-3 agreement 0.900, Spearman 0.857
+  rf: 4 patients, exact enumeration 75s, mean total |phi| 1.603
+  [PASS] RF KernelSHAP (log-odds) vs exact  max error 7.40e-02 (4.62% of total), mean error 7.50e-03, top-3 agreement 1.000, Spearman 0.955
+  rf_prob: 4 patients, exact enumeration 77s, mean total |phi| 0.247
+  [PASS] RF TreeSHAP (probability) as stored vs exact  max error 6.86e-04 (0.28% of total), mean error 1.03e-04, top-3 agreement 1.000, Spearman 0.998
+
+Audit 1 stage 'shapley': ALL CHECKS PASSED
+
+==============================================================================
+AUDIT 1 - CORRECTNESS   stage: leakage   2026-10-05 01:17
+==============================================================================
+
+T3 Leakage and sanity checks
+  [PASS] framingham: train and test indices disjoint  
+  [PASS] framingham: explained patients are a subset of the test set  
+  [PASS] framingham: background rows are a subset of the training set  
+  [PASS] framingham: no explained patient is in the training set  
+  [PASS] brfss: train and test indices disjoint  
+  [PASS] brfss: explained patients are a subset of the test set  
+  [PASS] brfss: background rows are a subset of the training set  
+  [PASS] brfss: no explained patient is in the training set  
+  [PASS] label permutation: lr test AUC falls to chance  mean 0.514, range 0.399-0.607 over 10 permutations
+  [PASS] label permutation: xgb test AUC falls to chance  mean 0.494, range 0.437-0.533 over 10 permutations
+  [PASS] label permutation: rf test AUC falls to chance  mean 0.509, range 0.458-0.566 over 10 permutations
+  [PASS] label permutation: mlp test AUC falls to chance  mean 0.502, range 0.434-0.563 over 10 permutations
+  Model-randomisation check: top-3 agreement between explanations of a model trained on
+  shuffled labels and of the real model (chance 0.129; real seed-to-seed 0.82-0.90):
+  [PASS]     xgb_tree_shap: shuffled-label explanations do not resemble the real ones  mean 0.165
+  [PASS]     lr_linear_shap: shuffled-label explanations do not resemble the real ones  mean 0.283
+  [PASS]     mlp_eg: shuffled-label explanations do not resemble the real ones  mean 0.254
+
+Audit 1 stage 'leakage': ALL CHECKS PASSED
+
+==============================================================================
+AUDIT 1 - CORRECTNESS   stage: determinism   2026-10-05 01:18
+==============================================================================
+
+T4 Determinism: refit Framingham base models and compare with stored attributions
+  [PASS] lr: refit reproduces stored predictions  max diff in log-odds 2.3e-07
+  [PASS] lr linear_shap: refit reproduces stored attributions  max diff 5.1e-08
+  [PASS] rf: refit reproduces stored predictions  max diff in log-odds 2.3e-07
+  [PASS] rf tree_shap: refit reproduces stored attributions  max diff 7.4e-09
+  [PASS] xgb: refit reproduces stored predictions  max diff in log-odds 0.0e+00
+  [PASS] xgb tree_shap: refit reproduces stored attributions  max diff 5.1e-08
+  [PASS] mlp: refit reproduces stored predictions  max diff in log-odds 0.0e+00
+  [PASS] mlp ig: refit reproduces stored attributions  max diff 0.0e+00
+  [PASS] mlp eg: refit reproduces stored attributions  max diff 0.0e+00
+  [PASS] bootstrap variant boot_007 (XGB) reproduces from its seed  max diff 5.9e-08
+
+Audit 1 stage 'determinism': ALL CHECKS PASSED
+
+==============================================================================
+AUDIT 2 - SENSITIVITY OF THE CONCLUSIONS (stored results)   2026-10-05 01:20
+==============================================================================
+
+S1 Complete-case check (D-04): Framingham explained patients with and without imputed values
+  500 explained patients: 56 have at least one imputed value, 34 have imputed glucose.
+
+  bootstrap top-3
+model   explainer  all_500  complete  complete_lo  complete_hi  imputed  glucose_imputed
+   lr linear_shap    0.704     0.703        0.692        0.714    0.710            0.714
+   rf   tree_shap    0.517     0.516        0.504        0.528    0.529            0.510
+  xgb   tree_shap    0.580     0.578        0.569        0.588    0.593            0.586
+  mlp          ig    0.528     0.527        0.519        0.535    0.536            0.547
+  mlp          eg    0.585     0.584        0.574        0.593    0.599            0.607
+
+  noise top-3 (high)
+model   explainer  all_500  complete  complete_lo  complete_hi  imputed  glucose_imputed
+   lr linear_shap    0.846     0.846        0.837        0.855    0.848            0.836
+   rf   tree_shap    0.673     0.672        0.658        0.686    0.685            0.669
+  xgb   tree_shap    0.829     0.829        0.819        0.840    0.829            0.821
+  mlp          ig    0.818     0.817        0.807        0.827    0.823            0.839
+  mlp          eg    0.832     0.829        0.820        0.839    0.850            0.864
+
+  plausibility cosine
+model   explainer  all_500  complete  complete_lo  complete_hi  imputed  glucose_imputed
+   lr linear_shap    0.927     0.927        0.922        0.932    0.927            0.930
+   rf   tree_shap    0.839     0.838        0.828        0.848    0.842            0.842
+  xgb   tree_shap    0.879     0.879        0.871        0.886    0.882            0.882
+  mlp          ig    0.904     0.904        0.898        0.909    0.909            0.908
+  mlp          eg    0.922     0.922        0.918        0.927    0.919            0.916
+
+  faithfulness ratio
+model   explainer  all_500  complete  complete_lo  complete_hi  imputed  glucose_imputed
+   lr linear_shap    2.763     2.742        2.636        2.852    2.932            2.823
+   rf   tree_shap    2.335     2.327        2.239        2.417    2.402            2.135
+  xgb   tree_shap    3.288     3.289        3.141        3.472    3.285            3.315
+  mlp          ig    2.687     2.682        2.575        2.797    2.723            2.695
+  mlp          eg    2.706     2.699        2.599        2.810    2.760            2.675
+
+  glucose share of attribution
+model   explainer  all_500  complete  complete_lo  complete_hi  imputed  glucose_imputed
+   lr linear_shap    0.056     0.056        0.052        0.062    0.054            0.034
+   rf   tree_shap    0.075     0.072        0.067        0.078    0.096            0.088
+  xgb   tree_shap    0.044     0.042        0.037        0.048    0.058            0.040
+  mlp          ig    0.017     0.016        0.013        0.020    0.025            0.006
+  mlp          eg    0.029     0.029        0.025        0.032    0.034            0.020
+
+  Largest change in any score when restricted to complete cases: 0.021 (faithfulness ratio excluded: 0.002)
+
+S2 Metric choice: is 'bootstrap agreement < seed agreement' true under every metric?
+
+  framingham (first 200 patients; top-1 chance 0.067, top-3 0.129)
+model explainer  top1_seed  top3_seed  top5_seed  spearman_seed  cosine_seed  top1_boot  top3_boot  top5_boot  spearman_boot  cosine_boot
+   rf tree_shap      0.953      0.821      0.811          0.942        0.990      0.744      0.516      0.527          0.739        0.868
+  xgb tree_shap      0.965      0.874      0.855          0.933        0.991      0.793      0.581      0.594          0.778        0.883
+  mlp        ig      0.941      0.852      0.850          0.937        0.989      0.699      0.530      0.579          0.765        0.830
+  mlp        eg      0.946      0.896      0.885          0.944        0.995      0.770      0.587      0.604          0.760        0.865
+  bootstrap < seed in 20 of 20 model x metric cells
+
+  brfss (first 200 patients; top-1 chance 0.048, top-3 0.090)
+model explainer  top1_seed  top3_seed  top5_seed  spearman_seed  cosine_seed  top1_boot  top3_boot  top5_boot  spearman_boot  cosine_boot
+   rf tree_shap      0.976      0.950      0.985          0.980        0.999      0.946      0.859      0.941          0.956        0.995
+  xgb tree_shap      0.934      0.939      0.949          0.980        0.999      0.876      0.852      0.884          0.927        0.989
+  mlp        ig      0.956      0.907      0.946          0.957        0.996      0.946      0.887      0.920          0.943        0.994
+  mlp        eg      0.951      0.910      0.936          0.951        0.996      0.949      0.891      0.926          0.932        0.994
+  bootstrap < seed in 20 of 20 model x metric cells
+
+  cosine = similarity of the raw signed attribution vectors (a magnitude-based measure).
+  It stays high where rank-based measures fall, as Hwang et al. 2026 warn.
+
+S3 Grouped features (Framingham): does instability survive when the four blood-pressure,
+   two smoking and two glycaemia columns are merged before ranking?
+  chance level: raw 15 features 0.129; 8 groups 0.259; '_corr' = chance-corrected (0 = chance, 1 = identical)
+model   explainer  raw_boot  raw_boot_corr  grouped_boot  grouped_boot_corr  grouped_top1_boot  raw_seed  raw_seed_corr  grouped_seed  grouped_seed_corr  grouped_top1_seed
+   lr linear_shap     0.704          0.660         0.740              0.649              0.834       NaN            NaN           NaN                NaN                NaN
+   rf   tree_shap     0.517          0.446         0.591              0.448              0.720     0.815          0.788         0.845              0.791              0.931
+  xgb   tree_shap     0.580          0.518         0.621              0.489              0.775     0.869          0.849         0.888              0.849              0.949
+  mlp          ig     0.528          0.459         0.617              0.483              0.704     0.848          0.825         0.875              0.832              0.940
+  mlp          eg     0.585          0.524         0.633              0.505              0.758     0.903          0.889         0.907              0.875              0.951
+
+S4 Sign stability: for each patient's three leading features in the base explanation,
+   how often does a bootstrap-retrained model give the attribution the SAME sign?
+
+  framingham
+model   explainer  rank1  rank2  rank3  pct_patients_rank1_always_same
+   lr linear_shap  0.999  0.998  0.996                           0.988
+   rf   tree_shap  0.995  0.988  0.980                           0.882
+  xgb   tree_shap  0.996  0.980  0.966                           0.880
+  mlp          ig  0.994  0.984  0.957                           0.894
+  mlp          eg  0.998  0.991  0.977                           0.942
+
+  brfss
+model   explainer  rank1  rank2  rank3  pct_patients_rank1_always_same
+   lr linear_shap    1.0    1.0    1.0                             1.0
+   rf   tree_shap    1.0    1.0    1.0                             1.0
+  xgb   tree_shap    1.0    1.0    1.0                             1.0
+  mlp          ig    1.0    1.0    1.0                             1.0
+  mlp          eg    1.0    1.0    1.0                             1.0
+
+S5 Paired differences with 95% confidence intervals (bootstrap over patients)
+
+  framingham: seed-only agreement minus bootstrap agreement (top-3), per patient
+    rf  tree_shap  +0.298  (95% CI +0.287 to +0.309)
+    xgb tree_shap  +0.289  (95% CI +0.277 to +0.300)
+    mlp ig         +0.319  (95% CI +0.308 to +0.331)
+    mlp eg         +0.318  (95% CI +0.307 to +0.329)
+  framingham: explainer-swap agreement minus model-swap agreement (top-3), per patient
+    all 5 explainer pairs vs all 6 model pairs      +0.271  (95% CI +0.256 to +0.286)
+    excluding the random forest from both sides    +0.196  (95% CI +0.178 to +0.212)
+    Shapley-type explainers only, no random forest +0.237  (95% CI +0.220 to +0.253)
+
+  brfss: seed-only agreement minus bootstrap agreement (top-3), per patient
+    rf  tree_shap  +0.090  (95% CI +0.082 to +0.099)
+    xgb tree_shap  +0.099  (95% CI +0.091 to +0.108)
+    mlp ig         +0.019  (95% CI +0.012 to +0.025)
+    mlp eg         +0.019  (95% CI +0.012 to +0.026)
+  brfss: explainer-swap agreement minus model-swap agreement (top-3), per patient
+    all 5 explainer pairs vs all 6 model pairs      +0.237  (95% CI +0.221 to +0.252)
+    excluding the random forest from both sides    +0.217  (95% CI +0.200 to +0.233)
+    Shapley-type explainers only, no random forest +0.223  (95% CI +0.206 to +0.239)
+
+S6 Threshold choice: correlation between bootstrap agreement and distance from the threshold
+
+  framingham
+model   explainer  thr_0.2  thr_0.152  thr_0.1  thr_0.075
+   lr linear_shap    0.075      0.018   -0.113     -0.148
+   rf   tree_shap    0.437      0.450    0.201      0.008
+  xgb   tree_shap    0.229      0.202    0.011     -0.015
+  mlp          ig    0.119      0.027   -0.050     -0.097
+  mlp          eg    0.108      0.078    0.051      0.068
+
+  brfss
+model   explainer  thr_0.094  thr_0.2  thr_0.05
+   lr linear_shap      0.108    0.321    -0.008
+   rf   tree_shap      0.000    0.319    -0.152
+  xgb   tree_shap     -0.113   -0.061    -0.146
+  mlp          ig      0.093    0.274    -0.031
+  mlp          eg      0.019    0.376    -0.152
+
+S7 Patients with and without the outcome: bootstrap top-3 agreement
+
+  framingham: 76 with the outcome, 424 without
+model   explainer  with_outcome  without_outcome
+   lr linear_shap         0.677            0.708
+   rf   tree_shap         0.530            0.515
+  xgb   tree_shap         0.585            0.579
+  mlp          ig         0.508            0.532
+  mlp          eg         0.588            0.585
+
+  brfss: 47 with the outcome, 453 without
+model   explainer  with_outcome  without_outcome
+   lr linear_shap         0.953            0.951
+   rf   tree_shap         0.797            0.863
+  xgb   tree_shap         0.856            0.837
+  mlp          ig         0.888            0.884
+  mlp          eg         0.853            0.890

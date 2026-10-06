@@ -1,0 +1,19 @@
+{
+  "lr": {
+    "C": 0.1
+  },
+  "rf": {
+    "n_estimators": 300,
+    "min_samples_leaf": 10,
+    "max_depth": 12
+  },
+  "xgb": {
+    "n_estimators": 300,
+    "max_depth": 2,
+    "learning_rate": 0.05
+  },
+  "mlp": {
+    "epochs": 7,
+    "batch": 64
+  }
+}
