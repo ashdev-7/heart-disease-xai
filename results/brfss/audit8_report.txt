@@ -1,0 +1,31 @@
+
+==============================================================================
+AUDIT 8 - DESIGN ALTERNATIVES ON BRFSS (first 200 explained patients)
+==============================================================================
+chance level of top-3 agreement 0.090
+
+Reference: bootstrap, hyperparameters tuned once (20 resamples)
+  lr  linear_shap  0.952
+  rf  tree_shap    0.857
+  xgb tree_shap    0.851
+
+Path-dependent instead of interventional TreeSHAP (20 resamples)
+  rf   bootstrap agreement: interventional 0.857, path-dependent 0.887; the two variants agree with each other at 0.787
+  xgb  bootstrap agreement: interventional 0.851, path-dependent 0.873; the two variants agree with each other at 0.610
+
+80% subsampling without replacement instead of the bootstrap (20 resamples)
+  lr  linear_shap  0.987   (bootstrap 0.952)
+  rf  tree_shap    0.917   (bootstrap 0.857)
+  xgb tree_shap    0.908   (bootstrap 0.851)
+  mlp ig           0.908
+  mlp eg           0.900
+
+Hyperparameters re-tuned inside each bootstrap with grouped folds: lr, xgb (10 resamples)
+  lr   re-tuned 0.948; tuned once, same 10 resamples 0.948; difference +0.000
+       settings chosen: {"C": 0.1} x9; {"C": 1} x1
+  xgb  re-tuned 0.863; tuned once, same 10 resamples 0.848; difference +0.015
+       settings chosen: {"n_estimators": 300, "max_depth": 3} x10
+
+Hyperparameters re-tuned inside each bootstrap with grouped folds: rf (10 resamples)
+  rf   re-tuned 0.862; tuned once, same 10 resamples 0.862; difference +0.000
+       settings chosen: {"n_estimators": 300, "min_samples_leaf": 50, "max_depth": 12} x10

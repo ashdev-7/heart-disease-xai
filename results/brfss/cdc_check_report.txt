@@ -1,0 +1,34 @@
+CDC raw file: /kaggle/input/behavioral-risk-factor-surveillance-system/2015.csv
+raw rows 441456; columns selected 22
+after dropping rows with any missing value: 343606
+after recoding and removing 'do not know' / 'refused' codes: 253680
+public file: rows 253680, columns 22: ['HeartDiseaseorAttack', 'HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke', 'Diabetes', 'PhysActivity', 'Fruits', 'Veggies', 'HvyAlcoholConsump', 'AnyHealthcare', 'NoDocbcCost', 'GenHlth', 'MentHlth', 'PhysHlth', 'DiffWalk', 'Sex', 'Age', 'Education', 'Income']
+same shape: True
+rows identical after sorting: 253680 of 253680; cells differing: 0
+
+Per-column means (rebuilt | public):
+  HeartDiseaseorAttack   0.094186 | 0.094186
+  HighBP                 0.429001 | 0.429001
+  HighChol               0.424121 | 0.424121
+  CholCheck              0.962670 | 0.962670
+  BMI                    28.382364 | 28.382364
+  Smoker                 0.443169 | 0.443169
+  Stroke                 0.040571 | 0.040571
+  Diabetes               0.296921 | 0.296921
+  PhysActivity           0.756544 | 0.756544
+  Fruits                 0.634256 | 0.634256
+  Veggies                0.811420 | 0.811420
+  HvyAlcoholConsump      0.056197 | 0.056197
+  AnyHealthcare          0.951053 | 0.951053
+  NoDocbcCost            0.084177 | 0.084177
+  GenHlth                2.511392 | 2.511392
+  MentHlth               3.184772 | 3.184772
+  PhysHlth               4.242081 | 4.242081
+  DiffWalk               0.168224 | 0.168224
+  Sex                    0.440342 | 0.440342
+  Age                    8.032119 | 8.032119
+  Education              5.050434 | 5.050434
+  Income                 6.053875 | 6.053875
+
+outcome cases: rebuilt 23893 | public 23893
+duplicate rows: rebuilt 23899 | public 23899
