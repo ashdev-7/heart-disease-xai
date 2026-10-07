@@ -11,6 +11,17 @@ a small neural network) are trained on two public datasets and their explanation
 across explainers, model classes, random seeds, bootstrap resamples of the training data,
 equally good hyperparameter settings, measurement noise and background samples.
 
+## Branches and tags
+
+| Name | Content |
+| --- | --- |
+| `main` | This study (code, protocol, results, summary) |
+| `protocol-v1` | Same history as `main`; the branch named in the paper |
+| tag `protocol-v1.0` | The protocol as frozen before any reliability score was computed |
+| `original-draft` | The earlier draft's notebook, figures and README, kept unchanged |
+
+Start with `summary.txt` for a plain-language account of the whole study.
+
 ## Layout
 
 | Path | Content |
