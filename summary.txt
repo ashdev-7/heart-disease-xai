@@ -3,13 +3,17 @@ SUMMARY
 Stability of feature-attribution explanations for heart-disease risk models:
 an audit across models, explainers, training samples and measurement noise
 ================================================================================
-Written 2026-10-06. Author of the study: Yash Tyagi.
+Written 2026-10-06, revised 2026-10-07 for the arXiv preprint.
+Author of the study: Yash Tyagi.
 This file explains the whole project from the first idea to the final numbers, in
 plain language, for a reader who has not seen any of it before. Every number comes
 from a file under results/ (named where it is used). Where something was not done,
 or went wrong, it says so.
 
+If you read only one part, read Section 0 and Section 16.
+
 CONTENTS
+   0. Read this first: the whole study in everyday words
    1. The pitch
    2. Words you need (plain-language glossary)
    3. Where the problem came from
@@ -25,6 +29,69 @@ CONTENTS
   13. What the work is worth
   14. Where everything is, and how to re-run it
   15. What is still left for the author
+  16. Questions you will be asked, with honest answers
+  17. Putting it on arXiv
+
+================================================================================
+0. READ THIS FIRST: THE WHOLE STUDY IN EVERYDAY WORDS
+================================================================================
+
+A picture to hold in your head
+  Imagine a doctor's assistant that looks at a patient and says: "High risk of
+  heart disease. Main reasons: 1. age, 2. blood pressure, 3. smoking."
+  The assistant is a computer model. The list of reasons is the "explanation".
+
+  Now imagine building that assistant a second time, exactly the same way, but
+  learning from a different group of past patients drawn from the same town. You
+  show it the SAME patient. It says: "High risk. Main reasons: 1. age,
+  2. cholesterol, 3. blood sugar."
+  Same patient. Same risk. Different reasons.
+
+  Which list is right? Neither is wrong about its own assistant. But a patient or
+  doctor reading only one of them would think those three reasons are a fact about
+  the patient. They are partly a fact about which past patients the assistant
+  happened to learn from.
+
+  This study measures how often that happens, and what causes it.
+
+What people normally check before trusting such reasons
+  1. Is the assistant accurate?                      (yes, as accurate as usual)
+  2. If I rebuild it changing only a random number   (yes, mostly)
+     inside the computer, are the reasons the same?
+  3. Do the reasons look medically sensible?         (yes: age, blood pressure,
+                                                      smoking)
+  All three checks came out fine in our study.
+
+What those checks missed
+  A. With a small group of past patients (about 3,400), rebuilding the assistant
+     from another such group often changed one of a patient's top three reasons, and
+     for a sizeable share of patients (4% to 47%, depending on the model) two or
+     more. With a very large group (about 200,000)
+     this mostly went away.
+     -> This part is NOT a surprise. Experts already know that learning from few
+        examples gives shaky results. What we add is that the accuracy score did
+        not get worse while this happened, so nobody looking at accuracy would
+        notice.
+  B. Even with the very large group, two DIFFERENT kinds of assistant that are
+     equally accurate gave the same patient different top reasons.
+     -> More data does not fix this one.
+  C. The same kind of assistant with slightly different settings, all equally good,
+     also gave different top reasons.
+
+What stayed the same throughout
+  Whether a reason pushes risk UP or DOWN almost never flipped (96 to 100% of the
+  time it stayed the same). What changed was the ORDER of the reasons.
+
+What we do NOT know
+  Whether a doctor would decide anything differently because the order changed.
+  No doctor was involved. So the study does not say explanations are useless or
+  dangerous. It says: the usual checks do not prove the reasons would be the same
+  next time, so papers should measure that directly.
+
+How strong is the study
+  Carefully done, honestly reported, fully repeatable. Not a breakthrough: the
+  main effect is expected, and the data are two public teaching/survey files, not
+  hospital records. A fair label is "a careful check of common practice".
 
 ================================================================================
 1. THE PITCH
@@ -58,14 +125,17 @@ What we found
      more than changing three random features.
   2. The explanations look medically sensible ("plausible"): they put weight on
      age, blood pressure and smoking, matching a published risk equation.
-  3. BUT on the small dataset the explanation for one patient is not reproducible.
-     Train the model again on a re-drawn sample of the same size and a patient's
-     top three features overlap only 0.52 to 0.70 (1 = identical, chance = 0.13).
-     Changing only the random seed gives 0.82 to 0.90 - so the usual "we checked
-     across seeds" test misses most of the problem.
-  4. The cause is the amount of data. Cut the large dataset down to the small
-     one's size and the same instability appears, while accuracy barely changes
-     (AUC 0.83 to 0.85). Accuracy does not warn you.
+  3. BUT on the small dataset the ORDER of one patient's leading features is not
+     reproducible. Train the model again on a re-drawn sample of the same size and
+     a patient's top three features overlap only 0.52 to 0.70 (1 = identical,
+     chance = 0.13). Changing only the random seed gives 0.82 to 0.90 - so the
+     usual "we checked across seeds" test misses most of it.
+     (This is how the paper is framed: the three usual checks - accuracy, a seed
+     test, medical sense - all came out fine, and still did not show this.)
+  4. The cause is the amount of data, which is an EXPECTED effect, and the paper
+     says so. What is not obvious is that accuracy does not warn you: cut the large
+     dataset down to the small one's size and the same instability appears, while
+     accuracy barely changes (AUC 0.83 to 0.85).
   5. Which MODEL you choose changes a patient's explanation more than which
      EXPLANATION METHOD you choose.
   6. Settings that are equally good by cross-validation give different
@@ -87,10 +157,11 @@ Why it is believable
   - Findings that go against us are reported, not hidden (Section 10).
 
 One sentence
-  For these heart-disease models, an individual patient's explanation is faithful
-  and plausible but, on small data, not reproducible - and the checks people
-  normally report (accuracy, a seed test, "it makes clinical sense") do not reveal
-  that.
+  For these heart-disease models, the checks people normally report with an
+  explanation (accuracy, a seed test, "it makes clinical sense") all came out fine
+  and still did not show that a patient's leading features change when the training
+  sample is re-drawn (small data) or another equally good model is used (both
+  datasets). The direction of each feature stays the same; the order does not.
 
 ================================================================================
 2. WORDS YOU NEED
@@ -805,8 +876,11 @@ Our own mistakes along the way (corrected)
   - One source (Andresen 2003) could not be read in full; its numbers were
     confirmed from a review that tabulates them, and we showed the remaining
     doubt (which statistic it reports) cannot affect our result.
-  - A random-forest explanation error of up to 5% for a few patients was never
-    traced. Declared.
+  - A random-forest explanation error of up to 5% for a few patients was at first
+    unexplained. Traced on 2026-10-07 to the SHAP library itself: for about 0.5% of
+    (tree, patient) pairs its tree algorithm returns values that do not add up to
+    the prediction. Confirmed against brute-force values. Averaged over the 300
+    trees the error is 0.3%; it does not change any top-3 result we checked.
 
 ================================================================================
 11. WHAT THE PAPER CLAIMS, AND WHAT IT DOES NOT
@@ -879,6 +953,7 @@ Does NOT claim
 ================================================================================
   Paper            https://claude.ai/code/artifact/c4fc6219-92a9-436f-8bc7-f4b992be7837
                    Stability_of_explanations_manuscript.pdf / .docx (local copies)
+  arXiv sheet      arxiv_submission.txt (title, short abstract, categories, checklist)
   This file        summary.txt
   Protocol         Methodology_and_Data_Flow.txt (frozen as tag protocol-v1.0)
   Decisions        Decision_Register.txt (each choice, its alternatives, evidence)
@@ -908,4 +983,110 @@ Does NOT claim
   3. Choose a journal and apply its formatting; complete "et al." author lists.
   4. Regenerate the Kaggle access token.
   5. Optional: read Andresen 2003 in full through a library.
+  6. Before posting to arXiv: get endorsed (Section 17).
+
+================================================================================
+16. QUESTIONS YOU WILL BE ASKED, WITH HONEST ANSWERS
+================================================================================
+
+Q1. "Everybody knows a model trained on little data is not good. What is new?"
+  Half right. That small samples give shaky results IS known, and the paper says so
+  in its abstract. But notice what "not good" usually means: worse accuracy. Here
+  accuracy was NOT worse (0.83 on the small sample, 0.85 on the full one). The
+  model looked fine. Only the explanation moved. So the usual warning sign was
+  absent. The other two findings have nothing to do with small data: on 250,000
+  people, two equally accurate models still gave a patient different top reasons,
+  and so did equally good settings of one model.
+
+Q2. "Isn't this just underfitting?"
+  No. Underfitting means the model is too simple and predicts badly. These models
+  predict as well as a published medical risk formula. The issue is that with few
+  sick patients to learn from, the fitted model differs from one sample to the
+  next. It is shakiness, not poor fit.
+
+Q3. "So are SHAP explanations useless?"
+  No, and the paper does not say that. They correctly describe what the model does
+  (faithful), they agree with medical knowledge (plausible), and the direction of
+  each feature is stable. What is not stable is the ORDER of a patient's top
+  features, on small data or across models.
+
+Q4. "Would this change what a doctor does?"
+  We do not know. No doctor was involved. The paper says so.
+
+Q5. "Why should I trust numbers from one split of the data?"
+  The whole study was repeated five more times with completely new splits (four on
+  Framingham, one on BRFSS). The conclusions held each time. One claim did not
+  hold ("random forest is the least stable") and was removed.
+
+Q6. "You chose the settings. Maybe you chose ones that give this result."
+  Every setting we chose was changed to see whether it matters (forest size,
+  network size, learning rate, number of patients, number of retrains, top-1 to
+  top-5, and more). None changes a conclusion. Two things that DID matter (the
+  network's weight decay, and a wider search for tree settings) are reported as
+  findings.
+
+Q7. "How do you know the explanation software is right?"
+  Each method was compared with the exact mathematical answer, computed the slow
+  way (all 32,768 combinations of the 15 features). That comparison is also how
+  three software problems were found, plus a defect in the SHAP library's tree
+  method that affects about 0.5% of (tree, patient) pairs.
+
+Q8. "What did you test, exactly?"
+  SHAP in three forms (exact for linear models, TreeSHAP for tree models,
+  KernelSHAP for any model) and two gradient methods for the neural network
+  (Integrated Gradients, Expected Gradients). Each was tested when: the seed
+  changed; the training sample was re-drawn; the model was swapped; the method was
+  swapped; the patient's values were re-measured with realistic noise; the
+  reference rows were re-drawn; the data were rebalanced with SMOTE; the training
+  set was shrunk; equally good settings were used; and the whole study was
+  repeated under other splits.
+
+Q9. "Why these two datasets?"
+  They are the ones most heart-disease SHAP papers use, they are public, and one
+  is small and one is large, which is what lets the same pipeline show the effect
+  of data size. They are not hospital data. That is a stated limit.
+
+Q10. "A lot of this was added after the plan was frozen."
+  True, and every such analysis is labelled "post hoc" in the paper. The two core
+  comparisons (seed vs re-drawn sample; model swap vs method swap) were in the
+  frozen plan.
+
+Q11. "Did an AI write this?"
+  An AI coding assistant (Claude Code) wrote the analysis code, ran the analyses
+  and drafted the manuscript, under the author's direction. This is stated in the
+  paper's Declarations section and is visible in the code history. The author is
+  responsible for the content and must be able to explain it; this file exists
+  for that purpose. Every number can be re-produced from the public code.
+
+Q12. "What is the single weakest point?"
+  Novelty. The main effect is expected, and close earlier work exists. The paper's
+  value is in measuring it carefully, showing the usual checks miss it, and
+  reporting honestly. It should be described as an audit, not a discovery.
+
+================================================================================
+17. PUTTING IT ON ARXIV
+================================================================================
+  The file arxiv_submission.txt holds the title, a 1,679-character abstract (arXiv
+  allows 1,920), suggested categories (cs.LG, with stat.ML and stat.AP), the
+  comments line and a checklist.
+
+  In order:
+   1. Get endorsed. arXiv requires a first-time submitter to be endorsed for the
+      category. With a gmail address that means asking an established arXiv author
+      in machine learning (a professor or supervisor) to endorse you. A college
+      email address makes this easier. This can take days, so start here.
+   2. Decide the author list and affiliation. They are public and permanent.
+   3. Push the code to GitHub, so the paper's statement that the code is available
+      is true on the day it is posted.
+   4. Read this file and then the paper once, start to finish.
+   5. Upload Stability_of_explanations_manuscript.pdf with the details from
+      arxiv_submission.txt.
+
+  What the preprint version changed compared with the earlier draft of the paper:
+   - The abstract and conclusion now lead with "the usual checks did not show it"
+     and state that the small-sample effect is expected.
+   - "Whether a clinical decision would change was not studied" is in the abstract.
+   - Author lists in the references were completed and checked.
+   - The unexplained random-forest error was traced to the SHAP library.
+   - The AI statement names the tool.
 ================================================================================

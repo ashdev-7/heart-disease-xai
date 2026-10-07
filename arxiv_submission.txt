@@ -1,0 +1,101 @@
+================================================================================
+ARXIV SUBMISSION SHEET
+================================================================================
+Prepared 2026-10-07. Everything needed to fill in the arXiv form. arXiv rules quoted
+here were read on that date from info.arxiv.org (help/prep, help/endorsement,
+help/moderation).
+
+FILE TO UPLOAD
+  Stability_of_explanations_manuscript.pdf   (41 pages, 1 figure)
+
+TITLE
+  Stability of feature-attribution explanations for heart-disease risk models: an
+  audit across models, explainers, training samples and measurement noise
+
+AUTHORS
+  Yash Tyagi
+
+ABSTRACT  (1,679 characters; arXiv's limit is 1,920. Paste as one paragraph.)
+  Feature-attribution explanations such as SHAP are routinely attached to
+  heart-disease prediction models and are usually supported by three checks: the
+  model's discrimination, agreement of explanations across random seeds, and
+  agreement with clinical knowledge. We audited whether those checks establish that
+  an individual patient's explanation is reproducible. On two public datasets
+  (Framingham teaching cohort, 4,240 people; BRFSS 2015, 253,680 respondents) we
+  trained logistic regression, random forest, XGBoost and a small neural network,
+  retrained each under 10 seeds and 50 to 100 bootstrap resamples, and explained the
+  same 500 held-out patients each time with exact linear SHAP, TreeSHAP, Integrated
+  Gradients, Expected Gradients and KernelSHAP, verified against exact Shapley
+  values. The usual checks came out well: explanations were faithful, a patient's
+  three leading features overlapped 0.82 to 0.95 across seeds, and grouped
+  importance matched a published risk equation. Yet across bootstrap retrains on the
+  small dataset the overlap was 0.52 to 0.70 (chance 0.13), an expected small-sample
+  effect that discrimination did not reveal: subsampling the large dataset raised
+  overlap from 0.58-0.67 to 0.85-0.96 while AUC moved from 0.83 to 0.85. On both
+  datasets, swapping the model class changed a patient's leading features more than
+  swapping the explainer, and hyperparameter settings that cross-validation could not
+  tell apart gave overlap of 0.73 to 1.00. The sign of leading attributions was
+  stable. Results held under five further master seeds. We report three software
+  pitfalls and recommend reporting per-patient stability under resampling of the
+  training data.
+
+CATEGORIES (suggested)
+  Primary     : cs.LG  (Machine Learning)
+  Cross-list  : stat.ML (Machine Learning), stat.AP (Applications)
+
+COMMENTS FIELD
+  41 pages, 1 figure. Code and result files: https://github.com/ashdev-7/heart-disease-xai
+
+LICENCE (suggested)
+  CC BY 4.0. It lets others reuse the text with credit and is accepted by most
+  journals for a later submission. Check the target journal's preprint policy first.
+
+--------------------------------------------------------------------------------
+THINGS THAT MUST BE TRUE BEFORE YOU PRESS SUBMIT
+--------------------------------------------------------------------------------
+ [ ] 1. ENDORSEMENT. arXiv: "requires that users be endorsed before submitting their
+        first paper to arXiv or a new category." With a gmail address you will need
+        a personal endorsement from an established arXiv author in cs.LG (ideally
+        someone who knows you: a professor or supervisor). If you have a college
+        email address, register with that instead; arXiv says institutional
+        addresses speed this up. Start this first; it can take days.
+ [ ] 2. THE CODE IS PUBLIC. The paper says the code is in the GitHub repository,
+        branch protocol-v1, tag protocol-v1.0. That is only true after the branch
+        and tag are pushed. Push before submitting.
+ [ ] 3. AFFILIATION. The PDF currently gives your name and email only. If you want
+        your college named, tell me and I will add it; do not leave it implied.
+ [ ] 4. CO-AUTHORS. If a supervisor or anyone else should be an author, add them
+        before posting. Author lists on arXiv are public and permanent.
+ [ ] 5. YOU HAVE READ THE PAPER. arXiv: by signing, authors "take full responsibility
+        for all its contents, irrespective of how the contents were generated."
+        Read summary.txt, then the paper, before posting.
+ [ ] 6. JOURNAL POLICY. If you already have a journal in mind, check that it accepts
+        papers already posted as preprints (most do).
+
+--------------------------------------------------------------------------------
+AI DISCLOSURE
+--------------------------------------------------------------------------------
+ arXiv policy: authors "should report in their work any significant use of
+ sophisticated tools ... we now include in particular text-to-text generative AI",
+ and "generative AI language tools should not be listed as an author".
+ The paper complies. Its Declarations section says:
+   "Use of AI assistance. An AI coding assistant (Claude Code, Anthropic) was used to
+    write the analysis code, run the analyses and draft this manuscript, under the
+    author's direction. The author reviewed the results and takes full
+    responsibility for the content."
+ The git history also records it: every commit made in this work ends with a
+ "Co-Authored-By: Claude" line, which is visible on GitHub once pushed.
+ This statement should stay. It is accurate, it is required, and removing it would
+ make the submission misleading.
+
+--------------------------------------------------------------------------------
+WHAT A MODERATOR OR READER MAY QUESTION, AND THE ANSWER
+--------------------------------------------------------------------------------
+ "Is this original research?"   Yes: new experiments, public code, full results.
+ "Is it novel?"                 The paper says plainly that the small-sample result is
+                                expected and claims no priority. Its contribution is
+                                the measurement and the checks.
+ "Only public toy datasets?"    Stated in Limitations. No clinical claims are made.
+ "AI-written?"                  Disclosed. All numbers come from code and result
+                                files in the repository and can be re-run.
+================================================================================

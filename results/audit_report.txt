@@ -933,3 +933,24 @@ Hyperparameters re-tuned inside each bootstrap with grouped folds: lr, xgb (10 r
 Hyperparameters re-tuned inside each bootstrap with grouped folds: rf (10 resamples)
   rf   re-tuned 0.862; tuned once, same 10 resamples 0.862; difference +0.000
        settings chosen: {"n_estimators": 300, "min_samples_leaf": 50, "max_depth": 12} x10
+
+==============================================================================
+AUDIT 11 - RANDOM-FOREST TreeSHAP ADDITIVITY ERROR, TRACED   2026-10-07
+==============================================================================
+Symptom: for the Framingham random forest, attributions + background mean did not equal
+the prediction exactly (mean error 0.3% of a patient's total attribution, worst 5%).
+Findings (shap 0.52.0, interventional TreeExplainer, scikit-learn forest):
+ - not floating-point precision: float32 and float64 inputs give the same error;
+ - not the background: 1, 5, 20 or 100 background rows give the same worst error;
+ - not a prediction mismatch: shap's internal tree prediction equals scikit-learn's;
+ - it comes from isolated tree-patient pairs: 163 of 30000 pairs (0.543%) in the
+   300-tree forest (100 patients, 5 background rows) had a wrong sum; median error in the
+   affected tree 0.080 on the probability scale, largest 0.923;
+ - verified against brute-force enumeration (32,768 coalitions) for one such pair
+   (single tree, patient 63, one background row): exact Shapley values sum to
+   f(x) - f(b) = -0.0459; the library returns values summing to +0.2041, with five
+   features (age, education, cigsPerDay, diaBP, glucose) each off by exactly 0.05.
+Reading: a defect in the library's interventional tree algorithm for particular paths,
+not in this study's pipeline. Averaged over 300 trees it is small (0.3% of total
+attribution on average), and random-forest TreeSHAP agreed with exact Shapley values on
+the top three features for every patient checked (paper Section 4.3).
